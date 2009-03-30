@@ -62,7 +62,7 @@ namespace PGORMWizard.Pages
                 conn.Open();
                 conn.Close();
                 IsValid = true;
-                wizardEngine.Parameters[Parameter.db_connection_string] = txtResult.Text;
+                wizardEngine.Parameters[ParameterName.db_connection_string] = txtResult.Text;
                 Cursor = Cursors.Default;
                 MessageBox.Show("Connection succeed.\nClick Next to continue.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -70,7 +70,7 @@ namespace PGORMWizard.Pages
             {
                 MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 IsValid = false;
-                wizardEngine.Parameters[Parameter.db_connection_string] = txtResult.Text;
+                wizardEngine.Parameters[ParameterName.db_connection_string] = txtResult.Text;
                 Cursor = Cursors.Default;
             }
         }
