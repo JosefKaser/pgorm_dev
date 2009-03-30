@@ -25,13 +25,13 @@ namespace PGORMWizard.Pages
 
             if (optNewProject.Checked)
             {
-                wizardEngine.Parameters[Parameter.project_type] = "n"; // for new
+                wizardEngine.Parameters[ParameterName.project_type] = "n"; // for new
                 return true;
             }
             else if(optExisting.Checked && txtFile.Text != "")
             {
-                wizardEngine.Parameters[Parameter.project_type] = "e"; // for existing
-                wizardEngine.Parameters[Parameter.selected_project] = txtFile.Text;
+                wizardEngine.Parameters[ParameterName.project_type] = "e"; // for existing
+                wizardEngine.Parameters[ParameterName.selected_project] = txtFile.Text;
                 return true;
             }
             return false;
