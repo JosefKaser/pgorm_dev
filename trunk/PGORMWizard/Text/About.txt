@@ -1,0 +1,3 @@
+﻿This wizard will help you create .NET (classes,Factories,Methods) entities that represent a PostgreSQL database.
+
+Click Next to continue.

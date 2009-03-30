@@ -1,0 +1,141 @@
+﻿group main;
+
+create_stored_function(libs,namespace,functions) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Reflection;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>
+{
+	public class StoredProcedures
+	{
+		<functions; separator="\r\n">
+	}
+}
+>>
+
+create_composite_set_returning(function,returntype,args) ::=<<
+#region <function.FunctionName>
+public static <returntype> <function.FunctionName>(<create_parameters(function.Parameters)>)
+{
+	string fcall = string.Format("{0}({1})","<function.FunctionName>","<function.Parameters:create_sql_asign_parameter(); separator=",">");
+	return <function.ReturnTypeRecordSet>.FromList(
+		DataAccess.ExecuteObjectQuery\<<function.ReturnType>\>
+		(
+			string.Format(Helper.SQL_SELECT,fcall,""),
+			<function.FactoryName>.CreateFromReader<args>
+			<function.Parameters:create_npgsql_newparameter(); separator=",\r\n">
+        ));
+}
+#endregion
+
+>>
+
+create_built_in_set_returning(function,returntype,args) ::=<<
+#region <function.FunctionName>
+public static List\<<returntype>\> <function.FunctionName>(<create_parameters(function.Parameters)>)
+{
+	ObjectRelationMapper\<<returntype>\> mapper  = (IDataReader reader) => {
+	
+		return (<returntype>)(reader[0] == DBNull.Value ? null : reader[0]);
+	};
+
+	string fcall = string.Format("{0}({1})","<function.FunctionName>","<function.Parameters:create_sql_asign_parameter(); separator=",">");
+	return DataAccess.ExecuteObjectQuery\<<function.ReturnType>\>
+		(
+			string.Format(Helper.SQL_SELECT,fcall,""),
+			mapper<args>
+			<function.Parameters:create_npgsql_newparameter(); separator=",\r\n">
+        );
+}
+#endregion
+
+>>
+
+create_composite_scalar(function,returntype,args) ::=<<
+#region <function.FunctionName>
+public static <returntype> <function.FunctionName>(<create_parameters(function.Parameters)>)
+{
+	string fcall = string.Format("{0}({1})","<function.FunctionName>","<function.Parameters:create_sql_asign_parameter(); separator=",">");
+	<function.ReturnTypeRecordSet> result = <function.ReturnTypeRecordSet>.FromList(
+		DataAccess.ExecuteObjectQuery\<<function.ReturnType>\>
+		(
+			string.Format(Helper.SQL_SELECT,fcall,""),
+			<function.FactoryName>.CreateFromReader<args>
+			<function.Parameters:create_npgsql_newparameter(); separator=",\r\n">
+        ));
+        
+	return result[0];               
+}
+#endregion
+
+>>
+
+create_void_function(function,returntype,args) ::=<<
+#region <function.FunctionName>
+public static void <function.FunctionName>(<create_parameters(function.Parameters)>)
+{
+	string fcall = string.Format("{0}({1})","<function.FunctionName>","<function.Parameters:create_sql_asign_parameter(); separator=",">");
+	DataAccess.ExecuteNoneQuery(
+			string.Format(Helper.SQL_SELECT,fcall,"")
+			<args>
+			<function.Parameters:create_npgsql_newparameter(); separator=",\r\n">
+        );        
+}
+#endregion
+
+>>
+
+
+
+
+
+
+
+create_built_in_scalar(function,returntype,args) ::=<<
+#region <function.FunctionName>
+public static <returntype> <function.FunctionName>(<create_parameters(function.Parameters)>)
+{
+	ObjectRelationMapper\<<returntype>\> mapper  = (IDataReader reader) => {
+	
+		return (<returntype>)(reader[0] == DBNull.Value ? null : reader[0]);
+	};
+	
+	string fcall = string.Format("{0}({1})","<function.FunctionName>","<function.Parameters:create_sql_asign_parameter(); separator=",">");
+	
+	List\<<returntype>\> result = DataAccess.ExecuteObjectQuery\<<function.ReturnType>\>
+		(
+			string.Format(Helper.SQL_SELECT,fcall,""),
+			mapper<args>
+			<function.Parameters:create_npgsql_newparameter(); separator=",\r\n">
+        );
+        
+	return (<returntype>)result[0];               
+}
+#endregion
+
+>>
+
+
+
+create_npgsql_newparameter(column) ::=<<
+DataAccess.NewParameter("@<column.ColumnName>",p_<column.ColumnName>)
+>>
+
+
+create_parameter(column) ::="<column.CLR_Type> p_<column.ColumnName>"
+create_sql_asign_parameter(column) ::="@<column.ColumnName>"
+
+create_parameters(columns) ::=<<
+<columns:create_parameter(); separator=",">
+>>	
+
+
+usings(lib) ::=<<
+using <lib>;
+>>
