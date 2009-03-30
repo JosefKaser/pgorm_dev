@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGORM", "PGORM\PGORM.csproj", "{17183698-5DDE-45F0-8119-2E46843D19FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGORMWizard", "PGORMWizard\PGORMWizard.csproj", "{06A7681C-A73B-4950-9E62-8E793A5C9373}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17183698-5DDE-45F0-8119-2E46843D19FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17183698-5DDE-45F0-8119-2E46843D19FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17183698-5DDE-45F0-8119-2E46843D19FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17183698-5DDE-45F0-8119-2E46843D19FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A7681C-A73B-4950-9E62-8E793A5C9373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A7681C-A73B-4950-9E62-8E793A5C9373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A7681C-A73B-4950-9E62-8E793A5C9373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A7681C-A73B-4950-9E62-8E793A5C9373}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
