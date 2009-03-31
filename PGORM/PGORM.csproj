@@ -81,6 +81,8 @@
       <DependentUpon>CodeTemplates.resx</DependentUpon>
     </Compile>
     <Compile Include="Core\Builder.cs" />
+    <Compile Include="Core\PGORMLoaggerException.cs" />
+    <Compile Include="Core\PGORMLogger.cs" />
     <Compile Include="Core\DataAccess.cs" />
     <Compile Include="Core\Helper.cs" />
     <Compile Include="Core\ProjectFile.cs" />
@@ -142,6 +144,7 @@
     <Content Include="Template\DataObject.stg.txt" />
     <Content Include="Template\DataObjectFactory.stg.txt" />
     <Content Include="Template\DataObjectRecordSet.stg.txt" />
+    <Content Include="Template\Exception.txt" />
     <Content Include="Template\Function.stg.txt" />
     <Content Include="Template\HelperClasses.stg.txt" />
     <Content Include="Template\VS2008_Project.stg.txt" />

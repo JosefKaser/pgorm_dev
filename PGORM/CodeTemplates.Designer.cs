@@ -102,10 +102,10 @@ namespace PGORM {
         ///namespace &lt;namespace&gt;
         ///{
         ///	#region &lt;table.TemplateTableName&gt;
-        ///	public class &lt;table.TemplateTableName&gt; : DbObjectBase
+        ///	public class &lt;table.TemplateTableName&gt; : DbObjectBaseX
         ///	{
         ///		#region Static Properties
-        ///		public static readonly string TABLE_NAME = &quot;\&quot;&lt;table.T [rest of string was truncated]&quot;;.
+        ///		public static readonly string TABLE_NAME = &quot;\&quot;&lt;table. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DataObject_stg {
             get {
@@ -173,6 +173,15 @@ namespace PGORM {
         internal static string DataObjectRecordSet_stg {
             get {
                 return ResourceManager.GetString("DataObjectRecordSet_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Exception {
+            get {
+                return ResourceManager.GetString("Exception", resourceCulture);
             }
         }
         
