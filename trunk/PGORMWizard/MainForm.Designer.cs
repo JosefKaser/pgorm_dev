@@ -1,4 +1,19 @@
-﻿namespace PGORMWizard
+/*-------------------------------------------------------------------------
+ * MainForm.Designer.cs
+ *
+ * This file is part of the PGORM project.
+ * http://pgorm.googlecode.com/
+ *
+ * Copyright (c) 2002-2009, TrueSoftware B.V.
+ *
+ * IDENTIFICATION
+ * 
+ *  $Id$
+ * 	$HeadURL$
+ * 	
+ *-------------------------------------------------------------------------
+ */
+namespace PGORMWizard
 {
     partial class MainForm
     {
@@ -47,4 +62,3 @@
         #endregion
     }
 }
-
