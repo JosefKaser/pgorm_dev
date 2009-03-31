@@ -23,12 +23,23 @@ namespace PGORM
         #endregion
 
         #region DatabaseSchema
-        public DatabaseSchema(ProjectFile p_projectFile, Builder builder)
-            : base(builder)
+        public DatabaseSchema(ProjectFile p_projectFile, Builder p_builder)
+            : base(p_builder)
+        {
+            CustomQueries = p_projectFile.CutsomQueries;
+            ReadSchema(p_projectFile.DatabaseConnectionString);
+        }
+
+        public DatabaseSchema(Builder p_builder)
+            : base(p_builder)
+        {
+        }
+        #endregion
+
+        public void ReadSchema(string DatabaseConnectionString)
         {
             SendMessage("Reading Database Schema");
-            DataAccess.InitializeDatabase(p_projectFile.DatabaseConnectionString);
-            CustomQueries = p_projectFile.CutsomQueries;
+            DataAccess.InitializeDatabase(DatabaseConnectionString);
             PrepareCustomQueries();
             LoadAllFunctions();
             LoadAllViewInfo();
@@ -38,7 +49,6 @@ namespace PGORM
             LoadAllForeignKeys();
             LoadTables();
         }
-        #endregion
 
         #region CreateNewCompositeType
         pg_composite_type CreateNewCompositeType(IDataReader reader)
@@ -121,6 +131,7 @@ namespace PGORM
                     func.ReturnsSet = proc.returns_set;
                     func.FunctionName = proc.proname;
                     func.ReturnTypeType = proc.return_type_type;
+                    func.DB_ReturnType = proc.return_type;
 
                     if (proc.return_type_type == "b") // built in type
                     {
@@ -152,6 +163,7 @@ namespace PGORM
                             string arg_type = proc.arg_types[a].Trim();
                             Column col = new Column();
                             col.ColumnIndex = a;
+                            col.DB_Type = arg_type;
                             if (arg_type.Contains("[]"))
                                 col.CLR_Type = GetCLRType("ARRAY", arg_type.Replace("[]", ""));
                             else
