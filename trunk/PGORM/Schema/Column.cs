@@ -7,10 +7,11 @@
  * Copyright (c) 2002-2009, TrueSoftware B.V.
  *
  * IDENTIFICATION
- * $Header$ 
- * $Revision$ 
- * $Date$ 
- * $Id$
+ * 	Repository path:    $HeadURL$
+ *  Last committed:     $Revision$
+ *  Last changed by:    $Author$
+ *  Last changed date:  $Date$
+ *  ID:                 $Id$
  *-------------------------------------------------------------------------
  */
 using System;
