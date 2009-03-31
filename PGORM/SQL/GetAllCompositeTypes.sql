@@ -1,4 +1,19 @@
-﻿select
+/*-------------------------------------------------------------------------
+ * GetAllCompositeTypes.sql
+ *
+ * This file is part of the PGORM project.
+ * http://pgorm.googlecode.com/
+ *
+ * Copyright (c) 2002-2009, TrueSoftware B.V.
+ *
+ * IDENTIFICATION
+ * 
+ *  $Id$
+ * 	$HeadURL$
+ * 	
+ *-------------------------------------------------------------------------
+ */
+select
 		t.typname::varchar as type_name,
 		a.attname::varchar as column_name,
 		format_type(a.atttypid,null) as db_type, 

@@ -1,4 +1,19 @@
-﻿select
+/*-------------------------------------------------------------------------
+ * GetAllIndexes.sql
+ *
+ * This file is part of the PGORM project.
+ * http://pgorm.googlecode.com/
+ *
+ * Copyright (c) 2002-2009, TrueSoftware B.V.
+ *
+ * IDENTIFICATION
+ * 
+ *  $Id$
+ * 	$HeadURL$
+ * 	
+ *-------------------------------------------------------------------------
+ */
+select
 	i.indkey as keys,
 	t.relname as table_name,
 	i2.relname as index_name,

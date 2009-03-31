@@ -1,4 +1,19 @@
-﻿select
+/*-------------------------------------------------------------------------
+ * GetAllFunctions.sql
+ *
+ * This file is part of the PGORM project.
+ * http://pgorm.googlecode.com/
+ *
+ * Copyright (c) 2002-2009, TrueSoftware B.V.
+ *
+ * IDENTIFICATION
+ * 
+ *  $Id$
+ * 	$HeadURL$
+ * 	
+ *-------------------------------------------------------------------------
+ */
+select
 		p.proname,
 		oidvectortypes(p.proargtypes) as arg_types,
 		format_type(p.prorettype,null) as return_type,
@@ -18,4 +33,4 @@ where
 		and format_type(p.prorettype,null) <> 'trigger'
 		
 order
-		by p.proname asc		
+		by p.proname asc

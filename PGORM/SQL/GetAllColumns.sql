@@ -1,4 +1,19 @@
-﻿select 
+/*-------------------------------------------------------------------------
+ * GetAllColumns.sql
+ *
+ * This file is part of the PGORM project.
+ * http://pgorm.googlecode.com/
+ *
+ * Copyright (c) 2002-2009, TrueSoftware B.V.
+ *
+ * IDENTIFICATION
+ * 
+ *  $Id$
+ * 	$HeadURL$
+ * 	
+ *-------------------------------------------------------------------------
+ */
+select 
 		d.description,
 		c.*	
 from
@@ -20,15 +35,3 @@ where
 		c.table_schema='public'		
 order by
 		c.table_name,c.column_name asc;
-
-/*
-select 
-		*
-from
-		information_schema.columns
-where
-		table_schema='public'		
-order by
-		table_name,column_name asc;
-*/		
-		
