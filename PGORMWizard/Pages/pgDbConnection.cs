@@ -48,7 +48,7 @@ namespace PGORMWizard.Pages
                 txtPort.Text,
                 txtOptions.Text
                 );
-
+            SetNextPage(typeof(pgSelectDbObjects));
             return IsValid;
         }
 
@@ -64,11 +64,11 @@ namespace PGORMWizard.Pages
                 IsValid = true;
                 wizardEngine.Parameters[ParameterName.db_connection_string] = txtResult.Text;
                 Cursor = Cursors.Default;
-                MessageBox.Show("Connection succeed.\nClick Next to continue.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(wizardEngine.HostForm, "Connection succeed.\nClick Next to continue.", wizardEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(wizardEngine.HostForm, ex.Message, wizardEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 IsValid = false;
                 wizardEngine.Parameters[ParameterName.db_connection_string] = txtResult.Text;
                 Cursor = Cursors.Default;

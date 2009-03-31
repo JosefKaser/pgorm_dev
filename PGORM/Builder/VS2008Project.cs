@@ -51,12 +51,11 @@ namespace PGORM
         #region Setup
         void Setup()
         {
-
 #if DEBUG
             if (Directory.Exists(project.ProjectOutputFolder))
             {
                 System.Threading.Thread.Sleep(500);
-                SendMessage("Deleting existing {0}",project.ProjectOutputFolder);
+                SendMessage("Deleting existing {0}", BuilderMessageType.Minor,project.ProjectOutputFolder);
                 Directory.Delete(project.ProjectOutputFolder, true);
             }
 #endif
@@ -73,6 +72,13 @@ namespace PGORM
                 Directory.CreateDirectory(project.ProjectOutputFolder);
                 System.Threading.Thread.Sleep(250);
                 Directory.CreateDirectory(project.ProjectOutputFolder + "\\" + "Objects");
+                System.Threading.Thread.Sleep(250);
+            }
+
+            if (!Directory.Exists(project.CompilerOutputFolder))
+            {
+                System.Threading.Thread.Sleep(250);
+                Directory.CreateDirectory(project.OutputFolder);
                 System.Threading.Thread.Sleep(250);
             }
         }

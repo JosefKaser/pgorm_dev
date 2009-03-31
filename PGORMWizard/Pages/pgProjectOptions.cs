@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace PGORMWizard.Pages
+{
+    public partial class pgProjectOptions : TrueSoftware.Framework.Wizard.WizardLastPage
+    {
+        public pgProjectOptions()
+        {
+            InitializeComponent();
+            Load += new EventHandler(pgProjectOptions_Load);
+        }
+
+        void pgProjectOptions_Load(object sender, EventArgs e)
+        {
+            picLogo.Image = Helper.PGLogo;
+            lblPageTitle.Text = "Project Options";
+            lblSubTitle.Text = "Please provide project options.";
+        }
+
+        protected override bool ValidatePage()
+        {
+            if (
+                txtRootNS.Text.Trim() != "" &&
+                folderCompilerOutput.SelectedValue.Trim() != ""
+                )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void LeavingThisPage()
+        {
+            ((BuilderWizard)wizardEngine).projectFile.RootNamespace 
+                = txtRootNS.Text;
+
+            ((BuilderWizard)wizardEngine).projectFile.CompilerOutputFolder =
+            folderCompilerOutput.InitialValue;
+        }
+
+        protected override void InitializePage()
+        {
+            txtRootNS.Text = ((BuilderWizard)wizardEngine).projectFile.RootNamespace;
+            folderCompilerOutput.InitialValue = ((BuilderWizard)wizardEngine).projectFile.CompilerOutputFolder;
+        }
+    }
+}

@@ -9,13 +9,14 @@ using System.Windows.Forms;
 
 namespace PGORMWizard.Pages
 {
-    public partial class pageWelcome : TrueSoftware.Framework.Wizard.WizardWelcomePage
+    public partial class pgWelcome : TrueSoftware.Framework.Wizard.WizardWelcomePage
     {
-        public pageWelcome()
+        public pgWelcome()
         {
             InitializeComponent();
             this.checkDontShow.Visible = false;
             picLogo.Image = Helper.PGLogo;
+            picLogo.Padding = new Padding(5);
             lblHeaderTitle.Text = global::PGORMWizard.Properties.Resources.WizardCaption;
             txtDescrption.Text = global::PGORMWizard.Properties.Resources.About;
         }

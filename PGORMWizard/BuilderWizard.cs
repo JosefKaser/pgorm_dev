@@ -10,20 +10,31 @@ using PGORM;
 
 namespace PGORMWizard
 {
-    class BuilderWizard : TrueSoftware.Framework.Wizard.WizardEngine
+    public class BuilderWizard : TrueSoftware.Framework.Wizard.WizardEngine
     {
 
         public Builder pgormBuilder;
         public ProjectFile projectFile = null;
+        public DatabaseSchema databaseSchema;
+        public Pages.pgProgress pgProgress;
 
         public BuilderWizard(Form hostForm, CancelFunction cancelFunction, ProcessFunction processFunction)
             : base(hostForm, cancelFunction, processFunction)
         {
             pgormBuilder = new Builder();
 
-            AddPage(new Pages.pageWelcome());
+            projectFile = new ProjectFile();
+            projectFile.Tables = new List<string>();
+            projectFile.Views = new List<string>();
+            projectFile.Functions = new List<string>();
+
+            AddPage(new Pages.pgWelcome());
             AddPage(new Pages.pgSelectProject());
             AddPage(new Pages.pgDbConnection());
+            AddPage(new Pages.pgSelectDbObjects());
+            AddPage(new Pages.pgProjectOptions());
+            pgProgress = new PGORMWizard.Pages.pgProgress();
+            AddPage(pgProgress);
         }
     }
 }

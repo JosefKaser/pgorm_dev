@@ -20,11 +20,11 @@ namespace PGORM
         }
 
         #region SendMessage
-        protected void SendMessage(string data, params object[] args)
+        protected void SendMessage(string data,BuilderMessageType messageType, params object[] args)
         {
             if (Builder != null)
             {
-                Builder.SendMessage(this, data, args);
+                Builder.SendMessage(this,messageType, data, args);
             }
         }
         #endregion

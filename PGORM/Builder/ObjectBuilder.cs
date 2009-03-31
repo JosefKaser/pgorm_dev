@@ -83,7 +83,7 @@ namespace PGORM
 
             foreach (Table table in schema.Tables)
             {
-                SendMessage("Generate objects for {0}",table.TableName);
+                SendMessage("Generate objects for {0}", BuilderMessageType.Minor,table.TableName);
 
                 dataobject.Reset();
                 dataobject.SetAttribute("libs", project.UsingLibs);

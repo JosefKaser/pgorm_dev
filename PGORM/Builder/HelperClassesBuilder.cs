@@ -18,7 +18,7 @@ namespace PGORM
 
         public override void Build()
         {
-            SendMessage("Creating helper classes");
+            SendMessage("Creating helper classes",BuilderMessageType.Major);
 
             StringTemplate st;
 
@@ -26,38 +26,38 @@ namespace PGORM
             if (!Directory.Exists(out_dir))
                 Directory.CreateDirectory(out_dir);
 
-            SendMessage("Creating Helper.cs");
+            SendMessage("Creating Helper.cs",BuilderMessageType.Minor);
             st = GetTemplate("helper");
             st.SetAttribute("namespace", project.RootNamespace);
             vsproject.AddCompileItem(@"Helper\Helper.cs", st.ToString());
 
-            SendMessage("Creating DbObjectBase.cs");
+            SendMessage("Creating DbObjectBase.cs",BuilderMessageType.Minor);
             st = GetTemplate("object_base");
             st.SetAttribute("namespace", project.RootNamespace);
             vsproject.AddCompileItem(@"Helper\DbObjectBase.cs", st.ToString());
 
-            SendMessage("Creating DbRecordSetBase.cs");
+            SendMessage("Creating DbRecordSetBase.cs", BuilderMessageType.Minor);
             st = GetTemplate("recordset_base");
             st.SetAttribute("namespace", project.RootNamespace);
             vsproject.AddCompileItem(@"Helper\DbRecordSetBase.cs", st.ToString());
 
-            SendMessage("Creating DbObjectValue.cs");
+            SendMessage("Creating DbObjectValue.cs", BuilderMessageType.Minor);
             st = GetTemplate("object_value");
             st.SetAttribute("namespace", project.RootNamespace);
             vsproject.AddCompileItem(@"Helper\DbObjectValue.cs", st.ToString());
 
-            SendMessage("Creating ColumnMetaInfo.cs");
+            SendMessage("Creating ColumnMetaInfo.cs", BuilderMessageType.Minor);
             st = GetTemplate("column_meta_info");
             st.SetAttribute("namespace", project.RootNamespace);
             vsproject.AddCompileItem(@"Helper\ColumnMetaInfo.cs", st.ToString());
 
-            SendMessage("Creating DMLOperation.cs");
+            SendMessage("Creating DMLOperation.cs", BuilderMessageType.Minor);
             st = GetTemplate("dml_opr_param");
             st.SetAttribute("namespace", project.RootNamespace);
             st.SetAttribute("libs", project.UsingLibs);
             vsproject.AddCompileItem(@"Helper\DMLOperation.cs", st.ToString());
 
-            SendMessage("Creating FullLoader.cs");
+            SendMessage("Creating FullLoader.cs", BuilderMessageType.Minor);
             st = GetTemplate("full_loader");
             st.SetAttribute("namespace", project.RootNamespace);
             st.SetAttribute("libs", project.UsingLibs);

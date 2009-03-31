@@ -30,20 +30,16 @@
         {
             this.optNewProject = new System.Windows.Forms.RadioButton();
             this.optExisting = new System.Windows.Forms.RadioButton();
-            this.pnlSelect = new System.Windows.Forms.Panel();
-            this.txtFile = new System.Windows.Forms.TextBox();
-            this.btnSelectFile = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.selectProject = new TrueSoftware.Framework.Wizard.SelectFileControl();
             this.MainGroupBox.SuspendLayout();
             this.panelTextHolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
-            this.pnlSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainGroupBox
             // 
-            this.MainGroupBox.Controls.Add(this.pnlSelect);
+            this.MainGroupBox.Controls.Add(this.selectProject);
             this.MainGroupBox.Controls.Add(this.optExisting);
             this.MainGroupBox.Controls.Add(this.optNewProject);
             // 
@@ -69,50 +65,26 @@
             this.optExisting.Text = "Existing project";
             this.optExisting.UseVisualStyleBackColor = true;
             // 
-            // pnlSelect
-            // 
-            this.pnlSelect.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlSelect.Controls.Add(this.label1);
-            this.pnlSelect.Controls.Add(this.txtFile);
-            this.pnlSelect.Controls.Add(this.btnSelectFile);
-            this.pnlSelect.Location = new System.Drawing.Point(12, 121);
-            this.pnlSelect.Name = "pnlSelect";
-            this.pnlSelect.Size = new System.Drawing.Size(471, 68);
-            this.pnlSelect.TabIndex = 2;
-            this.pnlSelect.Visible = false;
-            // 
-            // txtFile
-            // 
-            this.txtFile.Location = new System.Drawing.Point(12, 26);
-            this.txtFile.Multiline = true;
-            this.txtFile.Name = "txtFile";
-            this.txtFile.ReadOnly = true;
-            this.txtFile.Size = new System.Drawing.Size(356, 21);
-            this.txtFile.TabIndex = 1;
-            // 
-            // btnSelectFile
-            // 
-            this.btnSelectFile.Location = new System.Drawing.Point(374, 24);
-            this.btnSelectFile.Name = "btnSelectFile";
-            this.btnSelectFile.Size = new System.Drawing.Size(92, 23);
-            this.btnSelectFile.TabIndex = 0;
-            this.btnSelectFile.Text = "&Select File";
-            this.btnSelectFile.UseVisualStyleBackColor = true;
-            this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Project file:";
-            // 
             // openFileDialog
             // 
             this.openFileDialog.Filter = "PGORM file|*.pgorm";
             this.openFileDialog.Title = "Select a PGORM project";
+            // 
+            // selectProject
+            // 
+            this.selectProject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectProject.Caption = "Name:";
+            this.selectProject.Filter = "PGORM Files|*.pgorm";
+            this.selectProject.InitialValue = "";
+            this.selectProject.Location = new System.Drawing.Point(12, 109);
+            this.selectProject.Name = "selectProject";
+            this.selectProject.Padding = new System.Windows.Forms.Padding(2);
+            this.selectProject.SelectedValue = "";
+            this.selectProject.SelectionMode = TrueSoftware.Framework.Wizard.SelectFileMode.SelectFile;
+            this.selectProject.Size = new System.Drawing.Size(478, 48);
+            this.selectProject.TabIndex = 2;
+            this.selectProject.ValueLocked = true;
             // 
             // pgSelectProject
             // 
@@ -124,8 +96,6 @@
             this.panelTextHolder.ResumeLayout(false);
             this.panelTextHolder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
-            this.pnlSelect.ResumeLayout(false);
-            this.pnlSelect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -134,10 +104,7 @@
 
         private System.Windows.Forms.RadioButton optNewProject;
         private System.Windows.Forms.RadioButton optExisting;
-        private System.Windows.Forms.Panel pnlSelect;
-        private System.Windows.Forms.TextBox txtFile;
-        private System.Windows.Forms.Button btnSelectFile;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private TrueSoftware.Framework.Wizard.SelectFileControl selectProject;
     }
 }

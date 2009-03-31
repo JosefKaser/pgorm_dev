@@ -17,7 +17,7 @@ using System.Reflection;
 namespace <namespace>
 {
 	#region <table.TemplateTableName>
-	public class <table.TemplateTableName> : DbObjectBase
+	public class <table.TemplateTableName> : DbObjectBaseX
 	{
 		#region Static Properties
 		public static readonly string TABLE_NAME = "\"<table.TableName>\"";
