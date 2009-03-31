@@ -7,7 +7,7 @@
  * Copyright (c) 2002-2009, TrueSoftware B.V.
  *
  * IDENTIFICATION
- * $Id$
+ * $id$
  *-------------------------------------------------------------------------
  */
 using System;
