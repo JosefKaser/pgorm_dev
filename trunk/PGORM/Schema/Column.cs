@@ -8,8 +8,8 @@
  *
  * IDENTIFICATION
  * 
- *  ID: $Id$
- * 	Repository path: $HeadURL$
+ *  $Id$
+ * 	$HeadURL$
  * 	
  *-------------------------------------------------------------------------
  */
