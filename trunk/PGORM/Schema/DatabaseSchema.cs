@@ -38,7 +38,7 @@ namespace PGORM
 
         public void ReadSchema(string DatabaseConnectionString)
         {
-            SendMessage("Reading Database Schema");
+            SendMessage("Reading Database Schema", BuilderMessageType.Major);
             DataAccess.InitializeDatabase(DatabaseConnectionString);
             PrepareCustomQueries();
             LoadAllFunctions();
@@ -82,7 +82,7 @@ namespace PGORM
         #region LoadAllFunctions
         void LoadAllFunctions()
         {
-            SendMessage("Loading functions");
+            SendMessage("Loading functions",BuilderMessageType.Major);
             List<pg_proc> pg_procs = DataAccess.ExecuteObjectQuery<pg_proc>(SQLScripts.GetAllFunctions,
                 CreateNewPgProc);
 
@@ -223,7 +223,7 @@ namespace PGORM
             if (CustomQueries.Count == 0)
                 return;
 
-            SendMessage("Preparing custom queries");
+            SendMessage("Preparing custom queries", BuilderMessageType.Minor);
             foreach (Table tbl in CustomQueries)
             {
                 sql = string.Format("CREATE OR REPLACE VIEW \"{0}\" AS {1}",
@@ -292,7 +292,7 @@ namespace PGORM
         #region LoadAllForeignKeys
         private void LoadAllForeignKeys()
         {
-            SendMessage("Loading foreign keys");
+            SendMessage("Loading foreign keys", BuilderMessageType.Major);
             AllForeignKeys = new List<Index>();
 
             List<pg_foreignkey> foreign_keys = DataAccess.ExecuteObjectQuery<pg_foreignkey>(
@@ -334,7 +334,7 @@ namespace PGORM
 
         private void LoadAllIndexes()
         {
-            SendMessage("Loading Indexces");
+            SendMessage("Loading Indexces", BuilderMessageType.Major);
             AllIndexes = new List<Index>();
             List<pg_index> pg_indexes = DataAccess.ExecuteObjectQuery<pg_index>(
                 SQLScripts.GetAllIndexes, CreateNewPGIndex);
@@ -372,7 +372,7 @@ namespace PGORM
         #region LoadAllPrimaryKeys
         private void LoadAllPrimaryKeys()
         {
-            SendMessage("Loading primary keys");
+            SendMessage("Loading primary keys", BuilderMessageType.Major);
             AllPrimaryKeys = DataAccess.ExecuteObjectQuery<Column>(SQLScripts.GetAllPrimaryKeys, CreateNewPrimaryKey);
         }
         #endregion
@@ -380,7 +380,7 @@ namespace PGORM
         #region LoadAllColumns
         private void LoadAllColumns()
         {
-            SendMessage("Loading table columns");
+            SendMessage("Loading table columns", BuilderMessageType.Major);
             AllColumns = DataAccess.ExecuteObjectQuery<Column>(SQLScripts.GetAllColumns, CreateNewColumn);
         }
         #endregion
@@ -559,7 +559,7 @@ namespace PGORM
         #region PrepareViewIndexes
         void PrepareViewIndexes()
         {
-            SendMessage("Loading view indexces");
+            SendMessage("Loading view indexces", BuilderMessageType.Major);
             foreach (Table table in Tables)
             {
                 if (table.IsView)

@@ -34,6 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v3.5">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="Npgsql, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Library\Npgsql.dll</HintPath>
@@ -60,6 +65,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuilderWizard.cs" />
+    <Compile Include="Controls\FunctionListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\FunctionListView.Designer.cs">
+      <DependentUpon>FunctionListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaLoader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaLoader.Designer.cs">
+      <DependentUpon>SchemaLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TableListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TableListView.Designer.cs">
+      <DependentUpon>TableListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ViewListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ViewListView.Designer.cs">
+      <DependentUpon>ViewListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -67,17 +96,35 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\pageWelcome.cs">
+    <Compile Include="Pages\pgProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Pages\pageWelcome.Designer.cs">
-      <DependentUpon>pageWelcome.cs</DependentUpon>
+    <Compile Include="Pages\pgProgress.Designer.cs">
+      <DependentUpon>pgProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgProjectOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgProjectOptions.Designer.cs">
+      <DependentUpon>pgProjectOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgWelcome.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgWelcome.Designer.cs">
+      <DependentUpon>pgWelcome.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\pgDbConnection.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Pages\pgDbConnection.Designer.cs">
       <DependentUpon>pgDbConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgSelectDbObjects.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgSelectDbObjects.Designer.cs">
+      <DependentUpon>pgSelectDbObjects.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\pgSelectProject.cs">
       <SubType>UserControl</SubType>
@@ -87,11 +134,26 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\SchemaLoader.resx">
+      <DependentUpon>SchemaLoader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TableListView.resx">
+      <DependentUpon>TableListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\pgDbConnection.resx">
       <DependentUpon>pgDbConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgProgress.resx">
+      <DependentUpon>pgProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgProjectOptions.resx">
+      <DependentUpon>pgProjectOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgSelectDbObjects.resx">
+      <DependentUpon>pgSelectDbObjects.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\pgSelectProject.resx">
       <DependentUpon>pgSelectProject.cs</DependentUpon>
@@ -106,6 +168,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="App.config" />
     <None Include="PGORMWizard.snk" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -116,6 +179,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="WizardLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PGORM\PGORM.csproj">
@@ -125,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\elephant.png" />
+    <Content Include="Images\Function.png" />
+    <Content Include="Images\Table.png" />
+    <Content Include="Images\View.png" />
     <Content Include="postgres.ico" />
     <Content Include="Text\About.txt" />
     <Content Include="Text\WizardCaption.txt" />

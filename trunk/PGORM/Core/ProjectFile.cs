@@ -100,6 +100,7 @@ namespace PGORM
             RootNamespace = "MyProject";
             OutputFolder = AppDomain.CurrentDomain.BaseDirectory;
             Version = Assembly.GetExecutingAssembly().GetName().Version;
+            CompilerOutputFolder = @"C:\" + RootNamespace;
 
             Tables = new List<string>();
             Views = new List<string>();

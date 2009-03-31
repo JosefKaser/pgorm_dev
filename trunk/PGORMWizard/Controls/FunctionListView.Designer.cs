@@ -1,6 +1,6 @@
-﻿namespace PGORMWizard.Pages
+﻿namespace PGORMWizard.Controls
 {
-    partial class pageWelcome
+    partial class FunctionListView
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         #endregion

@@ -15,5 +15,7 @@ from
 where
 		n.nspname='public'
 		and t.tgname is null
+		and format_type(p.prorettype,null) <> 'trigger'
+		
 order
 		by p.proname asc		

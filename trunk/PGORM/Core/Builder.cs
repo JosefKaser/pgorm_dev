@@ -16,12 +16,25 @@ namespace PGORM
     public class BuilderEventArgs : EventArgs
     {
         public string Message { get; set; }
-        public BuilderEventArgs(string p_Message)
+        public BuilderMessageType MessageType;
+
+        public BuilderEventArgs(string p_Message,BuilderMessageType p_MessageType)
         {
             Message = p_Message;
+            MessageType = p_MessageType;
         }
     } 
     #endregion
+
+    #region BuilderMessageType
+    public enum BuilderMessageType
+    {
+        Major,
+        Minor,
+        Error
+    } 
+    #endregion
+
 
     public delegate void BuilderEventHandler(object sender,BuilderEventArgs e);
 
@@ -37,6 +50,7 @@ namespace PGORM
         protected FunctionBuilder functionBuilder;
         protected string tempFname;
         protected DatabaseSchema dbSchema;
+        public ILogger CustomLogger;
         public event BuilderEventHandler OnBuildStep;
         #endregion
 
@@ -53,6 +67,8 @@ namespace PGORM
         private void CreateDataAccessProject(string projectRootNamespace)
         {
             dataAccessProject = new ProjectFile();
+            // force this to be default 
+            dataAccessProject.CompilerOutputFolder = @"bin\Release";
             dataAccessProject.RootNamespace = projectRootNamespace + ".Data";
             vsDataProject = new VS2008Project(dataAccessProject, this);
             vsDataProject.AddCompileItem(
@@ -106,9 +122,9 @@ namespace PGORM
             helperClassesBuilder = new HelperClassesBuilder(objectProject, vsObjectProject, dbSchema,this);
             helperClassesBuilder.Build();
 
-            BuildAssembly(dataAccessProject.CPROJName);
+            BuildAssembly(dataAccessProject.CPROJName,null);
             vsObjectProject.Build();
-            BuildAssembly(objectProject.CPROJName);
+            BuildAssembly(objectProject.CPROJName,this.CustomLogger);
 
             //dbSchema.CleanUp();
         }
@@ -127,25 +143,27 @@ namespace PGORM
         //}
         #endregion
 
-        void BuildAssembly(string projectPath)
+        void BuildAssembly(string projectPath,ILogger customLogger)
         {
-            SendMessage(this,"Building {0}", Path.GetFileName(projectPath).Replace(".csproj", ".dll"));
+            SendMessage(this,BuilderMessageType.Major,"Building {0}",Path.GetFileName(projectPath).Replace(".csproj", ".dll"));
             Engine buildEngine = new Engine();
             BuildPropertyGroup pGroup = new BuildPropertyGroup();
-            ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);                
+            ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);
             pGroup.SetProperty("Configuration", "Release");
             pGroup.SetProperty("DebugType", "none");
             pGroup.SetProperty("DebugSymbols", "false");
             buildEngine.RegisterLogger(logger);
+            if (customLogger != null)
+                buildEngine.RegisterLogger(customLogger);
             buildEngine.BuildProjectFile(projectPath, new string[] { "Build" }, pGroup);
         }
 
         #region SendMessage
-        public void SendMessage(object sender, string data, params object[] args)
+        public void SendMessage(object sender,BuilderMessageType messageType, string data, params object[] args)
         {
             if (OnBuildStep != null)
             {
-                OnBuildStep(sender, new BuilderEventArgs(string.Format(data, args)));
+                OnBuildStep(sender, new BuilderEventArgs(string.Format(data, args),messageType));
             }
         }
         #endregion
