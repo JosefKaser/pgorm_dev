@@ -14,7 +14,7 @@ namespace PGORMWizard
     public partial class MainForm : Form
     {
         protected BuilderWizard wizEngine;
-        protected WizardLogger wizLogger;
+        protected PGORMLogger wizLogger;
 
         public MainForm()
         {
@@ -24,7 +24,7 @@ namespace PGORMWizard
         private void MainForm_Load(object sender, EventArgs e)
         {
             wizEngine = new BuilderWizard(this, CancelWizard, ProcessWizard);
-            wizLogger = new WizardLogger(wizEngine.pgormBuilder);
+            wizLogger = new PGORMLogger(wizEngine.pgormBuilder);
             wizEngine.StartWizard();
         }
 
@@ -42,7 +42,10 @@ namespace PGORMWizard
             catch (Exception ex)
             {
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Major, "Build faild. Please check the details...");
-                wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.Message);
+                if(ex is PGORMLoaggerException)
+                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, (ex as PGORMLoaggerException).ToString());
+                else
+                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.Message);
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.StackTrace);
                 result = false;
             }
@@ -55,10 +58,9 @@ namespace PGORMWizard
 
         void pgormBuilder_OnBuildStep(object sender, PGORM.BuilderEventArgs e)
         {
-            if (e.MessageType == BuilderMessageType.Major)
+            if (e.MessageType == BuilderMessageType.Major ||
+                e.MessageType == BuilderMessageType.Error)
                 wizEngine.ReportProgress(e.Message);
-            if (e.MessageType == BuilderMessageType.Error)
-                throw new Exception(e.Message);
             wizEngine.pgProgress.WriteLine(e.Message);
         }
 

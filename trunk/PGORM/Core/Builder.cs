@@ -50,7 +50,6 @@ namespace PGORM
         protected FunctionBuilder functionBuilder;
         protected string tempFname;
         protected DatabaseSchema dbSchema;
-        public ILogger CustomLogger;
         public event BuilderEventHandler OnBuildStep;
         #endregion
 
@@ -122,9 +121,9 @@ namespace PGORM
             helperClassesBuilder = new HelperClassesBuilder(objectProject, vsObjectProject, dbSchema,this);
             helperClassesBuilder.Build();
 
-            BuildAssembly(dataAccessProject.CPROJName,null);
+            BuildAssembly(dataAccessProject.CPROJName);
             vsObjectProject.Build();
-            BuildAssembly(objectProject.CPROJName,this.CustomLogger);
+            BuildAssembly(objectProject.CPROJName);
 
             //dbSchema.CleanUp();
         }
@@ -143,19 +142,22 @@ namespace PGORM
         //}
         #endregion
 
-        void BuildAssembly(string projectPath,ILogger customLogger)
+        void BuildAssembly(string projectPath)
         {
-            SendMessage(this,BuilderMessageType.Major,"Building {0}",Path.GetFileName(projectPath).Replace(".csproj", ".dll"));
+            SendMessage(this, BuilderMessageType.Major, "Building {0}", Path.GetFileName(projectPath).Replace(".csproj", ".dll"));
             Engine buildEngine = new Engine();
             BuildPropertyGroup pGroup = new BuildPropertyGroup();
             ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);
+            PGORMLogger pgormLogger = new PGORMLogger(this);
             pGroup.SetProperty("Configuration", "Release");
             pGroup.SetProperty("DebugType", "none");
             pGroup.SetProperty("DebugSymbols", "false");
             buildEngine.RegisterLogger(logger);
-            if (customLogger != null)
-                buildEngine.RegisterLogger(customLogger);
+            buildEngine.RegisterLogger(pgormLogger);
             buildEngine.BuildProjectFile(projectPath, new string[] { "Build" }, pGroup);
+            if (pgormLogger.HasErrors)
+                foreach (PGORMLoaggerException item in pgormLogger.Exceptions)
+                    throw item;
         }
 
         #region SendMessage
