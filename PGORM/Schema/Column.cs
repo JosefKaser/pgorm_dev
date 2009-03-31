@@ -7,10 +7,10 @@
  * Copyright (c) 2002-2009, TrueSoftware B.V.
  *
  * IDENTIFICATION
- * $Header: $ 
- * $Revision: $ 
- * $Date: $ 
- * $Id: $
+ * $Header$ 
+ * $Revision$ 
+ * $Date$ 
+ * $Id$
  *-------------------------------------------------------------------------
  */
 using System;
