@@ -28,8 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.panelTextHolder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // cmdCommand
+            // 
+            this.cmdCommand.Click += new System.EventHandler(this.cmdCommand_Click);
+            // 
+            // pgProgress
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "pgProgress";
+            this.panelTextHolder.ResumeLayout(false);
+            this.panelTextHolder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion

@@ -30,22 +30,24 @@ namespace PGORM
     public class PGORMLoaggerException : Exception
     {
         public BuildErrorEventArgs buildEventArgs { get; set; }
+        public string ProjectPath;
+        public string FileContent;
 
-        public PGORMLoaggerException(BuildErrorEventArgs p_BuildEventArgs)
+        public PGORMLoaggerException(BuildErrorEventArgs p_BuildEventArgs, string p_ProjectPath)
         {
             buildEventArgs = p_BuildEventArgs;
+            ProjectPath = p_ProjectPath;
+            FileContent = File.ReadAllText(string.Format(@"{0}\{1}",Path.GetDirectoryName(ProjectPath),buildEventArgs.File));
         }
 
         public override string ToString()
         {
             return string.Format(CodeTemplates.Exception,
                 buildEventArgs.Code,
-                buildEventArgs.ColumnNumber,
-                buildEventArgs.EndColumnNumber,
-                buildEventArgs.EndLineNumber,
                 buildEventArgs.File,
                 buildEventArgs.LineNumber,
-                buildEventArgs.Message);
+                buildEventArgs.Message,
+                FileContent);
         }
     }
 }

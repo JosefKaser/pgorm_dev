@@ -30,13 +30,15 @@ namespace PGORM
     public class PGORMLogger : ILogger
     {
         private Builder builder;
+        private string ProjectPath;
         public bool HasErrors { get; set; }
         public List<PGORMLoaggerException> Exceptions = new List<PGORMLoaggerException>();
 
-        public PGORMLogger(Builder p_builder)
+        public PGORMLogger(Builder p_builder, string p_ProjectPath)
         {
             HasErrors = false;
             builder = p_builder;
+            ProjectPath = p_ProjectPath;
         }
 
         #region ILogger Members
@@ -55,7 +57,7 @@ namespace PGORM
         void eventSource_ErrorRaised(object sender, BuildErrorEventArgs e)
         {
             HasErrors = true;
-            Exceptions.Add(new PGORMLoaggerException(e));
+            Exceptions.Add(new PGORMLoaggerException(e,ProjectPath));
         }
 
         public string Parameters

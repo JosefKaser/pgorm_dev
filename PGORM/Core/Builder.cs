@@ -163,7 +163,7 @@ namespace PGORM
             Engine buildEngine = new Engine();
             BuildPropertyGroup pGroup = new BuildPropertyGroup();
             ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);
-            PGORMLogger pgormLogger = new PGORMLogger(this);
+            PGORMLogger pgormLogger = new PGORMLogger(this,projectPath);
             pGroup.SetProperty("Configuration", "Release");
             pGroup.SetProperty("DebugType", "none");
             pGroup.SetProperty("DebugSymbols", "false");

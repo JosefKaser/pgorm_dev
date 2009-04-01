@@ -89,6 +89,12 @@
     <Compile Include="Controls\ViewListView.Designer.cs">
       <DependentUpon>ViewListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExceptionForm.Designer.cs">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -140,11 +146,17 @@
     <EmbeddedResource Include="Controls\TableListView.resx">
       <DependentUpon>TableListView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExceptionForm.resx">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\pgDbConnection.resx">
       <DependentUpon>pgDbConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgProgress.resx">
+      <DependentUpon>pgProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\pgProjectOptions.resx">
       <DependentUpon>pgProjectOptions.cs</DependentUpon>

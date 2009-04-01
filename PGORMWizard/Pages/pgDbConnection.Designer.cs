@@ -131,7 +131,6 @@ namespace PGORMWizard.Pages
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(386, 21);
             this.txtServer.TabIndex = 2;
-            this.txtServer.Text = "localhost";
             // 
             // txtDatabase
             // 
@@ -140,7 +139,6 @@ namespace PGORMWizard.Pages
             this.txtDatabase.Name = "txtDatabase";
             this.txtDatabase.Size = new System.Drawing.Size(386, 21);
             this.txtDatabase.TabIndex = 3;
-            this.txtDatabase.Text = "testdb";
             // 
             // label3
             // 
@@ -193,7 +191,6 @@ namespace PGORMWizard.Pages
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(386, 21);
             this.txtUsername.TabIndex = 8;
-            this.txtUsername.Text = "postgres";
             // 
             // txtPassword
             // 
@@ -202,7 +199,6 @@ namespace PGORMWizard.Pages
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(386, 21);
             this.txtPassword.TabIndex = 9;
-            this.txtPassword.Text = "postgres";
             // 
             // txtPort
             // 
@@ -211,7 +207,6 @@ namespace PGORMWizard.Pages
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(386, 21);
             this.txtPort.TabIndex = 10;
-            this.txtPort.Text = "5432";
             // 
             // txtOptions
             // 

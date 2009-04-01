@@ -29,7 +29,6 @@ namespace PGORMWizard
     public partial class MainForm : Form
     {
         protected BuilderWizard wizEngine;
-        protected PGORMLogger wizLogger;
 
         public MainForm()
         {
@@ -39,7 +38,6 @@ namespace PGORMWizard
         private void MainForm_Load(object sender, EventArgs e)
         {
             wizEngine = new BuilderWizard(this, CancelWizard, ProcessWizard);
-            wizLogger = new PGORMLogger(wizEngine.pgormBuilder);
             wizEngine.StartWizard();
         }
 
@@ -59,10 +57,14 @@ namespace PGORMWizard
             {
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Major, "Build faild. Please check the details...");
                 if(ex is PGORMLoaggerException)
-                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, (ex as PGORMLoaggerException).ToString());
+                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor,"{0}", (ex as PGORMLoaggerException).ToString());
                 else
                     wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.Message);
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.StackTrace);
+
+                ExceptionForm exForm = new ExceptionForm(ex);
+
+                exForm.ShowDialog();
                 result = false;
             }
             finally
@@ -75,7 +77,9 @@ namespace PGORMWizard
             for (int a = 0; a != 5; a++)
                 wizEngine.ReportProgress("Finished.");
 
-            MessageBox.Show(wizEngine.HostForm, "Project done.", wizEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (result)
+                MessageBox.Show(wizEngine.HostForm, "Project done.", wizEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             return result;
         }
 
