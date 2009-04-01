@@ -53,7 +53,7 @@ namespace PGORMWizard
             this.ClientSize = new System.Drawing.Size(292, 266);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "PGORM Wizard";
+            this.Text = "PGORM Wizard Release 0.10";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 
