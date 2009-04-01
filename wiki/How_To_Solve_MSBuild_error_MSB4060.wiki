@@ -1,0 +1,10 @@
+How_To_Solve_MSBuild_error_MSB4060   
+#Solve MSBuild error MSB4060 
+Problem
+When compiling a project that is using the PGORM.dll, there is possibility you get the MSB4060 error at the end of the code generation. This is because the system uses the wrong version of Microsoft.Build.Framework. 
+C:\WINDOWS\Microsoft.NET\Framework\v3.5\Microsoft.Data.Entity.targets(40,5): error MSB4127: The "EntityDeploy" task could not be instantiated from the assembly"C:\WINDOWS\Microsoft.NET\Framework\v3.5\Microsoft.Data.Entity.Build.Tasks.dll". Please verify the task assembly has been built using the same version of the Microsoft.Build.Framework assembly as the one installed on your computer and thatyour host application is not missing a binding redirect for Microsoft.Build.Framework. Unable to cast object of type 'Microsoft.Data.Entity.Build.Tasks.EntityDeploy' to type 'Microsoft.Build.Framework.ITask'.C:\WINDOWS\Microsoft.NET\Framework\v3.5\Microsoft.Data.Entity.targets(40,5): error MSB4060: The "EntityDeploy" task has been declared or used incorrectly, or failed during construction. Check the spelling of the task name and the assembly name.Solution
+
+--------------------------------------------------------------------------------
+Use/Copy the contents of App.config from the Dellstore2 sample project. 
+
+--------------------------------------------------------------------------------
