@@ -49,6 +49,10 @@ namespace PGORM
             delete_method = factoryGroup.GetInstanceOf("create_delete_method");
             get_all_method = factoryGroup.GetInstanceOf("get_all_method");
 
+
+            SendMessage("Generating database objects...", BuilderMessageType.Major);
+
+
             #region Create Directories
             out_dir = project.ProjectOutputFolder + "\\DataObject";
             if (!Directory.Exists(out_dir))
