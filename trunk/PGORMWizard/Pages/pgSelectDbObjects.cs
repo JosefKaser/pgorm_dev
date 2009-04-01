@@ -85,23 +85,32 @@ namespace PGORMWizard.Pages
         {
             if (current_conn_str != wizardEngine.Parameters[ParameterName.db_connection_string].ToString())
             {
-                current_conn_str = wizardEngine.Parameters[ParameterName.db_connection_string].ToString();
-                Cursor = Cursors.WaitCursor;
-                schemaLoader = new PGORMWizard.Controls.SchemaLoader();
-                schemaLoader.progressBar.Minimum = 0;
-                schemaLoader.progressBar.Maximum = 7;
-                schemaLoader.progressBar.Step = 1;
-                MainGroupBox.Controls.Add(schemaLoader);
-                SetContentState(false);
-                Application.DoEvents();
-                (wizardEngine as BuilderWizard).databaseSchema = schemaLoader.LoadSchema((wizardEngine as BuilderWizard));
-                schemaLoader.Visible = false;
-                tableList.LoadTables((wizardEngine as BuilderWizard).databaseSchema);
-                viewList.LoadViews((wizardEngine as BuilderWizard).databaseSchema);
-                functionList.LoadFunctions((wizardEngine as BuilderWizard).databaseSchema);
-                (wizardEngine as BuilderWizard).pgormBuilder.SendMessage(null,BuilderMessageType.Major,"Preparing controls. Please wait...");
-                SetContentState(true);
-                Cursor = Cursors.Default;
+                try
+                {
+                    current_conn_str = wizardEngine.Parameters[ParameterName.db_connection_string].ToString();
+                    Cursor = Cursors.WaitCursor;
+                    schemaLoader = new PGORMWizard.Controls.SchemaLoader();
+                    schemaLoader.progressBar.Minimum = 0;
+                    schemaLoader.progressBar.Maximum = 7;
+                    schemaLoader.progressBar.Step = 1;
+                    MainGroupBox.Controls.Add(schemaLoader);
+                    SetContentState(false);
+                    Application.DoEvents();
+                    (wizardEngine as BuilderWizard).databaseSchema = schemaLoader.LoadSchema((wizardEngine as BuilderWizard));
+                    schemaLoader.Visible = false;
+                    tableList.LoadTables((wizardEngine as BuilderWizard).databaseSchema);
+                    viewList.LoadViews((wizardEngine as BuilderWizard).databaseSchema);
+                    functionList.LoadFunctions((wizardEngine as BuilderWizard).databaseSchema);
+                    (wizardEngine as BuilderWizard).pgormBuilder.SendMessage(null, BuilderMessageType.Major, "Preparing controls. Please wait...");
+                    SetContentState(true);
+                    Cursor = Cursors.Default;
+                }
+                catch (Exception ex)
+                {
+                    ExceptionForm exForm = new ExceptionForm("Reading database schema failed due internal exception.\n", ex);
+                    exForm.ShowDialog();
+                    Application.Exit();
+                }
             }
         }
 

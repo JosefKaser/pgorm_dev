@@ -50,6 +50,12 @@ namespace PGORMWizard.Pages
             picLogo.Image = Helper.PGLogo;
             lblPageTitle.Text = "PostgreSQL Database Server";
             lblSubTitle.Text = "Please provide connection information";
+#if DEBUG
+            txtServer.Text = "localhost";
+            txtDatabase.Text = "testdb";
+            txtUsername.Text = "postgres";
+            txtPassword.Text = "postgres";
+#endif
         }
 
         protected override bool ValidatePage()
