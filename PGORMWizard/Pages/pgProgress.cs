@@ -46,5 +46,13 @@ namespace PGORMWizard.Pages
             txtReport.ScrollToCaret();
             Application.DoEvents();
         }
+
+        private void cmdCommand_Click(object sender, EventArgs e)
+        {
+            if (!wizardEngine.IsProcessing)
+            {
+                wizardEngine.CancelWizardProcess();
+            }
+        }
     }
 }

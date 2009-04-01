@@ -54,6 +54,10 @@ namespace PGORMWizard.Pages
             this.MainGroupBox.Controls.Add(this.txtReport);
             this.MainGroupBox.Controls.SetChildIndex(this.txtReport, 0);
             // 
+            // cmdCommand
+            // 
+            this.cmdCommand.Click += new System.EventHandler(this.cmdCommand_Click);
+            // 
             // txtReport
             // 
             this.txtReport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)

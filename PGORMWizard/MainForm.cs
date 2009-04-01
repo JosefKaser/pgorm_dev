@@ -46,6 +46,7 @@ namespace PGORMWizard
         bool ProcessWizard()
         {
             bool result = true;
+            wizEngine.pgProgress.EnableCancelButton = false;
             wizEngine.SetupProgressBar(2);
             wizEngine.pgormBuilder.OnBuildStep += new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             wizEngine.pgormBuilder.SendMessage(this,BuilderMessageType.Major, "Preparing...");
@@ -66,6 +67,7 @@ namespace PGORMWizard
             }
             finally
             {
+                wizEngine.pgProgress.EnableCancelButton = true;
                 wizEngine.pgormBuilder.OnBuildStep -= new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             }
             return result;
