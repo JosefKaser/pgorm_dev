@@ -47,7 +47,7 @@ namespace PGORMWizard
         {
             bool result = true;
             wizEngine.pgProgress.EnableCancelButton = false;
-            wizEngine.SetupProgressBar(2);
+            wizEngine.SetupProgressBar(9);
             wizEngine.pgormBuilder.OnBuildStep += new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             wizEngine.pgormBuilder.SendMessage(this,BuilderMessageType.Major, "Preparing...");
             try
@@ -70,11 +70,22 @@ namespace PGORMWizard
                 wizEngine.pgProgress.EnableCancelButton = true;
                 wizEngine.pgormBuilder.OnBuildStep -= new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             }
+
+            // animate progress to end
+            for (int a = 0; a != 5; a++)
+                wizEngine.ReportProgress("Finished.");
+
+            MessageBox.Show(wizEngine.HostForm, "Project done.", wizEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             return result;
         }
 
         void pgormBuilder_OnBuildStep(object sender, PGORM.BuilderEventArgs e)
         {
+            if (e.MessageType == BuilderMessageType.Major)
+            {
+                System.Diagnostics.Debug.WriteLine("A");
+            }
+
             if (e.MessageType == BuilderMessageType.Major ||
                 e.MessageType == BuilderMessageType.Error)
                 wizEngine.ReportProgress(e.Message);

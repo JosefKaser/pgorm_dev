@@ -33,7 +33,7 @@ namespace PGORM
 
         public override void Build()
         {
-            SendMessage("Creating helper classes",BuilderMessageType.Major);
+            SendMessage("Creating helper classes...",BuilderMessageType.Major);
 
             StringTemplate st;
 

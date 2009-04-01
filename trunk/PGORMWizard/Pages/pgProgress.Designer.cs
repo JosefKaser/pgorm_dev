@@ -1,19 +1,4 @@
-/*-------------------------------------------------------------------------
- * pgProgress.Designer.cs
- *
- * This file is part of the PGORM project.
- * http://pgorm.googlecode.com/
- *
- * Copyright (c) 2002-2009, TrueSoftware B.V.
- *
- * IDENTIFICATION
- * 
- *  $Id$
- * 	$HeadURL$
- * 	
- *-------------------------------------------------------------------------
- */
-namespace PGORMWizard.Pages
+﻿namespace PGORMWizard.Pages
 {
     partial class pgProgress
     {
@@ -43,48 +28,10 @@ namespace PGORMWizard.Pages
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtReport = new System.Windows.Forms.RichTextBox();
-            this.MainGroupBox.SuspendLayout();
-            this.panelTextHolder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // MainGroupBox
-            // 
-            this.MainGroupBox.Controls.Add(this.txtReport);
-            this.MainGroupBox.Controls.SetChildIndex(this.txtReport, 0);
-            // 
-            // cmdCommand
-            // 
-            this.cmdCommand.Click += new System.EventHandler(this.cmdCommand_Click);
-            // 
-            // txtReport
-            // 
-            this.txtReport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtReport.Location = new System.Drawing.Point(17, 118);
-            this.txtReport.Name = "txtReport";
-            this.txtReport.ReadOnly = true;
-            this.txtReport.Size = new System.Drawing.Size(460, 142);
-            this.txtReport.TabIndex = 5;
-            this.txtReport.Text = "";
-            // 
-            // pgProgress
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "pgProgress";
-            this.MainGroupBox.ResumeLayout(false);
-            this.panelTextHolder.ResumeLayout(false);
-            this.panelTextHolder.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
-            this.ResumeLayout(false);
-
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox txtReport;
     }
 }

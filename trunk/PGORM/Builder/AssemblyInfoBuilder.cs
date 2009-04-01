@@ -31,7 +31,7 @@ namespace PGORM
 
         public override void Build()
         {
-            SendMessage("Creating AssemblyInfo",BuilderMessageType.Major);
+            SendMessage("Creating AssemblyInfo...",BuilderMessageType.Major);
             StringTemplate st = GetTemplate("assembly_info");
             st.SetAttribute("project", project);
             st.SetAttribute("project_guid", vsproject.ProjectGuild);

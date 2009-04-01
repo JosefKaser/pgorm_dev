@@ -1,4 +1,4 @@
-/*-------------------------------------------------------------------------
+﻿/*-------------------------------------------------------------------------
  * pgProgress.cs
  *
  * This file is part of the PGORM project.
@@ -26,10 +26,15 @@ namespace PGORMWizard.Pages
 {
     public partial class pgProgress : TrueSoftware.Framework.Wizard.WizardProgressPage
     {
+        RichTextBox txtReport;
+
         public pgProgress()
         {
             InitializeComponent();
             Load += new EventHandler(pgProgress_Load);
+            txtReport = new RichTextBox();
+            txtReport.Dock = DockStyle.Fill;
+            tableLayoutPanel.Controls.Add(txtReport, 0, 2);
         }
 
         void pgProgress_Load(object sender, EventArgs e)
