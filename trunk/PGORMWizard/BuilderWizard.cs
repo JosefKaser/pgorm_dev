@@ -52,6 +52,7 @@ namespace PGORMWizard
             AddPage(new Pages.pgSelectProject());
             AddPage(new Pages.pgDbConnection());
             AddPage(new Pages.pgSelectDbObjects());
+            AddPage(new Pages.pgAssemblyInfo());
             AddPage(new Pages.pgProjectOptions());
             pgProgress = new PGORMWizard.Pages.pgProgress();
             AddPage(pgProgress);

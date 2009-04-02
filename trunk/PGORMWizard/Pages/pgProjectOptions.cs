@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 namespace PGORMWizard.Pages
 {
-    public partial class pgProjectOptions : TrueSoftware.Framework.Wizard.WizardLastPage
+    public partial class pgProjectOptions : TrueSoftware.Framework.Wizard.WizardDefaultPage
     {
         public pgProjectOptions()
         {
@@ -41,6 +41,7 @@ namespace PGORMWizard.Pages
 
         protected override bool ValidatePage()
         {
+            SetNextPage(typeof(pgAssemblyInfo));
             if (
                 txtRootNS.Text.Trim() != "" &&
                 folderCompilerOutput.SelectedValue.Trim() != ""
