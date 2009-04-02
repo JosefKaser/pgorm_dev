@@ -100,6 +100,7 @@ namespace PGORMWizard.Pages
             this.chkSaveSources.TabIndex = 3;
             this.chkSaveSources.Text = "&Save generated sources?";
             this.chkSaveSources.UseVisualStyleBackColor = true;
+            this.chkSaveSources.Visible = false;
             // 
             // pgProjectOptions
             // 

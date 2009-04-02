@@ -80,6 +80,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CodeTemplates.resx</DependentUpon>
     </Compile>
+    <Compile Include="Core\AssemblyInfoData.cs" />
     <Compile Include="Core\Builder.cs" />
     <Compile Include="Core\PGORMLoaggerException.cs" />
     <Compile Include="Core\PGORMLogger.cs" />

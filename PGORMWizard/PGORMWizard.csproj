@@ -102,6 +102,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\pgAssemblyInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgAssemblyInfo.Designer.cs">
+      <DependentUpon>pgAssemblyInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\pgProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -151,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgAssemblyInfo.resx">
+      <DependentUpon>pgAssemblyInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\pgDbConnection.resx">
       <DependentUpon>pgDbConnection.cs</DependentUpon>
