@@ -85,11 +85,6 @@ namespace PGORMWizard
 
         void pgormBuilder_OnBuildStep(object sender, PGORM.BuilderEventArgs e)
         {
-            if (e.MessageType == BuilderMessageType.Major)
-            {
-                System.Diagnostics.Debug.WriteLine("A");
-            }
-
             if (e.MessageType == BuilderMessageType.Major ||
                 e.MessageType == BuilderMessageType.Error)
                 wizEngine.ReportProgress(e.Message);

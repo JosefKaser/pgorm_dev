@@ -39,6 +39,11 @@ namespace PGORMWizard
             pgormBuilder = new Builder();
 
             projectFile = new ProjectFile();
+
+            string[] current_asm_info = System.Reflection.Assembly.GetExecutingAssembly().FullName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string current_asm_version = current_asm_info[1].Split(new char[] { '=' })[1];
+
+            projectFile.AssemblyInfo.Description = "This assembly is created by PGORM Wizard v" + current_asm_version;
             projectFile.Tables = new List<string>();
             projectFile.Views = new List<string>();
             projectFile.Functions = new List<string>();
