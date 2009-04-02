@@ -22,9 +22,35 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace PGORM
 {
+    public class AssemblyInfo
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Configuration { get; set; }
+        public string Company { get; set; }
+        public string Product { get; set; }
+        public string Copyright { get; set; }
+        public string Trademark { get; set; }
+        public string Culture { get; set; }
+        public string Guid { get; set; }
+        public string Version { get; set; }
+        public string FileVersion { get; set; }
+
+        public AssemblyInfo()
+        {
+            Company = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "RegisteredOrganization", "");
+            Copyright = string.Format("Copyright © {0} {1}", Company, DateTime.Now.Year);
+            Guid = System.Guid.NewGuid().ToString("N");
+            Version = "1.0.0.0";
+            FileVersion = "1.0.0.0";
+        }
+    }
+
+    #region ProjectFile
     public class ProjectFile
     {
         protected string UUID;
@@ -41,7 +67,7 @@ namespace PGORM
             {
                 p_RootNamespace = value;
             }
-        } 
+        }
         #endregion
 
         public string OutputFolder { get; set; }
@@ -60,6 +86,7 @@ namespace PGORM
         public List<string> ProjectRefs;
         public List<string> UsingLibs { get; set; }
         public Version Version { get; set; }
+        public AssemblyInfo AssemblyInfo;
 
         #region CPROJName
         public string CPROJName
@@ -68,19 +95,19 @@ namespace PGORM
             {
                 return string.Format(@"{0}\{1}.csproj", ProjectOutputFolder, AssemblyName);
             }
-        } 
+        }
         #endregion
 
         public string ObjectClassPostfix { get; private set; }
         public string AssemblyName { get { return RootNamespace; } }
 
-#region ProjectOutputFolder
-		#if DEBUG
+        #region ProjectOutputFolder
+#if DEBUG
         public string ProjectOutputFolder { get { return string.Format("{0}\\{1}", OutputFolder, RootNamespace); } }
 #else
         public string ProjectOutputFolder { get { return string.Format("{0}\\{1}_{2}", OutputFolder, RootNamespace, UUID); } }
-#endif 
-	#endregion
+#endif
+        #endregion
 
         #region DatabaseConnectionString
         public string DatabaseConnectionString
@@ -96,14 +123,14 @@ namespace PGORM
                     DatabaseConnectionOptions
                     );
             }
-        } 
+        }
         #endregion
 
         #region ProjectFile
         public ProjectFile()
         {
             UsingLibs = new List<string>();
-            UUID = Guid.NewGuid().ToString("N").ToUpper();
+            UUID = Guid.NewGuid().ToString();
             CompilerOutputFolder = @"bin\Release";
             DatabaseServer = "localhost";
             DatabaseName = "testdb";
@@ -125,7 +152,18 @@ namespace PGORM
             RemoveTablePrefix = new List<string>();
             ProjectRefs = new List<string>();
             ObjectClassPostfix = "Object";
-        } 
+            AssemblyInfo = new AssemblyInfo();
+            AssemblyInfo.Product = RootNamespace;
+            AssemblyInfo.Title = RootNamespace;
+            AssemblyInfo.Guid = UUID;
+#if DEBUG
+            AssemblyInfo.Configuration = "Debug";
+#elif RELEASE
+            AssemblyInfo.Configuration = "Release";
+#endif
+
+        }
         #endregion
-    }
+    } 
+    #endregion
 }
