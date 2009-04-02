@@ -24,6 +24,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
+using System.Windows.Forms;
 
 namespace PGORM
 {
@@ -90,6 +91,17 @@ namespace PGORM
 
             vsDataProject.AddCompileItem(
                 "DatabaseOperation.cs", DataAccessFiles.DatabaseOperation.Replace("MY_NAMESPACE", dataAccessProject.RootNamespace));
+
+            string[] current_asm_info = System.Reflection.Assembly.GetExecutingAssembly().FullName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string current_asm_version = current_asm_info[1].Split(new char[] { '=' })[1];
+            dataAccessProject.AssemblyInfo.Title = dataAccessProject.RootNamespace;
+            dataAccessProject.AssemblyInfo.Product = dataAccessProject.RootNamespace;
+            dataAccessProject.AssemblyInfo.Version = current_asm_version;
+            dataAccessProject.AssemblyInfo.FileVersion = current_asm_version;
+            dataAccessProject.AssemblyInfo.Description = objectProject.AssemblyInfo.Description;
+
+            AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(dataAccessProject, vsDataProject, this);
+            asmInfoBuilder.Build();
 
             dataAccessProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Npgsql.dll");
 
