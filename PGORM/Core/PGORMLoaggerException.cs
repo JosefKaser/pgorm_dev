@@ -37,7 +37,9 @@ namespace PGORM
         {
             buildEventArgs = p_BuildEventArgs;
             ProjectPath = p_ProjectPath;
-            FileContent = File.ReadAllText(string.Format(@"{0}\{1}",Path.GetDirectoryName(ProjectPath),buildEventArgs.File));
+            string failFile = string.Format(@"{0}\{1}", Path.GetDirectoryName(ProjectPath), buildEventArgs.File);
+            if(File.Exists(failFile))
+                FileContent = File.ReadAllText(failFile);
         }
 
         public override string ToString()
