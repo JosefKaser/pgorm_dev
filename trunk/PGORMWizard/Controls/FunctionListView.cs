@@ -40,16 +40,19 @@ namespace PGORMWizard.Controls
 
         public void LoadFunctions(PGORM.DatabaseSchema dbschema)
         {
-            Items.Clear();
-            foreach (Function item in dbschema.StoredFunctions)
+            if (dbschema.StoredFunctions != null && dbschema.StoredFunctions.Count != 0)
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = item.FunctionName;
-                lvi.Tag = item.FunctionName;
-                lvi.ImageIndex = 2;
-                lvi.SubItems.Add(item.DB_ReturnType);
-                lvi.SubItems.Add(item.ToStringParamTypes());
-                Items.Add(lvi);
+                Items.Clear();
+                foreach (Function item in dbschema.StoredFunctions)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = item.FunctionName;
+                    lvi.Tag = item.FunctionName;
+                    lvi.ImageIndex = 2;
+                    lvi.SubItems.Add(item.DB_ReturnType);
+                    lvi.SubItems.Add(item.ToStringParamTypes());
+                    Items.Add(lvi);
+                }
             }
         }
     }

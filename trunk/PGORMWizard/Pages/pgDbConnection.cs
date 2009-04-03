@@ -52,7 +52,7 @@ namespace PGORMWizard.Pages
             lblSubTitle.Text = "Please provide connection information";
 #if DEBUG
             txtServer.Text = "localhost";
-            txtDatabase.Text = "testdb";
+            txtDatabase.Text = "testdb2";
             txtUsername.Text = "postgres";
             txtPassword.Text = "postgres";
 #endif

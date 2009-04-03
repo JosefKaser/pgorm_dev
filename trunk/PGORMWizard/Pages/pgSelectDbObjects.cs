@@ -85,8 +85,10 @@ namespace PGORMWizard.Pages
         {
             if (current_conn_str != wizardEngine.Parameters[ParameterName.db_connection_string].ToString())
             {
+#if (!DEBUG)
                 try
                 {
+#endif
                     current_conn_str = wizardEngine.Parameters[ParameterName.db_connection_string].ToString();
                     Cursor = Cursors.WaitCursor;
                     schemaLoader = new PGORMWizard.Controls.SchemaLoader();
@@ -104,6 +106,7 @@ namespace PGORMWizard.Pages
                     (wizardEngine as BuilderWizard).pgormBuilder.SendMessage(null, BuilderMessageType.Major, "Preparing controls. Please wait...");
                     SetContentState(true);
                     Cursor = Cursors.Default;
+#if (!DEBUG)
                 }
                 catch (Exception ex)
                 {
@@ -111,6 +114,7 @@ namespace PGORMWizard.Pages
                     exForm.ShowDialog();
                     Application.Exit();
                 }
+#endif
             }
         }
 
