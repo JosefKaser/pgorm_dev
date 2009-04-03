@@ -47,6 +47,7 @@ namespace PGORM
             Guid = System.Guid.NewGuid().ToString("N");
             Version = "1.0.0.0";
             FileVersion = "1.0.0.0";
+            Culture = Application.CurrentCulture.ToString();
         }
     }
 }

@@ -28,6 +28,34 @@ namespace PGORMWizard.Pages
         public override void EnteringThisPage()
         {
             chkSNK_CheckedChanged(null, null);
+            AssemblyInfo info = (wizardEngine as BuilderWizard).projectFile.AssemblyInfo;
+            txtTitle.Text = info.Title;
+            txtDescription.Text = info.Description;
+            txtConfiguration.Text = info.Configuration;
+            txtCompany.Text = info.Company;
+            txtProduct.Text = info.Product;
+            txtCopyright.Text = info.Copyright;
+            txtTrademark.Text = info.Trademark;
+            txtCulture.Text = info.Culture;
+            txtGuid.Text = info.Guid;
+            txtVersion.Text = info.Version;
+            txtFileVersion.Text = info.FileVersion;
+        }
+
+        public override void LeavingThisPage()
+        {
+            AssemblyInfo info = (wizardEngine as BuilderWizard).projectFile.AssemblyInfo;
+            info.Title = txtTitle.Text;
+            info.Description = txtDescription.Text;
+            info.Configuration = txtConfiguration.Text;
+            info.Company = txtCompany.Text;
+            info.Product = txtProduct.Text;
+            info.Copyright = txtCopyright.Text;
+            info.Trademark = txtTrademark.Text;
+            info.Culture = txtCulture.Text;
+            info.Guid = txtGuid.Text;
+            info.Version = txtVersion.Text;
+            info.FileVersion = txtFileVersion.Text;
         }
 
         protected override bool ValidatePage()
