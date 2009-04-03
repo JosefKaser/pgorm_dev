@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Reflection;
 using TrueSoftware.Framework.Wizard;
 using PGORM;
 
@@ -37,6 +38,9 @@ namespace PGORMWizard
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            string[] asmInfo = Assembly.GetExecutingAssembly().FullName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string version = asmInfo[1].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1];
+            this.Text = "PGORM Wizard v" + version;
             wizEngine = new BuilderWizard(this, CancelWizard, ProcessWizard);
             wizEngine.StartWizard();
         }
