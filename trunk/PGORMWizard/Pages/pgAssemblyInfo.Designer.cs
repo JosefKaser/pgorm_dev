@@ -30,27 +30,27 @@
         {
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtTitle = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.txtConfiguration = new System.Windows.Forms.TextBox();
+            this.txtCompany = new System.Windows.Forms.TextBox();
+            this.txtProduct = new System.Windows.Forms.TextBox();
+            this.txtCopyright = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.txtTrademark = new System.Windows.Forms.TextBox();
+            this.txtCulture = new System.Windows.Forms.TextBox();
+            this.txtGuid = new System.Windows.Forms.TextBox();
+            this.txtVersion = new System.Windows.Forms.TextBox();
+            this.txtFileVersion = new System.Windows.Forms.TextBox();
             this.selectKeyFile = new TrueSoftware.Framework.Wizard.SelectFileControl();
             this.chkSNK = new System.Windows.Forms.CheckBox();
             this.MainGroupBox.SuspendLayout();
@@ -72,29 +72,29 @@
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 198F));
             this.tableLayoutPanel.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.textBox1, 1, 0);
+            this.tableLayoutPanel.Controls.Add(this.txtTitle, 1, 0);
             this.tableLayoutPanel.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel.Controls.Add(this.label3, 0, 2);
             this.tableLayoutPanel.Controls.Add(this.label4, 0, 3);
             this.tableLayoutPanel.Controls.Add(this.label5, 0, 4);
             this.tableLayoutPanel.Controls.Add(this.label6, 0, 5);
-            this.tableLayoutPanel.Controls.Add(this.textBox2, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.textBox3, 1, 2);
-            this.tableLayoutPanel.Controls.Add(this.textBox4, 1, 3);
-            this.tableLayoutPanel.Controls.Add(this.textBox5, 1, 4);
-            this.tableLayoutPanel.Controls.Add(this.textBox6, 1, 5);
+            this.tableLayoutPanel.Controls.Add(this.txtDescription, 1, 1);
+            this.tableLayoutPanel.Controls.Add(this.txtConfiguration, 1, 2);
+            this.tableLayoutPanel.Controls.Add(this.txtCompany, 1, 3);
+            this.tableLayoutPanel.Controls.Add(this.txtProduct, 1, 4);
+            this.tableLayoutPanel.Controls.Add(this.txtCopyright, 1, 5);
             this.tableLayoutPanel.Controls.Add(this.label7, 3, 0);
             this.tableLayoutPanel.Controls.Add(this.label8, 3, 1);
             this.tableLayoutPanel.Controls.Add(this.label9, 3, 2);
             this.tableLayoutPanel.Controls.Add(this.label10, 3, 3);
             this.tableLayoutPanel.Controls.Add(this.label11, 3, 4);
-            this.tableLayoutPanel.Controls.Add(this.textBox7, 4, 0);
-            this.tableLayoutPanel.Controls.Add(this.textBox8, 4, 1);
-            this.tableLayoutPanel.Controls.Add(this.textBox9, 4, 2);
-            this.tableLayoutPanel.Controls.Add(this.textBox10, 4, 3);
-            this.tableLayoutPanel.Controls.Add(this.textBox11, 4, 4);
+            this.tableLayoutPanel.Controls.Add(this.txtTrademark, 4, 0);
+            this.tableLayoutPanel.Controls.Add(this.txtCulture, 4, 1);
+            this.tableLayoutPanel.Controls.Add(this.txtGuid, 4, 2);
+            this.tableLayoutPanel.Controls.Add(this.txtVersion, 4, 3);
+            this.tableLayoutPanel.Controls.Add(this.txtFileVersion, 4, 4);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
@@ -120,13 +120,13 @@
             this.label1.Text = "Title";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox1
+            // txtTitle
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(81, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(144, 21);
-            this.textBox1.TabIndex = 1;
+            this.txtTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTitle.Location = new System.Drawing.Point(81, 3);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Size = new System.Drawing.Size(144, 21);
+            this.txtTitle.TabIndex = 1;
             // 
             // label2
             // 
@@ -183,45 +183,45 @@
             this.label6.Text = "Copyright";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox2
+            // txtDescription
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(81, 30);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(144, 21);
-            this.textBox2.TabIndex = 7;
+            this.txtDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtDescription.Location = new System.Drawing.Point(81, 30);
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(144, 21);
+            this.txtDescription.TabIndex = 7;
             // 
-            // textBox3
+            // txtConfiguration
             // 
-            this.textBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox3.Location = new System.Drawing.Point(81, 57);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(144, 21);
-            this.textBox3.TabIndex = 8;
+            this.txtConfiguration.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtConfiguration.Location = new System.Drawing.Point(81, 57);
+            this.txtConfiguration.Name = "txtConfiguration";
+            this.txtConfiguration.Size = new System.Drawing.Size(144, 21);
+            this.txtConfiguration.TabIndex = 8;
             // 
-            // textBox4
+            // txtCompany
             // 
-            this.textBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox4.Location = new System.Drawing.Point(81, 84);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(144, 21);
-            this.textBox4.TabIndex = 9;
+            this.txtCompany.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCompany.Location = new System.Drawing.Point(81, 84);
+            this.txtCompany.Name = "txtCompany";
+            this.txtCompany.Size = new System.Drawing.Size(144, 21);
+            this.txtCompany.TabIndex = 9;
             // 
-            // textBox5
+            // txtProduct
             // 
-            this.textBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox5.Location = new System.Drawing.Point(81, 111);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(144, 21);
-            this.textBox5.TabIndex = 10;
+            this.txtProduct.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtProduct.Location = new System.Drawing.Point(81, 111);
+            this.txtProduct.Name = "txtProduct";
+            this.txtProduct.Size = new System.Drawing.Size(144, 21);
+            this.txtProduct.TabIndex = 10;
             // 
-            // textBox6
+            // txtCopyright
             // 
-            this.textBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox6.Location = new System.Drawing.Point(81, 138);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(144, 21);
-            this.textBox6.TabIndex = 11;
+            this.txtCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCopyright.Location = new System.Drawing.Point(81, 138);
+            this.txtCopyright.Name = "txtCopyright";
+            this.txtCopyright.Size = new System.Drawing.Size(144, 21);
+            this.txtCopyright.TabIndex = 11;
             // 
             // label7
             // 
@@ -278,45 +278,46 @@
             this.label11.Text = "FileVersion";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox7
+            // txtTrademark
             // 
-            this.textBox7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox7.Location = new System.Drawing.Point(295, 3);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(192, 21);
-            this.textBox7.TabIndex = 17;
+            this.txtTrademark.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTrademark.Location = new System.Drawing.Point(295, 3);
+            this.txtTrademark.Name = "txtTrademark";
+            this.txtTrademark.Size = new System.Drawing.Size(192, 21);
+            this.txtTrademark.TabIndex = 17;
             // 
-            // textBox8
+            // txtCulture
             // 
-            this.textBox8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox8.Location = new System.Drawing.Point(295, 30);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(192, 21);
-            this.textBox8.TabIndex = 18;
+            this.txtCulture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCulture.Location = new System.Drawing.Point(295, 30);
+            this.txtCulture.Name = "txtCulture";
+            this.txtCulture.Size = new System.Drawing.Size(192, 21);
+            this.txtCulture.TabIndex = 18;
             // 
-            // textBox9
+            // txtGuid
             // 
-            this.textBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox9.Location = new System.Drawing.Point(295, 57);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(192, 21);
-            this.textBox9.TabIndex = 19;
+            this.txtGuid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGuid.Location = new System.Drawing.Point(295, 57);
+            this.txtGuid.Name = "txtGuid";
+            this.txtGuid.ReadOnly = true;
+            this.txtGuid.Size = new System.Drawing.Size(192, 21);
+            this.txtGuid.TabIndex = 19;
             // 
-            // textBox10
+            // txtVersion
             // 
-            this.textBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox10.Location = new System.Drawing.Point(295, 84);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(192, 21);
-            this.textBox10.TabIndex = 20;
+            this.txtVersion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtVersion.Location = new System.Drawing.Point(295, 84);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Size = new System.Drawing.Size(192, 21);
+            this.txtVersion.TabIndex = 20;
             // 
-            // textBox11
+            // txtFileVersion
             // 
-            this.textBox11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox11.Location = new System.Drawing.Point(295, 111);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(192, 21);
-            this.textBox11.TabIndex = 21;
+            this.txtFileVersion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFileVersion.Location = new System.Drawing.Point(295, 111);
+            this.txtFileVersion.Name = "txtFileVersion";
+            this.txtFileVersion.Size = new System.Drawing.Size(192, 21);
+            this.txtFileVersion.TabIndex = 21;
             // 
             // selectKeyFile
             // 
@@ -362,27 +363,27 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox txtDescription;
+        private System.Windows.Forms.TextBox txtConfiguration;
+        private System.Windows.Forms.TextBox txtCompany;
+        private System.Windows.Forms.TextBox txtProduct;
+        private System.Windows.Forms.TextBox txtCopyright;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox txtTrademark;
+        private System.Windows.Forms.TextBox txtCulture;
+        private System.Windows.Forms.TextBox txtGuid;
+        private System.Windows.Forms.TextBox txtVersion;
+        private System.Windows.Forms.TextBox txtFileVersion;
         private System.Windows.Forms.CheckBox chkSNK;
         private TrueSoftware.Framework.Wizard.SelectFileControl selectKeyFile;
     }
