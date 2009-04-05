@@ -29,8 +29,6 @@ namespace PGORM
     #region ProjectFile
     public class ProjectFile
     {
-        protected string UUID;
-
         #region RootNamespace
         private string p_RootNamespace;
         public string RootNamespace
@@ -46,6 +44,9 @@ namespace PGORM
         }
         #endregion
 
+        #region Props
+        protected string UUID;
+        [XmlIgnore]
         public string OutputFolder { get; set; }
         public string CompilerOutputFolder { get; set; }
         public string DatabaseServer { get; set; }
@@ -57,12 +58,20 @@ namespace PGORM
         public List<string> Tables;
         public List<string> Views;
         public List<string> Functions;
+        [XmlIgnore]
         public List<Table> CutsomQueries;
         public List<string> RemoveTablePrefix;
-        public List<string> ProjectRefs;
+        [XmlIgnore]
+        public List<string> ProjectRefs { get; set; }
+        [XmlIgnore]
         public List<string> UsingLibs { get; set; }
+        [XmlIgnore]
         public Version Version { get; set; }
         public AssemblyInfo AssemblyInfo;
+        [XmlIgnore]
+        public string ObjectClassPostfix { get; private set; }
+        public string AssemblyName { get { return RootNamespace; } } 
+        #endregion
 
         #region CPROJName
         public string CPROJName
@@ -73,9 +82,6 @@ namespace PGORM
             }
         }
         #endregion
-
-        public string ObjectClassPostfix { get; private set; }
-        public string AssemblyName { get { return RootNamespace; } }
 
         #region ProjectOutputFolder
 #if DEBUG
@@ -140,6 +146,14 @@ namespace PGORM
 
         }
         #endregion
+
+        public static void SaveProject(ProjectFile p_ProjectFile, string filename)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(ProjectFile));
+            FileStream fs = new FileStream(filename, FileMode.OpenOrCreate);
+            ser.Serialize(fs, p_ProjectFile);
+            fs.Close();
+        }
     } 
     #endregion
 }

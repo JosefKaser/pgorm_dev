@@ -27,6 +27,7 @@ namespace PGORMWizard
         public static string project_type = "project_type";
         public static string selected_project = "selected_project";
         public static string db_connection_string = "db_connection_string";
+        public static string save_project_file = "save_project_file";
     } 
     #endregion
 

@@ -55,6 +55,7 @@ namespace PGORMWizard
             try
             {
                 wizEngine.pgormBuilder.Build(wizEngine.projectFile, wizEngine.databaseSchema);
+                SaveProjectFile();
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Major, "Done.");
             }
             catch (Exception ex)
@@ -85,6 +86,12 @@ namespace PGORMWizard
                 MessageBox.Show(wizEngine.HostForm, "Project done.", wizEngine.HostForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             return result;
+        }
+
+        void SaveProjectFile()
+        {
+            if(wizEngine.Parameters.ContainsKey(ParameterName.save_project_file))
+                ProjectFile.SaveProject(wizEngine.projectFile, wizEngine.Parameters[ParameterName.save_project_file].ToString()); 
         }
 
         void pgormBuilder_OnBuildStep(object sender, PGORM.BuilderEventArgs e)

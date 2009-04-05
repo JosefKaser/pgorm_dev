@@ -46,7 +46,7 @@ namespace PGORMWizard.Pages
             this.label1 = new System.Windows.Forms.Label();
             this.txtRootNS = new System.Windows.Forms.TextBox();
             this.folderCompilerOutput = new TrueSoftware.Framework.Wizard.SelectFileControl();
-            this.chkSaveSources = new System.Windows.Forms.CheckBox();
+            this.savePrpjectFile = new TrueSoftware.Framework.Wizard.SelectFileControl();
             this.MainGroupBox.SuspendLayout();
             this.panelTextHolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -54,7 +54,7 @@ namespace PGORMWizard.Pages
             // 
             // MainGroupBox
             // 
-            this.MainGroupBox.Controls.Add(this.chkSaveSources);
+            this.MainGroupBox.Controls.Add(this.savePrpjectFile);
             this.MainGroupBox.Controls.Add(this.folderCompilerOutput);
             this.MainGroupBox.Controls.Add(this.txtRootNS);
             this.MainGroupBox.Controls.Add(this.label1);
@@ -62,7 +62,7 @@ namespace PGORMWizard.Pages
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 21);
+            this.label1.Location = new System.Drawing.Point(9, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 0;
@@ -70,9 +70,9 @@ namespace PGORMWizard.Pages
             // 
             // txtRootNS
             // 
-            this.txtRootNS.Location = new System.Drawing.Point(15, 38);
+            this.txtRootNS.Location = new System.Drawing.Point(12, 38);
             this.txtRootNS.Name = "txtRootNS";
-            this.txtRootNS.Size = new System.Drawing.Size(291, 21);
+            this.txtRootNS.Size = new System.Drawing.Size(294, 21);
             this.txtRootNS.TabIndex = 1;
             // 
             // folderCompilerOutput
@@ -87,20 +87,25 @@ namespace PGORMWizard.Pages
             this.folderCompilerOutput.Padding = new System.Windows.Forms.Padding(2);
             this.folderCompilerOutput.SelectedValue = "";
             this.folderCompilerOutput.SelectionMode = TrueSoftware.Framework.Wizard.SelectFileMode.SelectFolder;
-            this.folderCompilerOutput.Size = new System.Drawing.Size(329, 48);
+            this.folderCompilerOutput.Size = new System.Drawing.Size(294, 48);
             this.folderCompilerOutput.TabIndex = 2;
             this.folderCompilerOutput.ValueLocked = true;
             // 
-            // chkSaveSources
+            // savePrpjectFile
             // 
-            this.chkSaveSources.AutoSize = true;
-            this.chkSaveSources.Location = new System.Drawing.Point(15, 119);
-            this.chkSaveSources.Name = "chkSaveSources";
-            this.chkSaveSources.Size = new System.Drawing.Size(148, 17);
-            this.chkSaveSources.TabIndex = 3;
-            this.chkSaveSources.Text = "&Save generated sources?";
-            this.chkSaveSources.UseVisualStyleBackColor = true;
-            this.chkSaveSources.Visible = false;
+            this.savePrpjectFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.savePrpjectFile.Caption = "Save This Project To:";
+            this.savePrpjectFile.Filter = "PGORM Project|*.pgorm";
+            this.savePrpjectFile.InitialValue = "";
+            this.savePrpjectFile.Location = new System.Drawing.Point(12, 119);
+            this.savePrpjectFile.Name = "savePrpjectFile";
+            this.savePrpjectFile.Padding = new System.Windows.Forms.Padding(2);
+            this.savePrpjectFile.SelectedValue = "";
+            this.savePrpjectFile.SelectionMode = TrueSoftware.Framework.Wizard.SelectFileMode.SaveFile;
+            this.savePrpjectFile.Size = new System.Drawing.Size(294, 48);
+            this.savePrpjectFile.TabIndex = 5;
+            this.savePrpjectFile.ValueLocked = true;
             // 
             // pgProjectOptions
             // 
@@ -121,7 +126,7 @@ namespace PGORMWizard.Pages
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtRootNS;
         private TrueSoftware.Framework.Wizard.SelectFileControl folderCompilerOutput;
-        private System.Windows.Forms.CheckBox chkSaveSources;
+        private TrueSoftware.Framework.Wizard.SelectFileControl savePrpjectFile;
 
     }
 }

@@ -62,6 +62,9 @@ namespace PGORMWizard.Pages
 
             ((BuilderWizard)wizardEngine).projectFile.CompilerOutputFolder =
             folderCompilerOutput.InitialValue;
+
+            if (savePrpjectFile.SelectedValue != "")
+                wizardEngine.Parameters[ParameterName.save_project_file] = savePrpjectFile.SelectedValue;
         }
 
         protected override void InitializePage()
