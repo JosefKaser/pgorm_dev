@@ -42,7 +42,7 @@ namespace PGORM
 
         public AssemblyInfo()
         {
-            Company = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "RegisteredOrganization", "");
+            Company = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "RegisteredOrganization", "none");
             Copyright = string.Format("Copyright © {0} {1}", Company, DateTime.Now.Year);
             Guid = System.Guid.NewGuid().ToString("N");
             Version = "1.0.0.0";

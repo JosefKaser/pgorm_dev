@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Diagnostics;
 
 namespace PGORM
 {
@@ -364,11 +365,14 @@ namespace PGORM
                               where c.TableName == index.TablenName &&
                               pg_index.ColumnIndexes.FindAll(i => i == c.ColumnIndex).Count != 0
                               select c;
+                // some indexes have compusite columns which cannot be operated on
+                if (columns.Count() != 0)
+                {
+                    foreach (Column col in columns.Reverse())
+                        index.Columns.Add(col);
 
-                foreach (Column col in columns.Reverse())
-                    index.Columns.Add(col);
-
-                AllIndexes.Add(index);
+                    AllIndexes.Add(index);
+                }
             }
         }
         #endregion
