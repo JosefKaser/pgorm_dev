@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace PGORM
 {
@@ -191,6 +192,9 @@ namespace PGORM
         #region SendMessage
         public void SendMessage(object sender,BuilderMessageType messageType, string data, params object[] args)
         {
+#if DEBUG   
+            Debug.WriteLine(string.Format(data, args));
+#endif
             if (OnBuildStep != null)
             {
                 OnBuildStep(sender, new BuilderEventArgs(string.Format(data, args),messageType));
