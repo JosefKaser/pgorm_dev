@@ -52,6 +52,7 @@ namespace PGORM
         public string DatabaseServer { get; set; }
         public string DatabaseName { get; set; }
         public string DatabaseUsername { get; set; }
+        [XmlIgnore]
         public string DatabasePassword { get; set; }
         public string DatabaseConnectionPort { get; set; }
         public string DatabaseConnectionOptions { get; set; }
