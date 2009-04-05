@@ -148,6 +148,7 @@
     <Content Include="Template\Exception.txt" />
     <Content Include="Template\Function.stg.txt" />
     <Content Include="Template\HelperClasses.stg.txt" />
+    <Content Include="Template\ReservedWords.txt" />
     <Content Include="Template\VS2008_Project.stg.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
