@@ -90,6 +90,7 @@
     <Compile Include="Controls\ViewListView.Designer.cs">
       <DependentUpon>ViewListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess.cs" />
     <Compile Include="ExceptionForm.cs">
       <SubType>Form</SubType>
     </Compile>

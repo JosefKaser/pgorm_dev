@@ -44,17 +44,17 @@ namespace PGORMWizard.Pages
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblServer = new System.Windows.Forms.Label();
             this.txtServer = new System.Windows.Forms.TextBox();
-            this.txtDatabase = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
+            this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
+            this.lblDatabase = new System.Windows.Forms.Label();
+            this.cboDatabase = new System.Windows.Forms.ComboBox();
+            this.lblPort = new System.Windows.Forms.Label();
             this.txtPort = new System.Windows.Forms.TextBox();
+            this.lblOptions = new System.Windows.Forms.Label();
             this.txtOptions = new System.Windows.Forms.TextBox();
             this.txtResult = new System.Windows.Forms.TextBox();
             this.btnTestDb = new System.Windows.Forms.Button();
@@ -73,20 +73,20 @@ namespace PGORMWizard.Pages
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.05013F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 79.94987F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lblServer, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtServer, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtDatabase, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.txtUsername, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.txtPassword, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblUsername, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtUsername, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lblPassword, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.txtPassword, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.lblDatabase, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.cboDatabase, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblPort, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.txtPort, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.lblOptions, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.txtOptions, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.txtResult, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.btnTestDb, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.txtResult, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.btnTestDb, 1, 6);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -102,27 +102,16 @@ namespace PGORMWizard.Pages
             this.tableLayoutPanel1.Size = new System.Drawing.Size(490, 257);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
-            // label1
+            // lblServer
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 27);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Server";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 27);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Database";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblServer.AutoSize = true;
+            this.lblServer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblServer.Location = new System.Drawing.Point(3, 0);
+            this.lblServer.Name = "lblServer";
+            this.lblServer.Size = new System.Drawing.Size(92, 27);
+            this.lblServer.TabIndex = 0;
+            this.lblServer.Text = "Server";
+            this.lblServer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtServer
             // 
@@ -130,75 +119,76 @@ namespace PGORMWizard.Pages
             this.txtServer.Location = new System.Drawing.Point(101, 3);
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(386, 21);
-            this.txtServer.TabIndex = 2;
+            this.txtServer.TabIndex = 0;
             // 
-            // txtDatabase
+            // lblUsername
             // 
-            this.txtDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDatabase.Location = new System.Drawing.Point(101, 30);
-            this.txtDatabase.Name = "txtDatabase";
-            this.txtDatabase.Size = new System.Drawing.Size(386, 21);
-            this.txtDatabase.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(3, 54);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(92, 27);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Username";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 81);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 27);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Password";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 108);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(92, 27);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Port";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 135);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(92, 27);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Options";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblUsername.Location = new System.Drawing.Point(3, 27);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(92, 27);
+            this.lblUsername.TabIndex = 4;
+            this.lblUsername.Text = "Username";
+            this.lblUsername.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtUsername
             // 
             this.txtUsername.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtUsername.Location = new System.Drawing.Point(101, 57);
+            this.txtUsername.Location = new System.Drawing.Point(101, 30);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(386, 21);
-            this.txtUsername.TabIndex = 8;
+            this.txtUsername.TabIndex = 1;
+            // 
+            // lblPassword
+            // 
+            this.lblPassword.AutoSize = true;
+            this.lblPassword.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblPassword.Location = new System.Drawing.Point(3, 54);
+            this.lblPassword.Name = "lblPassword";
+            this.lblPassword.Size = new System.Drawing.Size(92, 27);
+            this.lblPassword.TabIndex = 5;
+            this.lblPassword.Text = "Password";
+            this.lblPassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtPassword
             // 
             this.txtPassword.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPassword.Location = new System.Drawing.Point(101, 84);
+            this.txtPassword.Location = new System.Drawing.Point(101, 57);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(386, 21);
-            this.txtPassword.TabIndex = 9;
+            this.txtPassword.TabIndex = 2;
+            // 
+            // lblDatabase
+            // 
+            this.lblDatabase.AutoSize = true;
+            this.lblDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblDatabase.Location = new System.Drawing.Point(3, 81);
+            this.lblDatabase.Name = "lblDatabase";
+            this.lblDatabase.Size = new System.Drawing.Size(92, 27);
+            this.lblDatabase.TabIndex = 1;
+            this.lblDatabase.Text = "Database";
+            this.lblDatabase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cboDatabase
+            // 
+            this.cboDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cboDatabase.FormattingEnabled = true;
+            this.cboDatabase.Location = new System.Drawing.Point(101, 84);
+            this.cboDatabase.Name = "cboDatabase";
+            this.cboDatabase.Size = new System.Drawing.Size(386, 21);
+            this.cboDatabase.TabIndex = 3;
+            // 
+            // lblPort
+            // 
+            this.lblPort.AutoSize = true;
+            this.lblPort.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblPort.Location = new System.Drawing.Point(3, 108);
+            this.lblPort.Name = "lblPort";
+            this.lblPort.Size = new System.Drawing.Size(92, 27);
+            this.lblPort.TabIndex = 6;
+            this.lblPort.Text = "Port";
+            this.lblPort.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtPort
             // 
@@ -206,7 +196,18 @@ namespace PGORMWizard.Pages
             this.txtPort.Location = new System.Drawing.Point(101, 111);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(386, 21);
-            this.txtPort.TabIndex = 10;
+            this.txtPort.TabIndex = 4;
+            // 
+            // lblOptions
+            // 
+            this.lblOptions.AutoSize = true;
+            this.lblOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblOptions.Location = new System.Drawing.Point(3, 135);
+            this.lblOptions.Name = "lblOptions";
+            this.lblOptions.Size = new System.Drawing.Size(92, 27);
+            this.lblOptions.TabIndex = 7;
+            this.lblOptions.Text = "Options";
+            this.lblOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtOptions
             // 
@@ -214,21 +215,21 @@ namespace PGORMWizard.Pages
             this.txtOptions.Location = new System.Drawing.Point(101, 138);
             this.txtOptions.Name = "txtOptions";
             this.txtOptions.Size = new System.Drawing.Size(386, 21);
-            this.txtOptions.TabIndex = 11;
+            this.txtOptions.TabIndex = 5;
             // 
             // txtResult
             // 
             this.txtResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtResult.Location = new System.Drawing.Point(101, 165);
+            this.txtResult.Location = new System.Drawing.Point(101, 194);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
-            this.txtResult.Size = new System.Drawing.Size(386, 40);
+            this.txtResult.Size = new System.Drawing.Size(386, 60);
             this.txtResult.TabIndex = 12;
             // 
             // btnTestDb
             // 
-            this.btnTestDb.Location = new System.Drawing.Point(101, 211);
+            this.btnTestDb.Location = new System.Drawing.Point(101, 165);
             this.btnTestDb.Name = "btnTestDb";
             this.btnTestDb.Size = new System.Drawing.Size(75, 23);
             this.btnTestDb.TabIndex = 13;
@@ -254,19 +255,19 @@ namespace PGORMWizard.Pages
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtServer;
-        private System.Windows.Forms.TextBox txtDatabase;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.TextBox txtPort;
-        private System.Windows.Forms.TextBox txtOptions;
+        private System.Windows.Forms.Label lblServer;
+        private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.Label lblPassword;
+        private System.Windows.Forms.Label lblPort;
+        private System.Windows.Forms.Label lblOptions;
         private System.Windows.Forms.TextBox txtResult;
         private System.Windows.Forms.Button btnTestDb;
+        private System.Windows.Forms.Label lblDatabase;
+        private System.Windows.Forms.TextBox txtServer;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.ComboBox cboDatabase;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.TextBox txtOptions;
     }
 }
