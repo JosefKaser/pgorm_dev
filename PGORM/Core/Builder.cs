@@ -83,6 +83,7 @@ namespace PGORM
         {
             dataAccessProject = new ProjectFile();
             // force this to be default 
+            dataAccessProject.OutputFolder = objectProject.OutputFolder;
             dataAccessProject.CompilerOutputFolder = @"bin\Release";
             dataAccessProject.RootNamespace = projectRootNamespace + ".Data";
             vsDataProject = new VS2008Project(dataAccessProject, this);

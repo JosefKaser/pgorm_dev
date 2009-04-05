@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("<asm.Title>")]
 [assembly: AssemblyDescription("<asm.Description>")]
 [assembly: AssemblyConfiguration("<asm.Configuration>")]
-[assembly: AssemblyCompany("<asm.CompanyName>")]
+[assembly: AssemblyCompany("<asm.Company>")]
 [assembly: AssemblyProduct("<asm.Product>")]
 [assembly: AssemblyCopyright("<asm.Copyright>")]
 [assembly: AssemblyTrademark("<asm.Trademark>")]
