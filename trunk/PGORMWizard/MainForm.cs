@@ -52,17 +52,20 @@ namespace PGORMWizard
             wizEngine.SetupProgressBar(9);
             wizEngine.pgormBuilder.OnBuildStep += new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             wizEngine.pgormBuilder.SendMessage(this,BuilderMessageType.Major, "Preparing...");
+#if !DEBUG
             try
             {
+#endif
                 wizEngine.pgormBuilder.Build(wizEngine.projectFile, wizEngine.databaseSchema);
                 SaveProjectFile();
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Major, "Done.");
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Major, "Build faild. Please check the details...");
-                if(ex is PGORMLoaggerException)
-                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor,"{0}", (ex as PGORMLoaggerException).ToString());
+                if (ex is PGORMLoaggerException)
+                    wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, "{0}", (ex as PGORMLoaggerException).ToString());
                 else
                     wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.Message);
                 wizEngine.pgormBuilder.SendMessage(this, BuilderMessageType.Minor, ex.StackTrace);
@@ -77,8 +80,9 @@ namespace PGORMWizard
                 wizEngine.pgProgress.EnableCancelButton = true;
                 wizEngine.pgormBuilder.OnBuildStep -= new PGORM.BuilderEventHandler(pgormBuilder_OnBuildStep);
             }
+#endif
 
-            // animate progress to end
+                // animate progress to end
             for (int a = 0; a != 5; a++)
                 wizEngine.ReportProgress("Finished.");
 
