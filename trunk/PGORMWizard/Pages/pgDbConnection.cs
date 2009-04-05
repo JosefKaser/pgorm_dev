@@ -32,12 +32,30 @@ namespace PGORMWizard.Pages
         {
             InitializeComponent();
             Load += new EventHandler(pgDbConnection_Load);
-            txtDatabase.TextChanged += new EventHandler(Text_TextChanged);
             txtOptions.TextChanged += new EventHandler(Text_TextChanged);
             txtPort.TextChanged += new EventHandler(Text_TextChanged);
             txtServer.TextChanged += new EventHandler(Text_TextChanged);
             txtUsername.TextChanged += new EventHandler(Text_TextChanged);
             txtPassword.TextChanged += new EventHandler(Text_TextChanged);
+            cboDatabase.TextChanged += new EventHandler(Text_TextChanged);
+            cboDatabase.DropDown += new EventHandler(cboDatabase_DropDown);
+        }
+
+        void cboDatabase_DropDown(object sender, EventArgs e)
+        {
+            if (cboDatabase.Items.Count == 0)
+            {
+                Cursor = Cursors.WaitCursor;
+                cboDatabase.DataSource = DataAccess.GetDbListing(
+                    txtServer.Text,
+                    txtUsername.Text,
+                    txtPassword.Text,
+                    txtOptions.Text
+                    );
+                cboDatabase.DisplayMember = "Name";
+                cboDatabase.ValueMember = "Name";
+                Cursor = Cursors.Default;
+            }
         }
 
         void Text_TextChanged(object sender, EventArgs e)
@@ -52,7 +70,7 @@ namespace PGORMWizard.Pages
             lblSubTitle.Text = "Please provide connection information";
 #if DEBUG
             txtServer.Text = "localhost";
-            txtDatabase.Text = "testdb";
+            cboDatabase.Text = "testdb";
             txtUsername.Text = "postgres";
             txtPassword.Text = "postgres";
 #endif
@@ -63,7 +81,7 @@ namespace PGORMWizard.Pages
             txtResult.Text =
                 string.Format("host={0}; database={1}; user={2}; password={3}; port={4}; {5}",
                 txtServer.Text,
-                txtDatabase.Text,
+                cboDatabase.Text,
                 txtUsername.Text,
                 txtPassword.Text,
                 txtPort.Text,
