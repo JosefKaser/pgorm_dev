@@ -37,5 +37,15 @@ namespace PGORM
                 }
             return source;
         }
+
+        private static List<string> p_ReservedWords = new List<string>();
+        
+        public static bool IsReservedWord(string word)
+        {
+            // load if first time
+            if(p_ReservedWords.Count == 0)
+                p_ReservedWords.AddRange(CodeTemplates.ReservedWords.Split(new char[] { '\r','\n' }, StringSplitOptions.RemoveEmptyEntries));
+            return p_ReservedWords.Contains(word);
+        }
     }
 }

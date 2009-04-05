@@ -145,7 +145,12 @@ namespace PGORM
                 {
                     Function func = new Function();
                     func.ReturnsSet = proc.returns_set;
-                    func.FunctionName = proc.proname;
+
+                    if(!Helper.IsReservedWord(proc.proname))
+                        func.FunctionName = proc.proname;
+                    else
+                        func.FunctionName = string.Format("__" +  proc.proname);
+
                     func.ReturnTypeType = proc.return_type_type;
                     func.DB_ReturnType = proc.return_type;
 

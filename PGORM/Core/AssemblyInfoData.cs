@@ -44,7 +44,7 @@ namespace PGORM
         {
             Company = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "RegisteredOrganization", "none");
             Copyright = string.Format("Copyright © {0} {1}", Company, DateTime.Now.Year);
-            Guid = System.Guid.NewGuid().ToString("N");
+            Guid = System.Guid.NewGuid().ToString();
             Version = "1.0.0.0";
             FileVersion = "1.0.0.0";
             Culture = Application.CurrentCulture.ToString();
