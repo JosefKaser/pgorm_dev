@@ -146,10 +146,15 @@ namespace PGORM
                     Function func = new Function();
                     func.ReturnsSet = proc.returns_set;
 
-                    if(!Helper.IsReservedWord(proc.proname))
+                    if (!Helper.IsReservedWord(proc.proname))
+                    {
                         func.FunctionName = proc.proname;
+                    }
                     else
-                        func.FunctionName = string.Format("__" +  proc.proname);
+                    {
+                        func.FunctionName = string.Format("__" + proc.proname);
+                        SendMessage("Renaming function {0} to {1} due C# reserved word usage.", BuilderMessageType.Major, proc.proname, func.FunctionName);
+                    }
 
                     func.ReturnTypeType = proc.return_type_type;
                     func.DB_ReturnType = proc.return_type;
