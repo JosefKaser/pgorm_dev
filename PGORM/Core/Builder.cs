@@ -106,6 +106,8 @@ namespace PGORM
             asmInfoBuilder.Build();
 
             dataAccessProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Npgsql.dll");
+            dataAccessProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Mono.Security.dll");
+            dataAccessProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Mono.Security.Protocol.Tls.dll");
 
             string dataAccessAssemblyName = string.Format(@"{0}\{1}\{2}.dll",
                 dataAccessProject.CPROJName.Replace(dataAccessProject.AssemblyName + ".csproj", ""),
@@ -134,8 +136,11 @@ namespace PGORM
             else
                 dbSchema = db_schmea;
 
-            vsObjectProject = new VS2008Project(objectProject,this);
+            objectProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Npgsql.dll");
+            objectProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Mono.Security.dll");
+            objectProject.ProjectRefs.Add(AppDomain.CurrentDomain.BaseDirectory + "Mono.Security.Protocol.Tls.dll");
 
+            vsObjectProject = new VS2008Project(objectProject,this);
             assemblyInfoBuilder = new AssemblyInfoBuilder(objectProject, vsObjectProject,this);
             assemblyInfoBuilder.Build();
 
