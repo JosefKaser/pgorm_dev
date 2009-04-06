@@ -12,6 +12,7 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using System.Diagnostics;
 <libs:usings(); separator="\r\n">
 
 namespace <namespace>
@@ -144,7 +145,20 @@ public static <table.RecordsetName> GetAll()
 >>
 
 idatareader_converter(column) ::=<<
-result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateTableName>.COL_<column.TemplateColumnName>];
+#region <column.TemplateColumnName>
+try
+{
+	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateTableName>.COL_<column.TemplateColumnName>];
+}
+catch(Exception ex)
+{
+	if(DataAccess.ThrowMapperException)
+		throw ex;
+	else
+		Debug.WriteLine(ex.Message);
+}
+#endregion
+
 >>
 
 idatareader_append_converter(column) ::=<<

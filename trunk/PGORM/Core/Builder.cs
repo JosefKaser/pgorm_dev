@@ -85,7 +85,11 @@ namespace PGORM
             dataAccessProject = new ProjectFile();
             // force this to be default 
             dataAccessProject.OutputFolder = objectProject.OutputFolder;
+#if (!DEBUG)
             dataAccessProject.CompilerOutputFolder = @"bin\Release";
+#else
+            dataAccessProject.CompilerOutputFolder = @"bin\Debug";
+#endif
             dataAccessProject.RootNamespace = projectRootNamespace + ".Data";
             vsDataProject = new VS2008Project(dataAccessProject, this);
             vsDataProject.AddCompileItem(
@@ -183,9 +187,15 @@ namespace PGORM
             BuildPropertyGroup pGroup = new BuildPropertyGroup();
             ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);
             PGORMLogger pgormLogger = new PGORMLogger(this,projectPath);
+#if (!DEBUG)
             pGroup.SetProperty("Configuration", "Release");
             pGroup.SetProperty("DebugType", "none");
             pGroup.SetProperty("DebugSymbols", "false");
+#else
+            pGroup.SetProperty("Configuration", "Debug");
+            pGroup.SetProperty("DebugType", "full");
+            pGroup.SetProperty("DebugSymbols", "true");
+#endif
             buildEngine.RegisterLogger(logger);
             buildEngine.RegisterLogger(pgormLogger);
             buildEngine.BuildProjectFile(projectPath, new string[] { "Build" }, pGroup);
