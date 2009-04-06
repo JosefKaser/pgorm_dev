@@ -185,7 +185,7 @@ namespace PGORM
             SendMessage(this, BuilderMessageType.Major, "Building {0}", Path.GetFileName(projectPath).Replace(".csproj", ".dll"));
             Engine buildEngine = new Engine();
             BuildPropertyGroup pGroup = new BuildPropertyGroup();
-            ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Quiet);
+            ConsoleLogger logger = new ConsoleLogger(LoggerVerbosity.Normal);
             PGORMLogger pgormLogger = new PGORMLogger(this,projectPath);
 #if (!DEBUG)
             pGroup.SetProperty("Configuration", "Release");
