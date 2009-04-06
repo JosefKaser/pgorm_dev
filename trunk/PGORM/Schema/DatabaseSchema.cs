@@ -456,6 +456,7 @@ namespace PGORM
                 case "character varying":
                 case "varchar":
                 case "interval":
+                case "tid":
                     return typeof(string);
 
                 case "smallint":

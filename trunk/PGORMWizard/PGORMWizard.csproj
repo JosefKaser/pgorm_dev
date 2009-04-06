@@ -39,6 +39,14 @@
     <Reference Include="Microsoft.Build.Utilities.v3.5">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security.Protocol.Tls, Version=1.0.1528.33423, Culture=neutral, PublicKeyToken=4c884638a2b03853">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Mono.Security.Protocol.Tls.dll</HintPath>
+    </Reference>
     <Reference Include="Npgsql, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Library\Npgsql.dll</HintPath>
