@@ -99,6 +99,16 @@ namespace PGORMWizard.Pages
                     SetContentState(false);
                     Application.DoEvents();
                     (wizardEngine as BuilderWizard).databaseSchema = schemaLoader.LoadSchema((wizardEngine as BuilderWizard));
+
+                    //show schema loader warnings
+                    string warnings = (wizardEngine as BuilderWizard).databaseSchema.GetWarningMessages();
+                    if (warnings != "")
+                    {                        
+                        ExceptionForm warnForm = new ExceptionForm(warnings, null, Color.Orange);
+                        warnForm.Text = "Warnings";
+                        warnForm.ShowDialog();
+                    }                        
+
                     schemaLoader.Visible = false;
                     tableList.LoadTables((wizardEngine as BuilderWizard).databaseSchema);
                     viewList.LoadViews((wizardEngine as BuilderWizard).databaseSchema);

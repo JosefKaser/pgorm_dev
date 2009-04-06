@@ -45,9 +45,12 @@ namespace PGORMWizard.Controls
 
         void pgormBuilder_OnBuildStep(object sender, BuilderEventArgs e)
         {
-            Application.DoEvents();
-            lblText.Text = e.Message;
-            progressBar.PerformStep();
+            if (e.MessageType == BuilderMessageType.Major)
+            {
+                Application.DoEvents();
+                lblText.Text = e.Message;
+                progressBar.PerformStep();
+            }
             Application.DoEvents();
         }
     }

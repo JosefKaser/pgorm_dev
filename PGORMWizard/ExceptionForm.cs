@@ -39,12 +39,19 @@ namespace PGORMWizard
             txtContent.Text = text + "\r\n" + txtContent.Text;
         }
 
+        public ExceptionForm(string text, Exception e,Color color)
+            : this(e)
+        {
+            txtContent.ForeColor = color;
+            txtContent.Text = text + "\r\n" + txtContent.Text;
+        }
 
         public ExceptionForm(Exception e)
             : this()
         {
             txtContent.ForeColor = Color.Red;
-            txtContent.Text = e.ToString();
+            if (e != null)
+                txtContent.Text = e.ToString();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
