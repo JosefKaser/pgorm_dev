@@ -48,7 +48,7 @@ namespace PGORM
     {
         Major,
         Minor,
-        Error
+        Error,
     } 
     #endregion
 

@@ -36,6 +36,7 @@ namespace PGORM
         protected List<pg_view_column_usage> AllViewInfo;
         protected List<Table> CustomQueries;
         public List<Function> StoredFunctions;
+        private List<string> Warnings;
         #endregion
 
         #region DatabaseSchema
@@ -54,6 +55,7 @@ namespace PGORM
 
         public void ReadSchema(string DatabaseConnectionString)
         {
+            Warnings = new List<string>();
             SendMessage("Reading Database Schema", BuilderMessageType.Major);
             DataAccess.InitializeDatabase(DatabaseConnectionString);
             PrepareCustomQueries();
@@ -180,7 +182,14 @@ namespace PGORM
                         func.FactoryName = string.Format("{0}Factory", CleanUpDBName(proc.return_type));
                     }
                     else
-                        throw new Exception("StoredFunction ReturnType [" + proc.return_type + "] is not implemented yet");
+                    {
+                        func.ReturnType = GetCLRType(proc.return_type, "").ToString();
+                        func.ReturnTypeRecordSet = string.Format("{0}RecordSet", CleanUpDBName(proc.return_type));
+                        func.FactoryName = string.Format("{0}Factory", CleanUpDBName(proc.return_type));
+                        string warning = "StoredFunction ReturnType [" + proc.return_type + "] is not implemented yet.\nThis type will be mapped to typeof(object)";
+                        SendMessage("{0}", BuilderMessageType.Minor, warning);
+                        Warnings.Add(warning);
+                    }
 
                     if (proc.num_args != 0)
                     {
@@ -447,9 +456,6 @@ namespace PGORM
         {
             switch (db_type)
             {
-                case "USER-DEFINED":
-                    return typeof(object);
-
                 case "anyarray":
                     return typeof(object[]);
 
@@ -520,7 +526,13 @@ namespace PGORM
                 default:
                     break;
             }
-            throw new NotImplementedException(db_type + (udt_name != "" ? "[ " + udt_name + " ]" : "") + " data type is not implemented in this version.");
+            string message = string.Format("{0}{1} Is not implemented yet. This type will be mapped to CLR typeof(object).",db_type,(udt_name != "" ? "[ " + udt_name + " ]" : ""));
+            Warnings.Add(message);
+            SendMessage("{0}",BuilderMessageType.Minor,db_type,message);
+            if(db_type == "ARRAY")
+                return typeof(object[]);
+            else
+                return typeof(object);
         }
         #endregion
 
@@ -688,5 +700,13 @@ namespace PGORM
             return t.ToLower() == def.ToLower();
         }
         #endregion
+
+        public string GetWarningMessages()
+        {
+            string result = "";
+            foreach (string item in Warnings)
+                result += item + "\n";
+            return result;
+        }
     }
 }
