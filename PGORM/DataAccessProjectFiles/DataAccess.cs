@@ -32,8 +32,14 @@ namespace MY_NAMESPACE
     {
         #region Props
         public static NpgsqlConnection Connection { get; set; }
+        public static bool ThrowMapperException { get; set; }
         private static bool IsDatabaseInitialized { get; set; }
         #endregion
+
+        static DataAccess()
+        {
+            ThrowMapperException = false;
+        }
 
         #region CheckDatabase
         protected static void CheckDatabase()

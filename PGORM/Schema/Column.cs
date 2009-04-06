@@ -58,7 +58,12 @@ namespace PGORM
         {
             get
             {
-                if (IsNullable && CLR_Type != typeof(string) && CLR_Type != typeof(byte[]) && !IsArrayType)
+                if (
+                    IsNullable && 
+                    CLR_Type != typeof(string) && 
+                    CLR_Type != typeof(object) &&
+                    CLR_Type != typeof(byte[]) && 
+                    !IsArrayType)
                     return "?";
                 else
                     return "";

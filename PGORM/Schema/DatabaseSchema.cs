@@ -447,6 +447,9 @@ namespace PGORM
         {
             switch (db_type)
             {
+                case "USER-DEFINED":
+                    return typeof(object);
+
                 case "anyarray":
                     return typeof(object[]);
 
@@ -457,6 +460,7 @@ namespace PGORM
                 case "varchar":
                 case "interval":
                 case "tid":
+                case "regprocedure":
                     return typeof(string);
 
                 case "smallint":
@@ -506,6 +510,7 @@ namespace PGORM
                             return typeof(long[]);
                         case "varchar":
                         case "integer":
+                        case "text":
                         case "character varying":
                             return typeof(string[]);
                         default:
