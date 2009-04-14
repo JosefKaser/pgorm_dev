@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dellstore2_Test", "Dellstore2_Test\Dellstore2_Test.csproj", "{BF1C7E2A-B2D9-42E7-AEA0-FF08CF04FCBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dellstore2_Builder", "Dellstore2_Builder\Dellstore2_Builder.csproj", "{AC1C2E75-0884-4A3C-A5F0-EAAA9C6CB12E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF1C7E2A-B2D9-42E7-AEA0-FF08CF04FCBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1C7E2A-B2D9-42E7-AEA0-FF08CF04FCBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1C7E2A-B2D9-42E7-AEA0-FF08CF04FCBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1C7E2A-B2D9-42E7-AEA0-FF08CF04FCBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC1C2E75-0884-4A3C-A5F0-EAAA9C6CB12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC1C2E75-0884-4A3C-A5F0-EAAA9C6CB12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC1C2E75-0884-4A3C-A5F0-EAAA9C6CB12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC1C2E75-0884-4A3C-A5F0-EAAA9C6CB12E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

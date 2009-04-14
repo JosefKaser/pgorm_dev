@@ -1,0 +1,327 @@
+﻿group main;
+
+helper(namespace) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+
+namespace <namespace>
+{
+	#region Helper
+	public class Helper
+	{
+		public static readonly string SQL_SELECT = "SELECT * FROM {0} {1}";
+		public static readonly string SQL_SELECT_COUNT = "SELECT COUNT(*) FROM {0}";
+		public static readonly string SQL_SELECT_WHERE = "SELECT {0} FROM {1} WHERE {2} {3}";
+		public static readonly string SQL_INSERT_INTO = "INSERT INTO {0} ({1}) VALUES ({2}) RETURNING *";
+		public static readonly string SQL_UPDATE = "UPDATE {0} SET {1} WHERE {2} RETURNING *";
+		public static readonly string SQL_DELETE_WHERE = "DELETE FROM {0} WHERE {1};";
+	}
+	#endregion
+}
+>>
+
+object_base(namespace) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+	
+namespace <namespace>
+{	
+	#region RecordStatus
+	public enum RecordStatus
+	{
+		Default,
+		Changed,
+		New,
+		Deleted
+	}
+	#endregion
+	
+	#region DbObjectBase
+    public class DbObjectBase
+    {
+		public RecordStatus RecordStatus { get; set; }
+		
+		public DbObjectBase()
+		{
+			RecordStatus = RecordStatus.New;
+		}
+    }
+    #endregion
+}
+>>
+
+recordset_base(namespace) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+
+namespace <namespace>
+{    
+    #region DbRecordSetBase
+    public class DbRecordSetBase\<T\> : List\<T\> where T : DbObjectBase
+    {
+    }
+    #endregion
+}    
+>>      
+    
+    
+object_value(namespace) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+using System.Reflection;
+
+namespace <namespace>
+{    
+	#region DbObjectValueTypeConverter
+    public class DbObjectValueTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return true;
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return true;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            Type t = GetGenericType(value.GetType().FullName);
+            object result = Activator.CreateInstance(t);
+            t.InvokeMember("DbValue", BindingFlags.SetProperty, null, result, new object[] { value });
+            return result;
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        public static Type GetGenericType(string innerType)
+        {
+            // construct the mangled name
+            string mangledName = string.Format("<namespace>.DbObjectValue`1[[{0}]]", innerType);
+
+            // get the open generic type
+            Type genericType = Type.GetType(mangledName);
+            return genericType;
+        }
+    }
+    #endregion
+
+
+    #region DbObjectValue
+    [DefaultProperty("Value")]
+    [TypeConverter(typeof(DbObjectValueTypeConverter))]
+    public class DbObjectValue\<T\>
+    {
+        #region props
+        private object _value;
+        #endregion
+
+        #region DbValue
+        public object DbValue
+        {
+            get
+            {
+				return _value;
+            }
+            set
+            {
+                _value = value;
+            }
+        }
+        #endregion
+
+        #region Value
+        public T Value
+        {
+            set
+            {
+                _value = value;
+            }
+            get
+            {
+                object nullObj = null;
+                if (_value == DBNull.Value)
+                    return (T)nullObj;
+                else
+                    return (T)_value;
+            }
+        }
+        #endregion
+
+        #region ToString
+        public override string ToString()
+        {
+            if (_value != null && _value != DBNull.Value)
+                return _value.ToString();
+            else
+                return "";
+        }
+        #endregion
+
+        #region implicit/explicit getter setter 
+        public static implicit operator DbObjectValue\<T\>(T t)
+        {
+            return new DbObjectValue\<T\>() { DbValue = t };
+        }
+
+        public static explicit operator T(DbObjectValue\<T\> t)
+        {
+            return t.Value;
+        } 
+        
+        public static implicit operator string(DbObjectValue\<T\> t)
+        {
+            return t.Value.ToString();
+        } 
+        
+        #endregion
+    }
+    #endregion
+}
+>>
+
+
+column_meta_info(namespace) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+
+namespace <namespace>
+{ 
+    #region ColumnMetaInfo
+    public class ColumnMetaInfo
+    {
+        public bool IsNullable { get; set; }
+        public bool HasDefaultValue { get; set; }
+        public string DefaultValue { get; set; }
+    }
+    #endregion
+}    
+>>
+
+usings(lib) ::=<<
+using <lib>;
+>>
+
+dml_opr_param(namespace,libs) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+using System.Data.Common;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>
+{ 
+    #region DMLOperation
+    public class DMLOperation
+    {
+		public string DbColumnName { get; set; }
+		public string DbParameterName { get; set; }
+        public object DbValue { get; set; }
+
+        public string OperationColumnNames = "";
+        public string OperationColumnArguments = "";
+        public DbParameter[] DbParameters = null;
+
+		public DbParameter GetDbParameter()
+		{
+			return DataAccess.NewParameter(DbParameterName,DbValue);
+		}
+		
+		public void Prepare(List\<DMLOperation\> oprParams,bool is_update,List\<DMLOperation\> updateKeys)
+		{
+            List\<DbParameter\> resultParams = new List\<DbParameter\>();
+			foreach(DMLOperation item in oprParams)
+            {
+                resultParams.Add(item.GetDbParameter());                
+                if (is_update)
+                {
+					OperationColumnNames += string.Format("{0}={1},",
+						item.DbColumnName,item.DbParameterName);
+                }
+                else
+                {
+                    OperationColumnNames += item.DbColumnName + ",";
+                    OperationColumnArguments += item.DbParameterName + ",";
+                }
+            }
+            
+            if (is_update)
+            {
+                foreach (DMLOperation item in updateKeys)
+                {
+                    OperationColumnArguments += string.Format("{0}={1},",
+                        item.DbColumnName, item.DbParameterName);
+                        
+                    resultParams.Add(item.GetDbParameter());   
+                }
+            }
+            
+            if (OperationColumnNames.Length > 1)
+                OperationColumnNames = OperationColumnNames.Substring(0, OperationColumnNames.Length - 1);
+
+            if (OperationColumnArguments.Length > 1)
+                OperationColumnArguments = OperationColumnArguments.Substring(0, OperationColumnArguments.Length - 1);
+
+            DbParameters = resultParams.ToArray();
+		}
+    }
+    #endregion
+}    
+>>
+
+full_loader(libs,namespace,tables) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Reflection;
+using System.Diagnostics;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>
+{
+	public class DeepLoader
+	{
+		public static List\<object\> Load()
+		{
+			List\<object\> result = new List\<object\>();
+			string msg="";
+			<tables:full_loader_item();separator="\r\n">
+			return result;
+		}
+	}
+}
+>>
+
+full_loader_item(table) ::=<<
+#region <table.TableName> Loader
+msg = string.Format("Loading {0}....",<table.TemplateTableName>.TABLE_NAME);
+Debug.Write(msg); Console.Write(msg);
+<table.RecordSetName> <table.TemplateTableName>_RecordSet = <table.FactoryName>.GetAll();
+result.Add(<table.TemplateTableName>_RecordSet);
+msg = string.Format(", {0} records loaded.",<table.TemplateTableName>_RecordSet.Count());	
+Debug.WriteLine(msg); Console.WriteLine(msg);
+#endregion
+>>

@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{06A7681C-A73B-4950-9E62-8E793A5C9373}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PGORMWizard</RootNamespace>
+    <AssemblyName>PGORMWizard</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>PGORMWizard.snk</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>postgres.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v3.5">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security.Protocol.Tls, Version=1.0.1528.33423, Culture=neutral, PublicKeyToken=4c884638a2b03853">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Mono.Security.Protocol.Tls.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TrueSoftware.Framework.Wizard, Version=2.4.0.0, Culture=neutral, PublicKeyToken=cfae3b590fb70cb8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\TrueSoftware.Framework.Wizard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuilderWizard.cs" />
+    <Compile Include="Controls\FunctionListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\FunctionListView.Designer.cs">
+      <DependentUpon>FunctionListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaLoader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaLoader.Designer.cs">
+      <DependentUpon>SchemaLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TableListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TableListView.Designer.cs">
+      <DependentUpon>TableListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ViewListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ViewListView.Designer.cs">
+      <DependentUpon>ViewListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataAccess.cs" />
+    <Compile Include="ExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExceptionForm.Designer.cs">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helper.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgAssemblyInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgAssemblyInfo.Designer.cs">
+      <DependentUpon>pgAssemblyInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgProgress.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgProgress.Designer.cs">
+      <DependentUpon>pgProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgProjectOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgProjectOptions.Designer.cs">
+      <DependentUpon>pgProjectOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgWelcome.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgWelcome.Designer.cs">
+      <DependentUpon>pgWelcome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgDbConnection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgDbConnection.Designer.cs">
+      <DependentUpon>pgDbConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgSelectDbObjects.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgSelectDbObjects.Designer.cs">
+      <DependentUpon>pgSelectDbObjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\pgSelectProject.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\pgSelectProject.Designer.cs">
+      <DependentUpon>pgSelectProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\SchemaLoader.resx">
+      <DependentUpon>SchemaLoader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TableListView.resx">
+      <DependentUpon>TableListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExceptionForm.resx">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgAssemblyInfo.resx">
+      <DependentUpon>pgAssemblyInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgDbConnection.resx">
+      <DependentUpon>pgDbConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgProgress.resx">
+      <DependentUpon>pgProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgProjectOptions.resx">
+      <DependentUpon>pgProjectOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgSelectDbObjects.resx">
+      <DependentUpon>pgSelectDbObjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\pgSelectProject.resx">
+      <DependentUpon>pgSelectProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.config" />
+    <None Include="PGORMWizard.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PGORM\PGORM.csproj">
+      <Project>{17183698-5DDE-45F0-8119-2E46843D19FD}</Project>
+      <Name>PGORM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\elephant.png" />
+    <Content Include="Images\Function.png" />
+    <Content Include="Images\Table.png" />
+    <Content Include="Images\View.png" />
+    <Content Include="postgres.ico" />
+    <Content Include="Text\About.txt" />
+    <Content Include="Text\WizardCaption.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
