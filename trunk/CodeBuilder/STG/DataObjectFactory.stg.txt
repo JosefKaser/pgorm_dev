@@ -1,5 +1,6 @@
 ﻿group main;
 
+
 usings(lib) ::=<<
 using <lib>;
 >>
@@ -19,18 +20,18 @@ using Npgsql;
 namespace <namespace>.Factory
 {
 	#region <table.FactoryName>
+	<code_summary({Factory class for relation <table.RelationName>})>
 	public class <table.FactoryName>
 	{
 		<methods; separator="\r\n">
 		#region CreateFromReader
-        /// \<summary\>
-        /// ObjectRelationMapper for table [<table.RelationName>]
-        /// \</summary\>
-        /// \<param name="reader"\>An IDataReader from DataAccess.ExecuteObjectQuery\</param\>
-        /// \<returns\>An object of type <table.TemplateRelationName>\</returns\>		
-        public static <table.TemplateRelationName> CreateFromReader(IDataReader reader)
+        <code_summary({ObjectRelationMapper for table [<table.RelationName>].})>
+        <inteli_param(name={reader},desc={An IDataReader from DataAccess.ExecuteObjectQuery.})>
+        <inteli_returns_table(table)>
+        <inteli_type_param_table(table)>
+        public static T CreateFromReader<generic("T")>(IDataReader reader) where T : <table.TemplateRelationName>,new()
         {
-            <table.TemplateRelationName> result = new <table.TemplateRelationName>();
+            T result = new T();
             <table.Columns:idatareader_converter(); separator="\r\n">
             result.EntityStatus = EntityStatus.Default;
             return result;
@@ -41,23 +42,62 @@ namespace <namespace>.Factory
 }
 >>
 
+/******************************************************************************************/
+getall_method(table) ::=<<
+#region getall_method
+<code_summary({Retrives the entire content of table [<table.TemplateRelationName>]})>
+<inteli_type_param_table(table)>
+<inteli_type_param_list(table)>
+<inteli_tans()>
+<inteli_returns_table_list(table)>
+public static R GetAll<generic("T,R")>(NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
+			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,""),
+			CreateFromReader<generic("T")>,
+			p_Transaction
+        );
+}
+#endregion
+
+#region getall_method
+<code_summary({Retrives the entire content of table [<table.TemplateRelationName>]})>
+<inteli_type_param_table(table)>
+<inteli_type_param_list(table)>
+<inteli_returns_table_list(table)>
+public static R GetAll<generic("T,R")>() where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
+			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,""),
+			CreateFromReader<generic("T")>,
+			null
+        );
+}
+#endregion
+
+>>
+
+/******************************************************************************************/
+
 insert_method(table) ::=<<
 #region insert_method
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
-<create_inteli_param(name={p_<table.TemplateRelationName>},desc={a ref object of type <table.TemplateRelationName>})>
-public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
+<inteli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<inteli_type_param_table(table)>
+public static void Insert\<T\>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
 {
-	Insert(ref p_<table.TemplateRelationName>,null);
+	Insert\<T\>(ref p_<table.TemplateRelationName>,null);
 }
 
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
-<create_inteli_param(name={p_<table.TemplateRelationName>},desc={a ref object of type <table.TemplateRelationName>})>
-<create_inteli_tans()>
-public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
+<inteli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<inteli_type_param_table(table)>
+<inteli_tans()>
+public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
 	string sqlStatement = "";
 	DbParameter[] dbParams = null;
@@ -82,10 +122,10 @@ public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRela
 			dbParams = insertOpr.DbParameters;
 		}
 		
-		List\<<table.TemplateRelationName>\> result = DataAccess.ExecuteObjectQuery\<<table.TemplateRelationName>\>
+		List\<T\> result = DataAccess.ExecuteObjectQuery\<T\>
 		(
 			sqlStatement,
-			CreateFromReader,
+			CreateFromReader<generic("T")>,
 			p_Transaction,
 			dbParams
         );			
@@ -109,17 +149,18 @@ public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRela
 
 getby_single_return_method(table,icolumns,index) ::=<<
 #region getby_single_return_method
-<code_summary({returns a single object of type <table.TemplateRelationName> based on [<index.IndexType> / <index.Indexname>]})>
-<icolumns:create_inteli_param_column(); separator="\r\n">
-<create_inteli_tans()>
-<code_return({an object of type <table.TemplateRelationName>})>
-public static <table.TemplateRelationName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction)
+<code_summary({Returns a single object of type [<table.TemplateRelationName>] based on [<index.IndexType> / <index.Indexname>].})>
+<icolumns:inteli_param_column(); separator="\r\n">
+<inteli_tans()>
+<inteli_type_param_table(table)>
+<inteli_returns_table(table)>
+public static T <create_getby_method_name(icolumns)><generic("T")>(<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
-	<table.TemplateRelationName> result = DataAccess.ExecuteSingleObjectQuery\<<table.TemplateRelationName>\>(
+	T result = DataAccess.ExecuteSingleObjectQuery<generic("T")>(
 						string.Format(Helper.SQL_SELECT_WHERE, "*",
 									  <table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",
 							           ""),
-						CreateFromReader,
+						CreateFromReader<generic("T")>,
 						p_Transaction,
 						<icolumns:create_npgsql_newparameter(); separator=",\r\n">
 					);
@@ -127,107 +168,50 @@ public static <table.TemplateRelationName> <create_getby_method_name(icolumns)>(
 	return result;
 }
 
-<code_summary({returns a single object of type <table.TemplateRelationName> based on [<index.IndexType> / <index.Indexname>]})>
-<icolumns:create_inteli_param_column(); separator="\r\n">
-<code_return({an object of type <table.TemplateRelationName>})>
-public static <table.TemplateRelationName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>)
+<code_summary({Returns a single object of type [<table.TemplateRelationName>] based on [<index.IndexType> / <index.Indexname>]})>
+<icolumns:inteli_param_column(); separator="\r\n">
+<inteli_type_param_table(table)>
+<inteli_returns_table(table)>
+public static T <create_getby_method_name(icolumns)><generic("T")>(<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new()
 {
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null);
+	return <create_getby_method_name(icolumns)><generic("T")>(<create_call_parameters(icolumns)>,null);
 }
+
 #endregion
 
 >>
 
 /*******************************************************************/
 
-create_getby_method(table,icolumns,index) ::=<<
-#region <create_getby_method_name(icolumns)> <index.Signiture>
-<code_summary("this is some code summary")>
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,SortOperation p_SortOperation,PagingOperation p_PagingOperation)
-{
-	string sopr = "",popr="",opr=" ";
-	if(p_SortOperation != null)
-		sopr = p_SortOperation.ToString();
-		
-	if(p_PagingOperation != null)
-		popr = p_PagingOperation.ToString();
-		
-	opr = string.Format("{0} {1}",sopr,popr);
+inteli_returns(text) ::="/// \<returns\><text>\</returns\>"
 
-	return <table.RecordsetName>.FromList(
-					DataAccess.ExecuteObjectQuery\<<table.TemplateRelationName>\>
-					(
-						string.Format(
-							Helper.SQL_SELECT_WHERE, "*",
-							<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",
-							opr),
-						CreateFromReader,
-						trans,
-						<icolumns:create_npgsql_newparameter(); separator=",\r\n">
-					));
-}
+inteli_returns_table(table) ::="/// \<returns\>An object of type [<table.TemplateRelationName>].\</returns\>"
+inteli_returns_table_list(table) ::="/// \<returns\>A list of List&lt;<table.TemplateRelationName>&gt; of type [<table.TemplateRelationName>].\</returns\>"
 
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,SortOperation p_SortOperation,PagingOperation p_PagingOperation)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,p_SortOperation,p_PagingOperation);
-}
-
-/*******************************************************************************************************************/
-
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,null,null);
-}
-
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,null);
-}
-
-
-/*******************************************************************************************************************/
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,SortOperation p_SortOperation)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,p_SortOperation,null);
-}
-
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,SortOperation p_SortOperation)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,p_SortOperation,null);
-}
-
-
-/*******************************************************************************************************************/
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,PagingOperation p_PagingOperation)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,null,p_PagingOperation);
-}
-
-<code_summary({bla bla bla <table.RecordsetName> gevik  babakhani next line <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,p_PagingOperation)})>
-public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,PagingOperation p_PagingOperation)
-{
-	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,p_PagingOperation);
-}
-
-#endregion
-
+inteli_type_param_table(table) ::=<<
+/// \<typeparam name="T"\>An object of type [<table.TemplateRelationName>]. The (derived) class must implement a default parameterless constructor.\</typeparam\>
 >>
 
-/****************************************************************************************************/
+inteli_type_param_list(table) ::=<<
+/// \<typeparam name="R"\>A List&lt;&gt; of type List&lt;<table.TemplateRelationName>&gt;. The (derived) classes must implement a default parameterless constructor.\</typeparam\>
+>>
 
-create_inteli_param(name,desc) ::=<<
+
+inteli_type_param(name,type) ::=<<
+/// \<typeparam name="<name>"\><type>\</typeparam\>
+>>
+
+inteli_param(name,desc) ::=<<
 /// \<param name="<name>"\><desc>\</param\>
 >>
 
-
-create_inteli_param_column(column) ::=<<
+inteli_param_column(column) ::=<<
 /// \<param name="p_<column.TemplateColumnName>"\><column.CLR_Description>\</param\>
 >>
 
-create_inteli_tans() ::=<<
-/// \<param name="p_Transaction"\>a NpgsqlTransaction object\</param\>
+inteli_tans() ::=<<
+/// \<param name="p_Transaction"\>A NpgsqlTransaction object.\</param\>
 >>
-
 
 create_implicit_check(column) ::=<<
 if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
@@ -281,4 +265,4 @@ code_summary(text) ::=<<
 /// \</summary\>
 >>
 
-code_return(text) ::="/// \<returns\><text>\</returns\>"
+generic(T) ::="\<<T>\>"

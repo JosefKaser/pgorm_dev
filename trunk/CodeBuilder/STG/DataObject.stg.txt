@@ -19,6 +19,12 @@ namespace <namespace>
 	#region <table.TemplateRelationName>
 	public class <table.TemplateRelationName> : DataObjectBase
 	{
+		#region ctor
+		public <table.TemplateRelationName>()
+		{
+		}
+		#endregion
+		
 		#region Static Properties
 		public static readonly string RELATION_NAME = "\"<table.RelationName>\"";
 		<table.Columns:static_db_column_name(); separator="\r\n">
@@ -30,7 +36,9 @@ namespace <namespace>
 >>
 
 static_db_column_name(column) ::=<<
+<code_summary({Represents the database column name.})>
 public static readonly string COL_<column.TemplateColumnName> = "<column.ColumnName>";
+<code_summary({Represents the explicit and quoted database column name to be used in SQL queries.})>
 public static readonly string COL_<column.TemplateColumnName>_Db = "\"<column.ColumnName>\"";
 >>
 
@@ -39,9 +47,7 @@ property(column) ::=<<
 #region <column.TemplateColumnName>
 protected  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> p_<column.TemplateColumnName> = 
 		new DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\>();
-/// \<summary\>
-/// <column.CLR_Description>
-/// \</summary\>		
+<code_summary({<column.CLR_Description>})>		
 public  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> <column.TemplateColumnName> 
 {
 	get
@@ -58,3 +64,8 @@ public  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> <column.Templa
 #endregion
 >>
 
+code_summary(text) ::=<<
+/// \<summary\>
+/// <text>
+/// \</summary\>
+>>

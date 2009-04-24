@@ -25,7 +25,8 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "no_pkey" || t.RelationName == "tbluser" ))
+            //foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "no_pkey" || t.RelationName == "tbluser"))
+            foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
 
@@ -37,10 +38,14 @@ namespace CodeBuilder
                 // create insert method
                 factoryBuilder.AddMethod("insert",factoryBuilder.CreateInsertMethod(rel));
 
+                // create get all method
+                factoryBuilder.AddMethod("getall", factoryBuilder.CreateGetAllMethod(rel));
+
+
                 // loop every index on this relation
                 foreach (Index<TemplateColumn> index in rel.Indexes)
                 {
-                    if(index.IndexType == IndexType.PrimaryKey)
+                    if (index.IndexType == IndexType.PrimaryKey)
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetySingleReturnMethod(rel, index));
 
                     if (index.IndexType == IndexType.UniqueIndex)

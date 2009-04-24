@@ -14,6 +14,7 @@ namespace CodeBuilder
         StringTemplate st;
         StringTemplate insert_method;
         StringTemplate getby_single_return_method;
+        StringTemplate getall_method;
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
         public List<TemplateMethod> Methods;
@@ -27,6 +28,8 @@ namespace CodeBuilder
 
             insert_method = p_stgGroup.GetInstanceOf("insert_method");
             getby_single_return_method = p_stgGroup.GetInstanceOf("getby_single_return_method");
+            getall_method = p_stgGroup.GetInstanceOf("getall_method");
+
             Methods = new List<TemplateMethod>();
         }
 
@@ -57,6 +60,14 @@ namespace CodeBuilder
             insert_method.SetAttribute("table", relation);
             string s = insert_method.ToString();
             return insert_method.ToString();
+        }
+
+        public string CreateGetAllMethod(TemplateRelation rel)
+        {
+            TemplateMethod method = new TemplateMethod();
+            getall_method.Reset();
+            getall_method.SetAttribute("table", rel);
+            return getall_method.ToString();
         }
 
         public TemplateMethod CreateGetySingleReturnMethod(TemplateRelation rel, Index<TemplateColumn> index)

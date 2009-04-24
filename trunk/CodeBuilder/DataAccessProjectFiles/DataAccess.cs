@@ -24,7 +24,7 @@ namespace MY_NAMESPACE.Core
         #region DataAccess
         static DataAccess()
         {
-            ThrowMapperException = false;
+            ThrowMapperException = true;
         } 
         #endregion
 
@@ -113,6 +113,28 @@ namespace MY_NAMESPACE.Core
         #endregion
 
         #region ExecuteObjectQuery
+        public static R ExecuteObjectQuery<T,R>(string sqlStatement, ObjectRelationMapper<T> ormFunction, NpgsqlTransaction trans, params DbParameter[] parameters) where R : List<T>,new()
+        {
+            R result = new R();
+
+            NpgsqlCommand command = new NpgsqlCommand(sqlStatement, DataAccess.Connection, trans);
+            SetupParameters(command, parameters);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    result.Add(ormFunction(reader));
+                }
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static List<T> ExecuteObjectQuery<T>(string sqlStatement, ObjectRelationMapper<T> ormFunction,NpgsqlTransaction trans, params DbParameter[] parameters)
         {
             List<T> result = new List<T>();
