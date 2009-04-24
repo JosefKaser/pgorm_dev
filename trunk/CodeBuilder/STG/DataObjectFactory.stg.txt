@@ -26,9 +26,9 @@ namespace <namespace>.Factory
 		<methods; separator="\r\n">
 		#region CreateFromReader
         <code_summary({ObjectRelationMapper for table [<table.RelationName>].})>
-        <inteli_param(name={reader},desc={An IDataReader from DataAccess.ExecuteObjectQuery.})>
-        <inteli_returns_table(table)>
-        <inteli_type_param_table(table)>
+        <intelli_param(name={reader},desc={An IDataReader from DataAccess.ExecuteObjectQuery.})>
+        <intelli_returns_table(table)>
+        <intelli_type_param_table(table)>
         public static T CreateFromReader<generic("T")>(IDataReader reader) where T : <table.TemplateRelationName>,new()
         {
             T result = new T();
@@ -43,38 +43,108 @@ namespace <namespace>.Factory
 >>
 
 /******************************************************************************************/
-getall_method(table) ::=<<
+get_method(table,method_name,icolumns,sep_comma,summary) ::=<<
 #region getall_method
-<code_summary({Retrives the entire content of table [<table.TemplateRelationName>]})>
-<inteli_type_param_table(table)>
-<inteli_type_param_list(table)>
-<inteli_tans()>
-<inteli_returns_table_list(table)>
-public static R GetAll<generic("T,R")>(NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+<summary>
+<intelli_tans()>
+<intelli_param_sort_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
 {
+	<sort_and_page_ops()>
 	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
-			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,""),
+			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,operations),
 			CreateFromReader<generic("T")>,
 			p_Transaction
         );
 }
-#endregion
 
-#region getall_method
-<code_summary({Retrives the entire content of table [<table.TemplateRelationName>]})>
-<inteli_type_param_table(table)>
-<inteli_type_param_list(table)>
-<inteli_returns_table_list(table)>
-public static R GetAll<generic("T,R")>() where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+
+<summary>
+<intelli_tans()>
+<intelli_param_sort()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
 {
-	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
-			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,""),
-			CreateFromReader<generic("T")>,
-			null
-        );
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, p_SortOperation,null);
 }
+
+<summary>
+<intelli_tans()>
+<intelli_param_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, null,p_PagingOperation);
+}
+
+<summary>
+<intelli_tans()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, null,null);
+}
+
+<summary>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)>null, null,null);
+}
+
+/**************************************************/
+
+<summary>
+<intelli_param_sort()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>SortOperation p_SortOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, p_SortOperation,null);
+}
+
+<summary>
+<intelli_param_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, null,p_PagingOperation);
+}
+
 #endregion
 
+
+<summary>
+<intelli_param_sort_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, p_SortOperation,p_PagingOperation);
+}
 >>
 
 /******************************************************************************************/
@@ -84,8 +154,8 @@ insert_method(table) ::=<<
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
-<inteli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
-<inteli_type_param_table(table)>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
 public static void Insert\<T\>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
 {
 	Insert\<T\>(ref p_<table.TemplateRelationName>,null);
@@ -94,9 +164,9 @@ public static void Insert\<T\>(ref T p_<table.TemplateRelationName>) where T : <
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
-<inteli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
-<inteli_type_param_table(table)>
-<inteli_tans()>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<intelli_tans()>
 public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
 	string sqlStatement = "";
@@ -150,10 +220,10 @@ public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransa
 getby_single_return_method(table,icolumns,index) ::=<<
 #region getby_single_return_method
 <code_summary({Returns a single object of type [<table.TemplateRelationName>] based on [<index.IndexType> / <index.Indexname>].})>
-<icolumns:inteli_param_column(); separator="\r\n">
-<inteli_tans()>
-<inteli_type_param_table(table)>
-<inteli_returns_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_tans()>
+<intelli_type_param_table(table)>
+<intelli_returns_table(table)>
 public static T <create_getby_method_name(icolumns)><generic("T")>(<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
 	T result = DataAccess.ExecuteSingleObjectQuery<generic("T")>(
@@ -169,9 +239,9 @@ public static T <create_getby_method_name(icolumns)><generic("T")>(<create_param
 }
 
 <code_summary({Returns a single object of type [<table.TemplateRelationName>] based on [<index.IndexType> / <index.Indexname>]})>
-<icolumns:inteli_param_column(); separator="\r\n">
-<inteli_type_param_table(table)>
-<inteli_returns_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_type_param_table(table)>
+<intelli_returns_table(table)>
 public static T <create_getby_method_name(icolumns)><generic("T")>(<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new()
 {
 	return <create_getby_method_name(icolumns)><generic("T")>(<create_call_parameters(icolumns)>,null);
@@ -183,33 +253,47 @@ public static T <create_getby_method_name(icolumns)><generic("T")>(<create_param
 
 /*******************************************************************/
 
-inteli_returns(text) ::="/// \<returns\><text>\</returns\>"
+intelli_returns(text) ::="/// \<returns\><text>\</returns\>"
 
-inteli_returns_table(table) ::="/// \<returns\>An object of type [<table.TemplateRelationName>].\</returns\>"
-inteli_returns_table_list(table) ::="/// \<returns\>A list of List&lt;<table.TemplateRelationName>&gt; of type [<table.TemplateRelationName>].\</returns\>"
+intelli_returns_table(table) ::="/// \<returns\>An object of type [<table.TemplateRelationName>].\</returns\>"
+intelli_returns_table_list(table) ::="/// \<returns\>A list of List&lt;<table.TemplateRelationName>&gt; of type [<table.TemplateRelationName>].\</returns\>"
 
-inteli_type_param_table(table) ::=<<
-/// \<typeparam name="T"\>An object of type [<table.TemplateRelationName>]. The (derived) class must implement a default parameterless constructor.\</typeparam\>
+intelli_type_param_table(table) ::=<<
+/// \<typeparam name="T"\>A class of type [<table.TemplateRelationName>]. The (derived) class must implement a default parameterless constructor.\</typeparam\>
 >>
 
-inteli_type_param_list(table) ::=<<
-/// \<typeparam name="R"\>A List&lt;&gt; of type List&lt;<table.TemplateRelationName>&gt;. The (derived) classes must implement a default parameterless constructor.\</typeparam\>
+intelli_type_param_list(table) ::=<<
+/// \<typeparam name="R"\>A generic list of type List&lt;<table.TemplateRelationName>&gt;. The (derived) classes must implement a default parameterless constructor.\</typeparam\>
 >>
 
 
-inteli_type_param(name,type) ::=<<
+intelli_type_param(name,type) ::=<<
 /// \<typeparam name="<name>"\><type>\</typeparam\>
 >>
 
-inteli_param(name,desc) ::=<<
+intelli_param_sort() ::=<<
+<intelli_param(name={p_SortOperation},desc={Instance of a Core.SortOperation})>
+>>
+
+intelli_param_page() ::=<<
+<intelli_param(name={p_PagingOperation},desc={Instance of a Core.PagingOperation})>
+>>
+
+intelli_param_sort_page() ::=<<
+<intelli_param_sort()>
+<intelli_param_page()>
+>>
+
+
+intelli_param(name,desc) ::=<<
 /// \<param name="<name>"\><desc>\</param\>
 >>
 
-inteli_param_column(column) ::=<<
+intelli_param_column(column) ::=<<
 /// \<param name="p_<column.TemplateColumnName>"\><column.CLR_Description>\</param\>
 >>
 
-inteli_tans() ::=<<
+intelli_tans() ::=<<
 /// \<param name="p_Transaction"\>A NpgsqlTransaction object.\</param\>
 >>
 
@@ -266,3 +350,14 @@ code_summary(text) ::=<<
 >>
 
 generic(T) ::="\<<T>\>"
+
+sort_and_page_ops() ::=<<
+string sopr = "",popr="",operations=" ";
+if(p_SortOperation != null)
+	sopr = p_SortOperation.ToString();
+	
+if(p_PagingOperation != null)
+	popr = p_PagingOperation.ToString();
+	
+operations = string.Format("{0} {1}",sopr,popr);
+>>

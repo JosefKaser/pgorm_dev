@@ -14,7 +14,8 @@ namespace CodeBuilder
         StringTemplate st;
         StringTemplate insert_method;
         StringTemplate getby_single_return_method;
-        StringTemplate getall_method;
+        StringTemplate get_method;
+        StringTemplate code_summary;
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
         public List<TemplateMethod> Methods;
@@ -28,7 +29,8 @@ namespace CodeBuilder
 
             insert_method = p_stgGroup.GetInstanceOf("insert_method");
             getby_single_return_method = p_stgGroup.GetInstanceOf("getby_single_return_method");
-            getall_method = p_stgGroup.GetInstanceOf("getall_method");
+            get_method = p_stgGroup.GetInstanceOf("get_method");
+            code_summary = p_stgGroup.GetInstanceOf("code_summary");
 
             Methods = new List<TemplateMethod>();
         }
@@ -54,6 +56,13 @@ namespace CodeBuilder
             Methods.Add(method);
         }
 
+        private string CodeSummary(string text,params object[] args)
+        {
+            code_summary.Reset();
+            code_summary.SetAttribute("text", string.Format(text, args));
+            return code_summary.ToString();
+        }
+
         public string CreateInsertMethod(TemplateRelation relation)
         {
             insert_method.Reset();
@@ -65,9 +74,11 @@ namespace CodeBuilder
         public string CreateGetAllMethod(TemplateRelation rel)
         {
             TemplateMethod method = new TemplateMethod();
-            getall_method.Reset();
-            getall_method.SetAttribute("table", rel);
-            return getall_method.ToString();
+            get_method.Reset();
+            get_method.SetAttribute("table", rel);
+            get_method.SetAttribute("method_name", "GetList");
+            get_method.SetAttribute("summary", CodeSummary("Retrives a generic List&lt;{0}&gt;", rel.TemplateRelationName));
+            return get_method.ToString();
         }
 
         public TemplateMethod CreateGetySingleReturnMethod(TemplateRelation rel, Index<TemplateColumn> index)
