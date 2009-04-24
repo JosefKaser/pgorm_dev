@@ -1,0 +1,284 @@
+﻿group main;
+
+usings(lib) ::=<<
+using <lib>;
+>>
+
+factory(libs,namespace,table,methods) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Reflection;
+using System.Diagnostics;
+using Npgsql;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>.Factory
+{
+	#region <table.FactoryName>
+	public class <table.FactoryName>
+	{
+		<methods; separator="\r\n">
+		#region CreateFromReader
+        /// \<summary\>
+        /// ObjectRelationMapper for table [<table.RelationName>]
+        /// \</summary\>
+        /// \<param name="reader"\>An IDataReader from DataAccess.ExecuteObjectQuery\</param\>
+        /// \<returns\>An object of type <table.TemplateRelationName>\</returns\>		
+        public static <table.TemplateRelationName> CreateFromReader(IDataReader reader)
+        {
+            <table.TemplateRelationName> result = new <table.TemplateRelationName>();
+            <table.Columns:idatareader_converter(); separator="\r\n">
+            result.EntityStatus = EntityStatus.Default;
+            return result;
+        }
+        #endregion        
+	}
+	#endregion
+}
+>>
+
+insert_method(table) ::=<<
+#region insert_method
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<create_inteli_param(name={p_<table.TemplateRelationName>},desc={a ref object of type <table.TemplateRelationName>})>
+public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
+{
+	Insert(ref p_<table.TemplateRelationName>,null);
+}
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<create_inteli_param(name={p_<table.TemplateRelationName>},desc={a ref object of type <table.TemplateRelationName>})>
+<create_inteli_tans()>
+public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
+{
+	string sqlStatement = "";
+	DbParameter[] dbParams = null;
+		
+	List\<OperationParameter\> oprParams = new List\<OperationParameter\>();
+	
+	#region Implicit value assignment.
+	<table.DMLColumns:create_implicit_check();separator="\r\n">	
+	#endregion
+	
+    if (oprParams.Count != 0)
+    {
+		if(p_<table.TemplateRelationName>.EntityStatus == EntityStatus.New)
+		{
+			InsertOperation insertOpr = new InsertOperation(oprParams);
+			
+			sqlStatement = string.Format(Helper.SQL_INSERT_INTO,
+				<table.TemplateRelationName>.RELATION_NAME,
+				insertOpr.InsertColumns,
+				insertOpr.InsertArguments);
+				
+			dbParams = insertOpr.DbParameters;
+		}
+		
+		List\<<table.TemplateRelationName>\> result = DataAccess.ExecuteObjectQuery\<<table.TemplateRelationName>\>
+		(
+			sqlStatement,
+			CreateFromReader,
+			p_Transaction,
+			dbParams
+        );			
+            
+		if(result.Count != 0)
+		{           
+			result[0].EntityStatus = EntityStatus.Default;
+			p_<table.TemplateRelationName> = result[0];
+		}
+    }
+    else
+    {
+        throw new OperationCanceledException("Unable to insert/update an empty [<table.TemplateRelationName>] into the database");
+    }	
+}
+#endregion
+
+>>
+
+/*******************************************************************/
+
+getby_single_return_method(table,icolumns,index) ::=<<
+#region getby_single_return_method
+<code_summary({returns a single object of type <table.TemplateRelationName> based on [<index.IndexType> / <index.Indexname>]})>
+<icolumns:create_inteli_param_column(); separator="\r\n">
+<create_inteli_tans()>
+<code_return({an object of type <table.TemplateRelationName>})>
+public static <table.TemplateRelationName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction)
+{
+	<table.TemplateRelationName> result = DataAccess.ExecuteSingleObjectQuery\<<table.TemplateRelationName>\>(
+						string.Format(Helper.SQL_SELECT_WHERE, "*",
+									  <table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",
+							           ""),
+						CreateFromReader,
+						p_Transaction,
+						<icolumns:create_npgsql_newparameter(); separator=",\r\n">
+					);
+	result.EntityStatus = EntityStatus.Default;
+	return result;
+}
+
+<code_summary({returns a single object of type <table.TemplateRelationName> based on [<index.IndexType> / <index.Indexname>]})>
+<icolumns:create_inteli_param_column(); separator="\r\n">
+<code_return({an object of type <table.TemplateRelationName>})>
+public static <table.TemplateRelationName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null);
+}
+#endregion
+
+>>
+
+/*******************************************************************/
+
+create_getby_method(table,icolumns,index) ::=<<
+#region <create_getby_method_name(icolumns)> <index.Signiture>
+<code_summary("this is some code summary")>
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,SortOperation p_SortOperation,PagingOperation p_PagingOperation)
+{
+	string sopr = "",popr="",opr=" ";
+	if(p_SortOperation != null)
+		sopr = p_SortOperation.ToString();
+		
+	if(p_PagingOperation != null)
+		popr = p_PagingOperation.ToString();
+		
+	opr = string.Format("{0} {1}",sopr,popr);
+
+	return <table.RecordsetName>.FromList(
+					DataAccess.ExecuteObjectQuery\<<table.TemplateRelationName>\>
+					(
+						string.Format(
+							Helper.SQL_SELECT_WHERE, "*",
+							<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",
+							opr),
+						CreateFromReader,
+						trans,
+						<icolumns:create_npgsql_newparameter(); separator=",\r\n">
+					));
+}
+
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,SortOperation p_SortOperation,PagingOperation p_PagingOperation)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,p_SortOperation,p_PagingOperation);
+}
+
+/*******************************************************************************************************************/
+
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,null,null);
+}
+
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,null);
+}
+
+
+/*******************************************************************************************************************/
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,SortOperation p_SortOperation)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,p_SortOperation,null);
+}
+
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,SortOperation p_SortOperation)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,p_SortOperation,null);
+}
+
+
+/*******************************************************************************************************************/
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,NpgsqlTransaction trans,PagingOperation p_PagingOperation)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,trans,null,p_PagingOperation);
+}
+
+<code_summary({bla bla bla <table.RecordsetName> gevik  babakhani next line <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,p_PagingOperation)})>
+public static <table.RecordsetName> <create_getby_method_name(icolumns)>(<create_parameters(icolumns)>,PagingOperation p_PagingOperation)
+{
+	return <create_getby_method_name(icolumns)>(<create_call_parameters(icolumns)>,null,null,p_PagingOperation);
+}
+
+#endregion
+
+>>
+
+/****************************************************************************************************/
+
+create_inteli_param(name,desc) ::=<<
+/// \<param name="<name>"\><desc>\</param\>
+>>
+
+
+create_inteli_param_column(column) ::=<<
+/// \<param name="p_<column.TemplateColumnName>"\><column.CLR_Description>\</param\>
+>>
+
+create_inteli_tans() ::=<<
+/// \<param name="p_Transaction"\>a NpgsqlTransaction object\</param\>
+>>
+
+
+create_implicit_check(column) ::=<<
+if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
+    oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Db, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName> });
+    
+>>
+
+create_getby_method_name(columns) ::=<<
+GetBy_<columns:create_method_name_part(); separator="_">
+>>
+
+create_method_name_part(column) ::="<column.TemplateColumnName>"
+
+idatareader_converter(column) ::=<<
+#region <column.TemplateColumnName>
+try
+{
+	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>];
+}
+catch(Exception ex)
+{
+	if(DataAccess.ThrowMapperException)
+		throw ex;
+	else
+		Debug.WriteLine(ex.Message);
+}
+#endregion
+>>
+
+create_parameters(columns) ::=<<
+<columns:create_parameter(); separator=",">
+>>	
+
+create_parameter(column) ::="<column.CLR_Type> p_<column.TemplateColumnName>"
+
+create_sql_asign_parameter(column) ::=" \\\"<column.TemplateColumnName>\\\"=@<column.TemplateColumnName> "
+
+create_npgsql_newparameter(column) ::=<<
+DataAccess.NewParameter("@<column.TemplateColumnName>",p_<column.TemplateColumnName>)
+>>
+
+create_call_parameters(columns) ::=<<
+<columns:create_call_parameter(); separator=",">
+>>	
+
+create_call_parameter(column) ::="p_<column.TemplateColumnName>"
+
+code_summary(text) ::=<<
+/// \<summary\>
+/// <text>
+/// \</summary\>
+>>
+
+code_return(text) ::="/// \<returns\><text>\</returns\>"

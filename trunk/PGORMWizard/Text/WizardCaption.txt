@@ -1,1 +1,0 @@
-﻿PostgreSQL Object Relational Mapper for .NET
