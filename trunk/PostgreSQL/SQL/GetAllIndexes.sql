@@ -5,7 +5,7 @@ select
 	ns.nspname as table_namespace,
 	re.relname as table_name,
 	string_to_array(i.indkey::varchar,' ')::integer[] as constraint_keys,
-	'i' as constraint_type,
+	case when i.indisunique then 'u'::varchar else 'i'::varchar end as constraint_type,
 	null::varchar as foreign_table_namespace,
 	null::varchar as foreign_table_name
 from 
@@ -36,4 +36,3 @@ from
 ) 
 a
 order by a.table_name
-

@@ -55,10 +55,13 @@ get_method(table,method_name,icolumns,sep_comma,summary) ::=<<
 public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
 {
 	<sort_and_page_ops()>
+	string sql = string.Format(Helper.SQL_SELECT_WHERE,"*",<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",operations);
+	Debug.WriteLine(sql);
 	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
-			string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,operations),
+			sql,
 			CreateFromReader<generic("T")>,
-			p_Transaction
+			p_Transaction<sep_comma>
+			<icolumns:create_npgsql_newparameter(); separator=",\r\n">
         );
 }
 
@@ -105,7 +108,7 @@ public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_
 <intelli_returns_table_list()>
 public static R <method_name><generic("T,R")>(<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
 {
-	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)>null, null,null);
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma>null, null,null);
 }
 
 /**************************************************/
@@ -361,3 +364,9 @@ if(p_PagingOperation != null)
 	
 operations = string.Format("{0} {1}",sopr,popr);
 >>
+
+create_method_sub_name(columns) ::=<<
+<columns:create_method_sub_name_part(); separator="_">
+>>
+
+create_method_sub_name_part(column) ::="<column.TemplateColumnName>"

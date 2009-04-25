@@ -14,6 +14,7 @@ namespace CodeBuilder
         StringTemplate st;
         StringTemplate insert_method;
         StringTemplate getby_single_return_method;
+        StringTemplate create_method_sub_name;
         StringTemplate get_method;
         StringTemplate code_summary;
         string p_ObjectNamespace;
@@ -31,6 +32,7 @@ namespace CodeBuilder
             getby_single_return_method = p_stgGroup.GetInstanceOf("getby_single_return_method");
             get_method = p_stgGroup.GetInstanceOf("get_method");
             code_summary = p_stgGroup.GetInstanceOf("code_summary");
+            create_method_sub_name = p_stgGroup.GetInstanceOf("create_method_sub_name");
 
             Methods = new List<TemplateMethod>();
         }
@@ -56,7 +58,7 @@ namespace CodeBuilder
             Methods.Add(method);
         }
 
-        private string CodeSummary(string text,params object[] args)
+        public string CodeSummary(string text,params object[] args)
         {
             code_summary.Reset();
             code_summary.SetAttribute("text", string.Format(text, args));
@@ -73,7 +75,6 @@ namespace CodeBuilder
 
         public string CreateGetAllMethod(TemplateRelation rel)
         {
-            TemplateMethod method = new TemplateMethod();
             get_method.Reset();
             get_method.SetAttribute("table", rel);
             get_method.SetAttribute("method_name", "GetList");
@@ -81,7 +82,22 @@ namespace CodeBuilder
             return get_method.ToString();
         }
 
-        public TemplateMethod CreateGetySingleReturnMethod(TemplateRelation rel, Index<TemplateColumn> index)
+        public TemplateMethod CreateGetMultiReturnMethod(TemplateRelation rel, string method_name, Index<TemplateColumn> index,string summary)
+        {
+            //get_method(table,method_name,icolumns,sep_comma,summary)
+            TemplateMethod method = new TemplateMethod();
+            get_method.Reset();
+            get_method.SetAttribute("table", rel);
+            get_method.SetAttribute("method_name", method_name);
+            get_method.SetAttribute("summary", summary);
+            get_method.SetAttribute("icolumns", index.Columns);
+            get_method.SetAttribute("sep_comma", ",");
+            method.Content = get_method.ToString();
+            method.Signiture = index.Signiture;
+            return method;
+        }
+
+        public TemplateMethod CreateGetSingleReturnMethod(TemplateRelation rel, Index<TemplateColumn> index)
         {
             TemplateMethod method = new TemplateMethod();
             getby_single_return_method.Reset();
@@ -91,6 +107,13 @@ namespace CodeBuilder
             method.Content = getby_single_return_method.ToString();
             method.Signiture = index.Signiture;
             return method;
+        }
+
+        public string CreateMethodSubName(List<TemplateColumn> columns)
+        {
+            create_method_sub_name.Reset();
+            create_method_sub_name.SetAttribute("columns", columns);
+            return create_method_sub_name.ToString();
         }
 
         public void Create(TemplateRelation relation, string destFolder)
@@ -109,8 +132,13 @@ namespace CodeBuilder
 
             if (Methods.Count != 0)
             {
-                var methods = (from m in Methods select m.Content).Distinct();
-                methods.ToList<string>().ForEach(m => st.SetAttribute("methods", m));
+                List<TemplateMethod> distinct_method = new List<TemplateMethod>();
+                foreach(TemplateMethod item in Methods)
+                {
+                    if(!distinct_method.Exists(m => m.Signiture == item.Signiture))
+                        distinct_method.Add(item);
+                }
+                distinct_method.ForEach(m => st.SetAttribute("methods", m.Content));
             }
 
             File.WriteAllText(fname, st.ToString());

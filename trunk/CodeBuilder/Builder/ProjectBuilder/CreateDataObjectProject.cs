@@ -25,8 +25,8 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tblcv" || t.RelationName == "tbluser"))
-            //foreach (TemplateRelation rel in p_Schema.Tables)
+            //foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser_properties" || t.RelationName == "tbluser"))
+            foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
 
@@ -42,14 +42,26 @@ namespace CodeBuilder
                 factoryBuilder.AddMethod("getall", factoryBuilder.CreateGetAllMethod(rel));
 
 
-                // loop every index on this relation
+                // loop every unique and primary key index on this relation.
                 foreach (Index<TemplateColumn> index in rel.Indexes)
                 {
                     if (index.IndexType == IndexType.PrimaryKey)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetySingleReturnMethod(rel, index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
 
                     if (index.IndexType == IndexType.UniqueIndex)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetySingleReturnMethod(rel, index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
+                }
+
+                foreach (Index<TemplateColumn> index in rel.Indexes)
+                {
+                    string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
+                    string summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName,index.IndexType,method_sub_name);
+
+                    if (index.IndexType == IndexType.ForeignKey)
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetBy_{0}", method_sub_name), index, summary));
+
+                    if (index.IndexType == IndexType.CustomIndex)
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel,string.Format("GetBy_{0}",method_sub_name),index,summary));
                 }
 
                 factoryBuilder.Create(rel, doBuildFolder);
