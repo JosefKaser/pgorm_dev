@@ -302,7 +302,7 @@ intelli_tans() ::=<<
 
 create_implicit_check(column) ::=<<
 if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
-    oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Db, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName> });
+    oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quored, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
     
 >>
 
@@ -316,7 +316,7 @@ idatareader_converter(column) ::=<<
 #region <column.TemplateColumnName>
 try
 {
-	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>];
+	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
 }
 catch(Exception ex)
 {

@@ -25,8 +25,8 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            //foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser_properties" || t.RelationName == "tbluser"))
-            foreach (TemplateRelation rel in p_Schema.Tables)
+            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser_properties" || t.RelationName == "tbluser"))
+            //foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
 
@@ -83,7 +83,9 @@ namespace CodeBuilder
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);
             File.WriteAllText(string.Format(@"{0}\AssemblyInfo.cs", doBuildFolder), asmInfoBuilder.BuildToString());
 
-            p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.Objects.dll", p_Project.OutputFolder, p_Project.RootNamespace);
+            //p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.Objects.dll", p_Project.OutputFolder, p_Project.RootNamespace);
+            string p_ProjAsmName = Path.GetFileNameWithoutExtension(p_Project.AssemblyName);
+            p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.dll", p_Project.OutputFolder, p_ProjAsmName);
 
             CSharpCodeProvider cscProvider = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
             CompilerParameters compParams = new CompilerParameters();

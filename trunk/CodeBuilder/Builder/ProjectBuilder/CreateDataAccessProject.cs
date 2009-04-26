@@ -30,7 +30,8 @@ namespace CodeBuilder
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(asmInfo, this);
             File.WriteAllText(string.Format(@"{0}\AssemblyInfo.cs", daBuildFolder), asmInfoBuilder.BuildToString());
 
-            p_DataAccessAssemblyFile = string.Format(@"{0}\{1}.DataAccess.dll", p_Project.OutputFolder, p_Project.RootNamespace);
+            string p_ProjAsmName = Path.GetFileNameWithoutExtension(p_Project.AssemblyName);
+            p_DataAccessAssemblyFile = string.Format(@"{0}\{1}.core.dll", p_Project.OutputFolder, p_ProjAsmName);
 
             CSharpCodeProvider cscProvider = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
             CompilerParameters compParams = new CompilerParameters();

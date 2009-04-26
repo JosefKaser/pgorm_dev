@@ -57,8 +57,18 @@ namespace PostgreSQL.Catalog
                 // create a temporary table for each proc which imitates the argument names and types
                 if (proc.num_args > 0)
                 {
+                    List<string> distinct_arg = new List<string>();
+                    string arg_name="";
                     for (int a = 0; a != proc.num_args; a++)
-                        sql += string.Format("\"{0}\" {1},", proc.proargnames[a], proc.arg_types[a]);
+                    {
+                        arg_name = proc.proargnames[a];
+                        if (distinct_arg.Exists(i => i == arg_name))
+                            arg_name = string.Format("{0}_arg{1}", arg_name, a);
+                        else
+                            distinct_arg.Add(arg_name);
+
+                        sql += string.Format("\"{0}\" {1}\r\n,", arg_name, proc.arg_types[a]);
+                    }
                     sql = string.Format("create temporary table {0} ({1}); ", tmp_name, sql.Substring(0, sql.Length - 1));
                     DataAccess.ExecuteNoneQuery(sql, transaction);
                 }
