@@ -9,74 +9,9 @@ using System.Diagnostics;
 
 namespace DevHelper
 {
-    #region MyRegion
-    class Country
-    {
-        public string TwoLetterCode { get; set; }
-        public string Name { get; set; }
-        public string Currency { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("({0},{1},{2})", TwoLetterCode, Name, Currency);
-        }
-    }
-
-    class CountryTypeConverter : PostgreSQLTypeConverter
-    {
-        public override Type CLR_Type()
-        {
-            return typeof(Country);
-        }
-
-        public override string ToString(object obj)
-        {
-            return (obj as Country).ToString();
-        }
-
-        public override object FromString(string data)
-        {
-            if (!string.IsNullOrEmpty(data))
-            {
-                string[] parts = data.Replace("(", "").Replace(")", "").Split(new char[] { ',' });
-                Country country = new Country();
-                country.TwoLetterCode = parts[0];
-                country.Name = parts[1];
-                country.Currency = parts[2];
-                return country;
-            }
-            else
-                return null;
-        }
-    } 
-    #endregion
-
     class Program
     {
-        #region MyRegion
-        //public static void TestAllDBs()
-        //{
-        //    List<string> databases = new List<string>();
-        //    List<Schema> scs = new List<Schema>();
-        //    string constr = "server=db1.truesoftware.net;username=postgres;password=db359!wn";
-        //    DataAccess.InitializeDatabase(constr);
-        //    NpgsqlCommand command = new NpgsqlCommand("select datname from pg_database where datdba <> 10", DataAccess.Connection);
-        //    NpgsqlDataReader reader = command.ExecuteReader();
-
-        //    while (reader.Read())
-        //        databases.Add(reader.GetString(0));
-
-        //    foreach (string db in databases)
-        //    {
-        //        constr = string.Format("server=db1.truesoftware.net;database={0};username=postgres;password=db359!wn", db);
-        //        SchemaReader sr = new SchemaReader(constr);
-        //        Debug.Write("Reading " + db);
-        //        scs.Add(sr.ReadSchema());
-        //        Debug.WriteLine(" , Done.");
-        //    }
-        //} 
-        #endregion
-
+        static bool has_error = false;
         static void Main(string[] args)
         {
             //string constr = "server=localhost;database=testdb;username=postgres;password=postgres";
@@ -92,18 +27,20 @@ namespace DevHelper
             project.RemoveTablePrefix.Add("view_");
             project.BuildInDebugMode = true;
             project.SetDefaultsByDatabaseName();
+            project.AssemblyName = @"test1.dll";
             CodeBuilder.ProjectBuilder projectBuilder = new CodeBuilder.ProjectBuilder(project);
             projectBuilder.OnBuildStep += new CodeBuilder.ProjectBuilderEventHandler(projectBuilder_OnBuildStep);
             projectBuilder.Build();
             Console.WriteLine("Done.");
-            Console.ReadLine();
-
+            if (has_error)
+                Console.ReadLine();
         }
 
         static void projectBuilder_OnBuildStep(object sender, CodeBuilder.ProjectBuilderEventArgs e)
         {
+            if (e.MessageType == CodeBuilder.ProjectBuilderMessageType.Error)
+                has_error = true;
             Console.WriteLine(string.Format("{0}\t{1}", e.MessageType, e.Message));
         }
-
     }
 }

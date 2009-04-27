@@ -159,11 +159,11 @@ namespace MY_NAMESPACE.Core
         #endregion
 
         #region ExecuteNoneQuery
-        public static void ExecuteNoneQuery(string sqlStatement,NpgsqlTransaction trans, params DbParameter[] parameters)
+        public static int ExecuteNoneQuery(string sqlStatement,NpgsqlTransaction trans, params DbParameter[] parameters)
         {
             NpgsqlCommand command = new NpgsqlCommand(sqlStatement, DataAccess.Connection,trans);
             SetupParameters(command, parameters);
-            command.ExecuteNonQuery();
+            return command.ExecuteNonQuery();
         } 
         #endregion
 

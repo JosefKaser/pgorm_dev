@@ -16,22 +16,29 @@ namespace CodeBuilder
         StringTemplate getby_single_return_method;
         StringTemplate create_method_sub_name;
         StringTemplate get_method;
+        StringTemplate delete_method;
         StringTemplate code_summary;
+        StringTemplate record_count;
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
         public List<TemplateMethod> Methods;
 
+        #region FactoryTemplate
         private static string FactoryTemplate()
         {
-            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n",
+            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n{5}\r\n{6}\r\n",
                 Templates.Factory_Main_stg,
                 Templates.Factory_InsertInto_stg,
                 Templates.Factory_GetSingle_stg,
                 Templates.Factory_GetManyBy_stg,
-                Templates.Factory_Factory_stg);
-        }
+                Templates.Factory_Factory_stg,
+                Templates.Factory_Delete_stg,
+                Templates.Factory_RecordCount_stg);
+        } 
+        #endregion
 
-        public FactoryBuilder(ProjectBuilder p_builder, string object_namespace,string recordet_namespace)
+        #region FactoryBuilder
+        public FactoryBuilder(ProjectBuilder p_builder, string object_namespace, string recordet_namespace)
             : base(FactoryTemplate(), p_builder)
         {
             st = p_stgGroup.GetInstanceOf("factory");
@@ -43,16 +50,22 @@ namespace CodeBuilder
             get_method = p_stgGroup.GetInstanceOf("get_method");
             code_summary = p_stgGroup.GetInstanceOf("code_summary");
             create_method_sub_name = p_stgGroup.GetInstanceOf("create_method_sub_name");
+            delete_method = p_stgGroup.GetInstanceOf("delete_method");
+            record_count = p_stgGroup.GetInstanceOf("record_count");
 
             Methods = new List<TemplateMethod>();
-        }
+        } 
+        #endregion
 
+        #region Reset
         public void Reset()
         {
             st.Reset();
             Methods.Clear();
-        }
+        } 
+        #endregion
 
+        #region AddMethod
         public void AddMethod(string sig, string content)
         {
             Methods.Add(new TemplateMethod()
@@ -61,28 +74,36 @@ namespace CodeBuilder
                 Content = content
             }
             );
-        }
+        } 
+        #endregion
 
+        #region AddMethod
         public void AddMethod(TemplateMethod method)
         {
             Methods.Add(method);
-        }
+        } 
+        #endregion
 
-        public string CodeSummary(string text,params object[] args)
+        #region CodeSummary
+        public string CodeSummary(string text, params object[] args)
         {
             code_summary.Reset();
             code_summary.SetAttribute("text", string.Format(text, args));
             return code_summary.ToString();
-        }
+        } 
+        #endregion
 
+        #region CreateInsertMethod
         public string CreateInsertMethod(TemplateRelation relation)
         {
             insert_method.Reset();
             insert_method.SetAttribute("table", relation);
             string s = insert_method.ToString();
             return insert_method.ToString();
-        }
+        } 
+        #endregion
 
+        #region CreateGetAllMethod
         public string CreateGetAllMethod(TemplateRelation rel)
         {
             get_method.Reset();
@@ -90,9 +111,11 @@ namespace CodeBuilder
             get_method.SetAttribute("method_name", "GetList");
             get_method.SetAttribute("summary", CodeSummary("Retrives a generic List&lt;{0}&gt;", rel.TemplateRelationName));
             return get_method.ToString();
-        }
+        } 
+        #endregion
 
-        public TemplateMethod CreateGetMultiReturnMethod(TemplateRelation rel, string method_name, Index<TemplateColumn> index,string summary)
+        #region CreateGetMultiReturnMethod
+        public TemplateMethod CreateGetMultiReturnMethod(TemplateRelation rel, string method_name, Index<TemplateColumn> index, string summary)
         {
             //get_method(table,method_name,icolumns,sep_comma,summary)
             TemplateMethod method = new TemplateMethod();
@@ -105,8 +128,33 @@ namespace CodeBuilder
             method.Content = get_method.ToString();
             method.Signiture = index.Signiture;
             return method;
+        } 
+        #endregion
+
+        public TemplateMethod CreateCountRecords(TemplateRelation rel)
+        {
+            TemplateMethod method = new TemplateMethod();
+            record_count.Reset();
+            record_count.SetAttribute("table", rel);
+            method.Content = record_count.ToString();
+            method.Signiture = "recond_count";
+            return method;
         }
 
+        #region CreateDeleteMethod
+        public TemplateMethod CreateDeleteMethod(TemplateRelation rel, Index<TemplateColumn> index)
+        {
+            TemplateMethod method = new TemplateMethod();
+            delete_method.Reset();
+            delete_method.SetAttribute("table", rel);
+            delete_method.SetAttribute("icolumns", index.Columns);
+            method.Content = delete_method.ToString();
+            method.Signiture = "deleteby_" + index.Signiture;
+            return method;
+        } 
+        #endregion
+
+        #region CreateGetSingleReturnMethod
         public TemplateMethod CreateGetSingleReturnMethod(TemplateRelation rel, Index<TemplateColumn> index)
         {
             TemplateMethod method = new TemplateMethod();
@@ -117,15 +165,19 @@ namespace CodeBuilder
             method.Content = getby_single_return_method.ToString();
             method.Signiture = index.Signiture;
             return method;
-        }
+        } 
+        #endregion
 
+        #region CreateMethodSubName
         public string CreateMethodSubName(List<TemplateColumn> columns)
         {
             create_method_sub_name.Reset();
             create_method_sub_name.SetAttribute("columns", columns);
             return create_method_sub_name.ToString();
-        }
+        } 
+        #endregion
 
+        #region Create
         public void Create(TemplateRelation relation, string destFolder)
         {
             string nspace = Helper.GetExplicitNamespace(p_Project, relation);
@@ -143,15 +195,16 @@ namespace CodeBuilder
             if (Methods.Count != 0)
             {
                 List<TemplateMethod> distinct_method = new List<TemplateMethod>();
-                foreach(TemplateMethod item in Methods)
+                foreach (TemplateMethod item in Methods)
                 {
-                    if(!distinct_method.Exists(m => m.Signiture == item.Signiture))
+                    if (!distinct_method.Exists(m => m.Signiture == item.Signiture))
                         distinct_method.Add(item);
                 }
                 distinct_method.ForEach(m => st.SetAttribute("methods", m.Content));
             }
 
             File.WriteAllText(fname, st.ToString());
-        }
+        } 
+        #endregion
     }
 }

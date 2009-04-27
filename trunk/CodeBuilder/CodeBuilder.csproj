@@ -51,6 +51,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -108,11 +110,14 @@
     <Content Include="ReservedWords.txt" />
     <Content Include="STG\AssemblyInfo.stg.txt" />
     <Content Include="STG\DataObject.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_Delete.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Main.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Factory.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_GetManyBy.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_GetSingle.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_InsertInto.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_RecordCount.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factoty_Update.stg.txt" />
     <Content Include="STG\DataObjectRecordSet.stg.txt" />
   </ItemGroup>
   <ItemGroup>

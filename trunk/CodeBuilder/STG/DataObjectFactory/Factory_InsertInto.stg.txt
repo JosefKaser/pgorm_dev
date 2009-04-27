@@ -5,9 +5,9 @@
 /// with the latest affected column values.})>
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
 <intelli_type_param_table(table)>
-public static void Insert\<T\>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
+public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
 {
-	Insert\<T\>(ref p_<table.TemplateRelationName>,null);
+	Insert<generic("T")>(ref p_<table.TemplateRelationName>,null);
 }
 
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
@@ -16,12 +16,12 @@ public static void Insert\<T\>(ref T p_<table.TemplateRelationName>) where T : <
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
 <intelli_type_param_table(table)>
 <intelli_tans()>
-public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
+public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
 	string sqlStatement = "";
 	DbParameter[] dbParams = null;
 		
-	List\<OperationParameter\> oprParams = new List\<OperationParameter\>();
+	List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
 	
 	#region Implicit value assignment.
 	<table.DMLColumns:create_implicit_check();separator="\r\n">	
@@ -39,29 +39,25 @@ public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransa
 				insertOpr.InsertArguments);
 				
 			dbParams = insertOpr.DbParameters;
+
+		    p_<table.TemplateRelationName> = DataAccess.ExecuteSingleObjectQuery<generic("T")>
+		    (
+    			sqlStatement,
+			    CreateFromReader<generic("T")>,
+			    p_Transaction,
+			    dbParams
+            );			
 		}
-		
-		List\<T\> result = DataAccess.ExecuteObjectQuery\<T\>
-		(
-			sqlStatement,
-			CreateFromReader<generic("T")>,
-			p_Transaction,
-			dbParams
-        );			
-            
-		if(result.Count != 0)
-		{           
-			result[0].EntityStatus = EntityStatus.Default;
-			p_<table.TemplateRelationName> = result[0];
-		}
+        else
+        {
+            throw new OperationCanceledException("Unable to insert an object that is not EntityStatus == EntityStatus.New");
+        }		
     }
     else
     {
-        throw new OperationCanceledException("Unable to insert/update an empty [<table.TemplateRelationName>] into the database");
+        throw new OperationCanceledException("Unable to insert an empty [<table.TemplateRelationName>] into the database");
     }	
 }
-#endregion
-
 
 /************************* non generic ****************************************/
 
@@ -83,4 +79,7 @@ public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRela
 {
 	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,p_Transaction);
 }
+
+#endregion
+
 >>

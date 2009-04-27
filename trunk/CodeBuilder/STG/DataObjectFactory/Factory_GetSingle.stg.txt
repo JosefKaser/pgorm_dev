@@ -15,7 +15,8 @@ public static T <create_getby_method_name(icolumns)><generic("T")>(<create_param
 						p_Transaction,
 						<icolumns:create_npgsql_newparameter(); separator=",\r\n">
 					);
-	result.EntityStatus = EntityStatus.Default;
+    if(result != null)
+	    result.EntityStatus = EntityStatus.Default;
 	return result;
 }
 

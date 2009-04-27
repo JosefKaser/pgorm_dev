@@ -41,15 +41,17 @@ namespace CodeBuilder
                 // create get all method
                 factoryBuilder.AddMethod("getall", factoryBuilder.CreateGetAllMethod(rel));
 
+                // create count records
+                factoryBuilder.AddMethod(factoryBuilder.CreateCountRecords(rel));
 
                 // loop every unique and primary key index on this relation.
                 foreach (Index<TemplateColumn> index in rel.Indexes)
                 {
-                    if (index.IndexType == IndexType.PrimaryKey)
+                    if (index.IndexType == IndexType.PrimaryKey || index.IndexType == IndexType.UniqueIndex)
+                    {
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
-
-                    if (index.IndexType == IndexType.UniqueIndex)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateDeleteMethod(rel,index));
+                    }
                 }
 
                 foreach (Index<TemplateColumn> index in rel.Indexes)

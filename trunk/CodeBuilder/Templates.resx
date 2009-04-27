@@ -127,6 +127,9 @@
   <data name="DataObject_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobject.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Factory_Delete_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_delete.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="Factory_Factory_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobjectfactory\factory_factory.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -141,5 +144,8 @@
   </data>
   <data name="Factory_Main_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobjectfactory\factory_main.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_RecordCount_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_recordcount.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>
