@@ -62,4 +62,25 @@ public static void Insert\<T\>(ref T p_<table.TemplateRelationName>,NpgsqlTransa
 }
 #endregion
 
+
+/************************* non generic ****************************************/
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
+{
+	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,null);
+}
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_tans()>
+public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
+{
+	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,p_Transaction);
+}
 >>
