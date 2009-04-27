@@ -1,1 +1,105 @@
-﻿
+﻿update_method_single(table,icolumns) ::=<<
+#region insert_method
+<code_summary({Updates an existing record in table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_tans()>
+public static void UpdateBy_<create_method_sub_name(icolumns)><generic("T")>(ref T p_<table.TemplateRelationName>,<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
+{
+	string sqlStatement = "";
+	DbParameter[] dbParams = null;
+		
+	List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
+	
+	#region Implicit value assignment.
+	<table.DMLColumns:create_implicit_check();separator="\r\n">	
+	#endregion
+	
+    if (oprParams.Count != 0)
+    {
+		if(p_<table.TemplateRelationName>.EntityStatus == EntityStatus.Changed)
+		{
+
+		    List<generic("OperationParameter")> updateKeys = new List<generic("OperationParameter")>();
+		    updateKeys.AddRange(
+			    new OperationParameter[] 
+			    { 
+				    <icolumns:create_update_opr_param_from_method();separator=",\r\n">
+			    }
+		    );
+
+			UpdateOperation updateOpr = new UpdateOperation(oprParams,updateKeys);
+			
+			sqlStatement = string.Format(Helper.SQL_UPDATE,
+				<table.TemplateRelationName>.RELATION_NAME,
+				updateOpr.UpdateColumns,
+				updateOpr.UpdateArguments);
+				
+			dbParams = updateOpr.DbParameters;
+
+		    p_<table.TemplateRelationName> = DataAccess.ExecuteSingleObjectQuery<generic("T")>
+		    (
+    			sqlStatement,
+			    CreateFromReader<generic("T")>,
+			    p_Transaction,
+			    dbParams
+            );			
+		}
+        else
+        {
+            throw new OperationCanceledException("Unable to update an object that is not EntityStatus == EntityStatus.Changed");
+        }		
+    }
+    else
+    {
+        throw new OperationCanceledException("Unable to update an empty [<table.TemplateRelationName>] into the database");
+    }	
+}
+
+<code_summary({Updates an existing record in table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+public static void UpdateBy_<create_method_sub_name(icolumns)><generic("T")>(ref T p_<table.TemplateRelationName>,<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new()
+{
+    UpdateBy_<create_method_sub_name(icolumns)><generic("T")>(ref p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,null);
+}
+
+/************************** non generic *********************************/
+
+<code_summary({Updates an existing record in table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_tans()>
+<icolumns:intelli_param_column(); separator="\r\n">
+public static void UpdateBy_<create_method_sub_name(icolumns)>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction)
+{
+    UpdateBy_<create_method_sub_name(icolumns)><generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,p_Transaction);
+}
+
+
+<code_summary({Updates an existing record in table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<icolumns:intelli_param_column(); separator="\r\n">
+public static void UpdateBy_<create_method_sub_name(icolumns)>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,<create_parameters(icolumns)>)
+{
+    UpdateBy_<create_method_sub_name(icolumns)><generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,null);
+}
+
+
+#endregion
+
+>>
+
+
+create_update_opr_param_from_method(column) ::=<<
+new OperationParameter() { DbValue = p_<column.TemplateColumnName>, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@UPD_" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR }
+>>

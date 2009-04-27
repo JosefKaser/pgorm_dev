@@ -19,6 +19,8 @@ namespace CodeBuilder
         StringTemplate delete_method;
         StringTemplate code_summary;
         StringTemplate record_count;
+        StringTemplate update_method_single;
+
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
         public List<TemplateMethod> Methods;
@@ -26,14 +28,15 @@ namespace CodeBuilder
         #region FactoryTemplate
         private static string FactoryTemplate()
         {
-            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n{5}\r\n{6}\r\n",
+            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n{5}\r\n{6}\r\n{7}\r\n",
                 Templates.Factory_Main_stg,
                 Templates.Factory_InsertInto_stg,
                 Templates.Factory_GetSingle_stg,
                 Templates.Factory_GetManyBy_stg,
                 Templates.Factory_Factory_stg,
                 Templates.Factory_Delete_stg,
-                Templates.Factory_RecordCount_stg);
+                Templates.Factory_RecordCount_stg,
+                Templates.Factoty_Update_stg);
         } 
         #endregion
 
@@ -52,6 +55,7 @@ namespace CodeBuilder
             create_method_sub_name = p_stgGroup.GetInstanceOf("create_method_sub_name");
             delete_method = p_stgGroup.GetInstanceOf("delete_method");
             record_count = p_stgGroup.GetInstanceOf("record_count");
+            update_method_single = p_stgGroup.GetInstanceOf("update_method_single");
 
             Methods = new List<TemplateMethod>();
         } 
@@ -131,6 +135,7 @@ namespace CodeBuilder
         } 
         #endregion
 
+        #region CreateCountRecords
         public TemplateMethod CreateCountRecords(TemplateRelation rel)
         {
             TemplateMethod method = new TemplateMethod();
@@ -140,6 +145,8 @@ namespace CodeBuilder
             method.Signiture = "recond_count";
             return method;
         }
+        
+        #endregion
 
         #region CreateDeleteMethod
         public TemplateMethod CreateDeleteMethod(TemplateRelation rel, Index<TemplateColumn> index)
@@ -176,6 +183,17 @@ namespace CodeBuilder
             return create_method_sub_name.ToString();
         } 
         #endregion
+
+        public TemplateMethod CreateUpdateMethodSingle(TemplateRelation rel,Index<TemplateColumn> index)
+        {
+            TemplateMethod method = new TemplateMethod();
+            update_method_single.Reset();
+            update_method_single.SetAttribute("table", rel);
+            update_method_single.SetAttribute("icolumns", index.Columns);
+            method.Content = update_method_single.ToString();
+            method.Signiture = "update_" + index.Signiture;
+            return method;
+        }
 
         #region Create
         public void Create(TemplateRelation relation, string destFolder)

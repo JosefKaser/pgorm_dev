@@ -38,7 +38,7 @@ namespace <namespace>
 static_db_column_name(column) ::=<<
 internal static readonly string COL_<column.TemplateColumnName>_CLR = "<column.ColumnName>";
 <code_summary({Represents the explicit and quoted database column name to be used in SQL queries.})>
-public static readonly string COL_<column.TemplateColumnName>_Quored = "\"<column.ColumnName>\"";
+public static readonly string COL_<column.TemplateColumnName>_Quoted = "\"<column.ColumnName>\"";
 >>
 
 

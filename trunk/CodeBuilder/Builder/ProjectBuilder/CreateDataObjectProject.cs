@@ -25,7 +25,7 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser_properties" || t.RelationName == "tbluser"))
+            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser"))
             //foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
@@ -51,6 +51,7 @@ namespace CodeBuilder
                     {
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
                         factoryBuilder.AddMethod(factoryBuilder.CreateDeleteMethod(rel,index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateMethodSingle(rel, index));
                     }
                 }
 

@@ -38,9 +38,12 @@ namespace DevHelper
 
         static void projectBuilder_OnBuildStep(object sender, CodeBuilder.ProjectBuilderEventArgs e)
         {
-            if (e.MessageType == CodeBuilder.ProjectBuilderMessageType.Error)
-                has_error = true;
-            Console.WriteLine(string.Format("{0}\t{1}", e.MessageType, e.Message));
+            if (!e.Message.Contains("zXML"))
+            {
+                if (e.MessageType == CodeBuilder.ProjectBuilderMessageType.Error)
+                    has_error = true;
+                Console.WriteLine(string.Format("{0}\t{1}", e.MessageType, e.Message));
+            }
         }
     }
 }

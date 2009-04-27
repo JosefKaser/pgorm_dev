@@ -274,17 +274,33 @@ namespace CodeBuilder {
         ///&lt;intelli_returns({long containing the number of records})&gt;
         ///public static long CountRecords(NpgsqlTransaction p_Transaction)
         ///{
-        ///    return DataAccess.ExecuteScalarQuery&lt;long&gt;(
+        ///    return DataAccess.ExecuteScalarQuery&lt;generic(&quot;long&quot;)&gt;(
         ///        string.Format(Helper.SQL_SELECT_COUNT,&lt;table.TemplateRelationName&gt;.RELATION_NAME),
         ///        p_Transaction);
         ///}
         ///
         ///&lt;intelli_tans()&gt;
-        ///&lt;code_summary({Counts the number of records i [rest of string was truncated]&quot;;.
+        ///&lt;code_summary({Counts the number o [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Factory_RecordCount_stg {
             get {
                 return ResourceManager.GetString("Factory_RecordCount_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update_method_single(table,icolumns) ::=&lt;&lt;
+        ///#region insert_method
+        ///&lt;code_summary({Updates an existing record in table [&lt;table.RelationName&gt;] based on an object 
+        ////// of type &lt;table.TemplateRelationName&gt;. This method updates the [ref p_&lt;table.TemplateRelationName&gt;]
+        ////// with the latest affected column values.})&gt;
+        ///&lt;intelli_param(name={p_&lt;table.TemplateRelationName&gt;},desc={A ref object of type &lt;table.TemplateRelationName&gt;.})&gt;
+        ///&lt;intelli_type_param_table(table)&gt;
+        ///&lt;icolumns:intelli_param_column(); separator=&quot;\r\n [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Factoty_Update_stg {
+            get {
+                return ResourceManager.GetString("Factoty_Update_stg", resourceCulture);
             }
         }
     }
