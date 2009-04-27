@@ -121,13 +121,25 @@
   <data name="AssemblyInfo_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\assemblyinfo.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="DataObjectFactory_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>stg\dataobjectfactory.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="DataObjectRecordSet_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobjectrecordset.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="DataObject_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobject.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_Factory_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_factory.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_GetManyBy_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_getmanyby.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_GetSingle_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_getsingle.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_InsertInto_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_insertinto.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Factory_Main_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_main.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

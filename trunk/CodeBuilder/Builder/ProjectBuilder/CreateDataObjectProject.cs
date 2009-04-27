@@ -58,10 +58,10 @@ namespace CodeBuilder
                     string summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName,index.IndexType,method_sub_name);
 
                     if (index.IndexType == IndexType.ForeignKey)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format( "GetManyBy_{0}", method_sub_name), index, summary));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, summary));
 
                     if (index.IndexType == IndexType.CustomIndex)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel,string.Format( "GetManyBy_{0}",method_sub_name),index,summary));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel,string.Format("GetManyBy_{0}",method_sub_name),index,summary));
                 }
 
                 factoryBuilder.Create(rel, doBuildFolder);

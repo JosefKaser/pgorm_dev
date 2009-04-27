@@ -21,8 +21,18 @@ namespace CodeBuilder
         string p_RecordSetNamespace;
         public List<TemplateMethod> Methods;
 
+        private static string FactoryTemplate()
+        {
+            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n",
+                Templates.Factory_Main_stg,
+                Templates.Factory_InsertInto_stg,
+                Templates.Factory_GetSingle_stg,
+                Templates.Factory_GetManyBy_stg,
+                Templates.Factory_Factory_stg);
+        }
+
         public FactoryBuilder(ProjectBuilder p_builder, string object_namespace,string recordet_namespace)
-            : base(Templates.DataObjectFactory_stg, p_builder)
+            : base(FactoryTemplate(), p_builder)
         {
             st = p_stgGroup.GetInstanceOf("factory");
             p_ObjectNamespace = object_namespace;

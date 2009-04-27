@@ -1,0 +1,106 @@
+﻿get_method(table,method_name,icolumns,sep_comma,summary) ::=<<
+#region getall_method
+<summary>
+<intelli_tans()>
+<intelli_param_sort_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	<sort_and_page_ops()>
+	string sql = string.Format(Helper.SQL_SELECT_WHERE,"*",<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",operations);
+	Debug.WriteLine(sql);
+	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
+			sql,
+			CreateFromReader<generic("T")>,
+			p_Transaction<sep_comma>
+			<icolumns:create_npgsql_newparameter(); separator=",\r\n">
+        );
+}
+
+
+<summary>
+<intelli_tans()>
+<intelli_param_sort()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, p_SortOperation,null);
+}
+
+<summary>
+<intelli_tans()>
+<intelli_param_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, null,p_PagingOperation);
+}
+
+<summary>
+<intelli_tans()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> p_Transaction, null,null);
+}
+
+<summary>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma>null, null,null);
+}
+
+/**************************************************/
+
+<summary>
+<intelli_param_sort()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>SortOperation p_SortOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, p_SortOperation,null);
+}
+
+<summary>
+<intelli_param_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, null,p_PagingOperation);
+}
+
+#endregion
+
+
+<summary>
+<intelli_param_sort_page()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+	return <method_name><generic("T,R")>(<create_call_parameters(icolumns)><sep_comma> null, p_SortOperation,p_PagingOperation);
+}
+>>

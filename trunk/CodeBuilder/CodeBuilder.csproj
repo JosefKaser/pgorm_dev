@@ -108,7 +108,11 @@
     <Content Include="ReservedWords.txt" />
     <Content Include="STG\AssemblyInfo.stg.txt" />
     <Content Include="STG\DataObject.stg.txt" />
-    <Content Include="STG\DataObjectFactory.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_Main.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_Factory.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_GetManyBy.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_GetSingle.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_InsertInto.stg.txt" />
     <Content Include="STG\DataObjectRecordSet.stg.txt" />
   </ItemGroup>
   <ItemGroup>

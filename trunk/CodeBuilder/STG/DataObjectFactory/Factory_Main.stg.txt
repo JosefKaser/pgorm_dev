@@ -1,0 +1,121 @@
+﻿group main;
+
+
+usings(lib) ::=<<
+using <lib>;
+>>
+
+intelli_returns(text) ::="/// \<returns\><text>\</returns\>"
+
+intelli_returns_table(table) ::="/// \<returns\>An object of type [<table.TemplateRelationName>].\</returns\>"
+intelli_returns_table_list(table) ::="/// \<returns\>A list of List&lt;<table.TemplateRelationName>&gt; of type [<table.TemplateRelationName>].\</returns\>"
+
+intelli_type_param_table(table) ::=<<
+/// \<typeparam name="T"\>A class of type [<table.TemplateRelationName>]. The (derived) class must implement a default parameterless constructor.\</typeparam\>
+>>
+
+intelli_type_param_list(table) ::=<<
+/// \<typeparam name="R"\>A generic list of type List&lt;<table.TemplateRelationName>&gt;. The (derived) classes must implement a default parameterless constructor.\</typeparam\>
+>>
+
+
+intelli_type_param(name,type) ::=<<
+/// \<typeparam name="<name>"\><type>\</typeparam\>
+>>
+
+intelli_param_sort() ::=<<
+<intelli_param(name={p_SortOperation},desc={Instance of a Core.SortOperation})>
+>>
+
+intelli_param_page() ::=<<
+<intelli_param(name={p_PagingOperation},desc={Instance of a Core.PagingOperation})>
+>>
+
+intelli_param_sort_page() ::=<<
+<intelli_param_sort()>
+<intelli_param_page()>
+>>
+
+
+intelli_param(name,desc) ::=<<
+/// \<param name="<name>"\><desc>\</param\>
+>>
+
+intelli_param_column(column) ::=<<
+/// \<param name="p_<column.TemplateColumnName>"\><column.CLR_Description>\</param\>
+>>
+
+intelli_tans() ::=<<
+/// \<param name="p_Transaction"\>A NpgsqlTransaction object.\</param\>
+>>
+
+create_implicit_check(column) ::=<<
+if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
+    oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quored, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
+    
+>>
+
+create_getby_method_name(columns) ::=<<
+GetBy_<columns:create_method_name_part(); separator="_">
+>>
+
+create_method_name_part(column) ::="<column.TemplateColumnName>"
+
+idatareader_converter(column) ::=<<
+#region <column.TemplateColumnName>
+try
+{
+	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
+}
+catch(Exception ex)
+{
+	if(DataAccess.ThrowMapperException)
+		throw ex;
+	else
+		Debug.WriteLine(ex.Message);
+}
+#endregion
+>>
+
+create_parameters(columns) ::=<<
+<columns:create_parameter(); separator=",">
+>>	
+
+create_parameter(column) ::="<column.CLR_Type> p_<column.TemplateColumnName>"
+
+create_sql_asign_parameter(column) ::=" \\\"<column.TemplateColumnName>\\\"=@<column.TemplateColumnName> "
+
+create_npgsql_newparameter(column) ::=<<
+DataAccess.NewParameter("@<column.TemplateColumnName>",p_<column.TemplateColumnName>)
+>>
+
+create_call_parameters(columns) ::=<<
+<columns:create_call_parameter(); separator=",">
+>>	
+
+create_call_parameter(column) ::="p_<column.TemplateColumnName>"
+
+code_summary(text) ::=<<
+/// \<summary\>
+/// <text>
+/// \</summary\>
+>>
+
+generic(T) ::="\<<T>\>"
+
+sort_and_page_ops() ::=<<
+string sopr = "",popr="",operations=" ";
+if(p_SortOperation != null)
+	sopr = p_SortOperation.ToString();
+	
+if(p_PagingOperation != null)
+	popr = p_PagingOperation.ToString();
+	
+operations = string.Format("{0} {1}",sopr,popr);
+>>
+
+create_method_sub_name(columns) ::=<<
+<columns:create_method_sub_name_part(); separator="_">
+>>
+
+create_method_sub_name_part(column) ::="<column.TemplateColumnName>"
