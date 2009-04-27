@@ -100,6 +100,100 @@ public static void UpdateBy_<create_method_sub_name(icolumns)>(ref <table.Templa
 >>
 
 
+update_many_method(table,icolumns,summary,method_name) ::=<<
+#region update_many_method
+<summary>
+<intelli_tans()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(T p_<table.TemplateRelationName>,<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List<generic("T")>,new()
+{
+	string sqlStatement = "";
+	DbParameter[] dbParams = null;
+		
+	List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
+	
+	#region Implicit value assignment.
+	<table.DMLColumns:create_implicit_check();separator="\r\n">	
+	#endregion
+	
+    if (oprParams.Count != 0)
+    {
+		if(p_<table.TemplateRelationName>.EntityStatus == EntityStatus.ChangeMany)
+		{
+
+		    List<generic("OperationParameter")> updateKeys = new List<generic("OperationParameter")>();
+		    updateKeys.AddRange(
+			    new OperationParameter[] 
+			    { 
+				    <icolumns:create_update_opr_param_from_method();separator=",\r\n">
+			    }
+		    );
+
+			UpdateOperation updateOpr = new UpdateOperation(oprParams,updateKeys);
+			
+			sqlStatement = string.Format(Helper.SQL_UPDATE,
+				<table.TemplateRelationName>.RELATION_NAME,
+				updateOpr.UpdateColumns,
+				updateOpr.UpdateArguments);
+				
+			dbParams = updateOpr.DbParameters;
+
+		    return DataAccess.ExecuteObjectQuery<generic("T,R")>
+		    (
+    			sqlStatement,
+			    CreateFromReader<generic("T")>,
+			    p_Transaction,
+			    dbParams
+            );			
+		}
+        else
+        {
+            throw new OperationCanceledException("Unable to update any records when EntityStatus is not set to EntityStatus.ChangeMany");
+        }		
+    }
+    else
+    {
+        throw new OperationCanceledException("Unable to update any records based on an empty [<table.TemplateRelationName>].");
+    }	
+}
+
+<summary>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static R <method_name><generic("T,R")>(T p_<table.TemplateRelationName>,<create_parameters(icolumns)>) where T : <table.TemplateRelationName>,new() where R : List<generic("T")>,new()
+{
+    return <method_name><generic("T,R")>(p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,null);
+}
+
+/********************* non generic *************************/
+<summary>
+<intelli_tans()>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static <table.RecordSetName> <method_name>(<table.TemplateRelationName> p_<table.TemplateRelationName>,<create_parameters(icolumns)>,NpgsqlTransaction p_Transaction)
+{
+    return <method_name><generic({<table.TemplateRelationName>,<table.RecordSetName>})>(p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,p_Transaction);
+}
+
+<summary>
+<icolumns:intelli_param_column(); separator="\r\n">
+<intelli_returns_table_list()>
+public static <table.RecordSetName> <method_name>(<table.TemplateRelationName> p_<table.TemplateRelationName>,<create_parameters(icolumns)>)
+{
+    return <method_name><generic({<table.TemplateRelationName>,<table.RecordSetName>})>(p_<table.TemplateRelationName>,<create_call_parameters(icolumns)>,null);
+}
+
+
+#endregion
+>>
+
+
+
 create_update_opr_param_from_method(column) ::=<<
 new OperationParameter() { DbValue = p_<column.TemplateColumnName>, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@UPD_" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR }
 >>

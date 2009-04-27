@@ -25,7 +25,7 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tbluser"))
+            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tblcv_exper" || t.RelationName == "tbluser"))
             //foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
@@ -51,20 +51,25 @@ namespace CodeBuilder
                     {
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
                         factoryBuilder.AddMethod(factoryBuilder.CreateDeleteMethod(rel,index));
-                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateMethodSingle(rel, index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateSingleMethod(rel, index));
                     }
                 }
 
                 foreach (Index<TemplateColumn> index in rel.Indexes)
                 {
                     string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
-                    string summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName,index.IndexType,method_sub_name);
+                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName,index.IndexType,method_sub_name);
+                    string update_many_summary = factoryBuilder.CodeSummary("Updates table [{0}] using p_{0} as UPDATE SET parameters and retrives a generic List&lt;{0}&gt; of all updated/affected records. Use this method when updating foreign records.", rel.TemplateRelationName, index.IndexType, method_sub_name);
+
 
                     if (index.IndexType == IndexType.ForeignKey)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, summary));
+                    {
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateManyMethod(rel, string.Format("UpdateManyBy_{0}", method_sub_name), index,update_many_summary));
+                    }
 
                     if (index.IndexType == IndexType.CustomIndex)
-                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel,string.Format("GetManyBy_{0}",method_sub_name),index,summary));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
                 }
 
                 factoryBuilder.Create(rel, doBuildFolder);

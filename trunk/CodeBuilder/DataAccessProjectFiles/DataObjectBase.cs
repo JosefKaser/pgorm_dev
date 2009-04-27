@@ -11,7 +11,8 @@ namespace MY_NAMESPACE.Core
 		Default,
 		Changed,
 		New,
-		Deleted
+		Deleted,
+        ChangeMany
 	}
 	#endregion
 	

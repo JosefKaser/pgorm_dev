@@ -20,6 +20,7 @@ namespace CodeBuilder
         StringTemplate code_summary;
         StringTemplate record_count;
         StringTemplate update_method_single;
+        StringTemplate update_many_method;
 
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
@@ -56,6 +57,7 @@ namespace CodeBuilder
             delete_method = p_stgGroup.GetInstanceOf("delete_method");
             record_count = p_stgGroup.GetInstanceOf("record_count");
             update_method_single = p_stgGroup.GetInstanceOf("update_method_single");
+            update_many_method = p_stgGroup.GetInstanceOf("update_many_method");
 
             Methods = new List<TemplateMethod>();
         } 
@@ -184,7 +186,21 @@ namespace CodeBuilder
         } 
         #endregion
 
-        public TemplateMethod CreateUpdateMethodSingle(TemplateRelation rel,Index<TemplateColumn> index)
+        public TemplateMethod CreateUpdateManyMethod(TemplateRelation rel, string method_name,Index<TemplateColumn> index, string summary)
+        {
+            TemplateMethod method = new TemplateMethod();
+            update_many_method.Reset();
+            update_many_method.SetAttribute("table", rel);
+            update_many_method.SetAttribute("icolumns", index.Columns);
+            update_many_method.SetAttribute("method_name", method_name);
+            update_many_method.SetAttribute("summary", summary);
+            method.Content = update_many_method.ToString();
+            method.Signiture = "update_many_" + index.Signiture;
+            return method;
+        }
+
+        #region CreateUpdateMethodSingle
+        public TemplateMethod CreateUpdateSingleMethod(TemplateRelation rel, Index<TemplateColumn> index)
         {
             TemplateMethod method = new TemplateMethod();
             update_method_single.Reset();
@@ -193,7 +209,8 @@ namespace CodeBuilder
             method.Content = update_method_single.ToString();
             method.Signiture = "update_" + index.Signiture;
             return method;
-        }
+        } 
+        #endregion
 
         #region Create
         public void Create(TemplateRelation relation, string destFolder)
