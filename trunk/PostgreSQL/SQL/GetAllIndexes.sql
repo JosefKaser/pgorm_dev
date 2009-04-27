@@ -35,4 +35,5 @@ from
 	left join pg_namespace fns on fre.relnamespace=fns.oid
 ) 
 a
+where a.constraint_type <> 'c'
 order by a.table_name

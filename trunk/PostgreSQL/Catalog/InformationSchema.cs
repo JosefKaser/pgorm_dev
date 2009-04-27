@@ -67,6 +67,9 @@ namespace PostgreSQL.Catalog
                         else
                             distinct_arg.Add(arg_name);
 
+                        // correct arg types
+                        if(proc.arg_types[a] == "anyarray")
+                            proc.arg_types[0] = "varchar[]";
                         sql += string.Format("\"{0}\" {1}\r\n,", arg_name, proc.arg_types[a]);
                     }
                     sql = string.Format("create temporary table {0} ({1}); ", tmp_name, sql.Substring(0, sql.Length - 1));

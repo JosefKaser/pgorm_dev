@@ -206,7 +206,7 @@ namespace PostgreSQL
             if (t == "i")
                 return IndexType.CustomIndex;
 
-            throw new SchemaNotImplementedException(string.Format("Index type ({0}) is not implemented in thsi version", t));
+            throw new SchemaNotImplementedException(string.Format("Index type ({0}) is not implemented in this version", t));
         }
 
         #region GetViewDependedTables
