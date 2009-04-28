@@ -131,6 +131,7 @@
     <Compile Include="DataAccessProjectFiles\DataObjectValue.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectValueTypeConverter.cs" />
     <Compile Include="Builder\RecordSetBuilder.cs" />
+    <Compile Include="DataAccessProjectFiles\PostgreSQLTypeConverter.cs" />
     <Compile Include="HelperResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

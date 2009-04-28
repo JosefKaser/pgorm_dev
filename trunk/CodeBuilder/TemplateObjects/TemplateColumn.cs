@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MY_NAMESPACE.Core;
 
 namespace CodeBuilder.TemplateObjects
 {
     public class TemplateColumn : PostgreSQL.Objects.Column
     {
         public string p_TemplateColumnName;
+        public PostgreSQLTypeConverter Converter { get; set; }
+
+        public TemplateColumn()
+            : base()
+        {
+            Converter = null;
+        }
 
         public string TemplateColumnName
         {
@@ -46,9 +54,10 @@ namespace CodeBuilder.TemplateObjects
             get
             {
                 string s =
-                    "<para>Datatype: {0}</para>"
-                    + "<para>Is array: {7}</para>"
+                    "<para>PG Datatype: {0}</para>"
                     + "<para>Is PG array: {8}</para>"
+                    + "<para>Is CLR array: {7}</para>"
+                    + "<para>PG Type Type: {9}</para>"
                     + "<para>Autonumber: {1}</para>"
                     + "<para>Entity: {2}</para>"
                     + "<para>Nullable: {3}</para>"
@@ -56,7 +65,7 @@ namespace CodeBuilder.TemplateObjects
                     + "<para>Length: {5}</para>"
                     + GetDBComment(DB_Comment);
                     ;
-                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray,IsPgArray);
+                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray,IsPgArray,PGTypeType);
             }
         }
 

@@ -65,7 +65,11 @@ idatareader_converter(column) ::=<<
 #region <column.TemplateColumnName>
 try
 {
-	result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
+    <if(column.Converter)>
+        throw new NotImplementedException("Converter for <column.TemplateColumnName> is not implemented");
+    <else>
+        result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
+    <endif>
 }
 catch(Exception ex)
 {

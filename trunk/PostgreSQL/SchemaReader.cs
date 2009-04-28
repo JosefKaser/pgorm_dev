@@ -14,7 +14,6 @@ namespace PostgreSQL
     {
         #region Properties
         public event SchemaReaderMessageEventHandler Message;
-        public event SchemaReaderResolvePGTypeEventHandler ResolvePgType;
         private Schema<R,S,C> p_Schema;
         private List<Relation<C>> sp_arguments;
         #endregion
@@ -58,8 +57,7 @@ namespace PostgreSQL
         {
             foreach (Relation<C> item in sp_arguments)
             {
-                string[] sig = InformationSchema.GetFunstionSigniture(item.RelationName);
-                item.RelationName = sig[0];
+                item.RelationName = InformationSchema.GetFunstionSigniture(item.RelationName);
             }
 
             foreach (pg_proc proc in InformationSchema.Functions)
@@ -138,7 +136,7 @@ namespace PostgreSQL
                 col.column_name = string.Format("return_type_{0}", func.FunstionName);
                 List<pg_column> cols = new List<pg_column>();
                 cols.Add(col);
-                string sql = CreateCompositeTypeTemplateSQL(cols);
+                string sql = z_CreateCompositeTypeTemplateSQL(cols);
                 NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
                 NpgsqlDataReader reader = command.ExecuteReader();
                 reader.Read();
@@ -282,7 +280,6 @@ namespace PostgreSQL
                 }
                 else if (pg_rel.table_type == "SP ARGUMENT")
                 {
-                    string[] s = InformationSchema.GetFunstionSigniture(relation.RelationName);
                     sp_arguments.Add(relation);
                 }
 
@@ -292,20 +289,12 @@ namespace PostgreSQL
         #endregion
 
         #region CreateCompositeTypeTemplateSQL
-        private string CreateCompositeTypeTemplateSQL(List<pg_column> columns)
+        private string z_CreateCompositeTypeTemplateSQL(List<pg_column> columns)
         {
             string sql = "",data_type="";
             foreach (pg_column col in columns)
             {
-                if (col.data_type == "USER-DEFINED")
-                    data_type = col.udt_name;
-                else if (col.data_type == "ARRAY")
-                {
-                    SetCorrectPgTypeWhenArray(col);
-                    data_type = col.data_type;
-                }
-                else
-                    data_type = col.data_type;
+                data_type = col.data_type;
                 sql += string.Format("\r\nnull::{0} as \"{1}\",", data_type, col.column_name);
             }
             sql = string.Format("select {0} ", sql.Substring(0, sql.Length - 1));
@@ -316,18 +305,14 @@ namespace PostgreSQL
         #region CreateRelationColumns
         private void CreateRelationColumns(Relation<C> rel, pg_relation pg_rel)
         {
-            string sql = "";
+            string sql = "!";
             
             List<pg_column> rel_cols = InformationSchema.GetColumnsByRelation(pg_rel);
 
-            if (rel.RelationType == RelationType.CompositeType || rel.RelationType == RelationType.Enum )
-            {
-                sql = CreateCompositeTypeTemplateSQL(rel_cols);
-            }
-            else
-            {
+            if (rel.RelationType == RelationType.CompositeType)
+                sql = string.Format("select * from {0}.\"{1}_{2}\"()", InformationSchema.TEMP_SCHEMA, pg_rel.table_schema, pg_rel.table_name);
+            else if(rel.RelationType == RelationType.Table || rel.RelationType == RelationType.View)
                 sql = string.Format("select * from {0} where 1=0", rel.FullName);
-            }
 
 
             NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
@@ -364,48 +349,27 @@ namespace PostgreSQL
         } 
         #endregion
 
-        void SetCorrectPgTypeWhenArray(pg_column rcol)
-        {
-            pg_type ptype = InformationSchema.GetPgTypeByName(rcol.udt_name);
-            rcol.data_type = ptype.type_long_name;
-        }
-
-        void SetCorrectPgTypeWhenArray(pg_column rcol, Column col)
-        {
-            pg_type ptype = InformationSchema.GetPgTypeByName(rcol.udt_name);
-            col.PG_Type = ptype.type_long_name;
-        }
 
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(pg_column rcol, Column col, Type provided_type)
         {
-            if (rcol.data_type != "USER-DEFINED")
-            {
-                if (rcol.data_type == "ARRAY" || rcol.data_type.Contains("[]"))
-                {
-                    SetCorrectPgTypeWhenArray(rcol, col);
-                    col.IsPgArray = true;
-                }
-                else
-                {
-                    col.PG_Type = rcol.data_type;
-                }
-                col.CLR_Type = provided_type;
-            }
-            else
+            pg_type pgtype = InformationSchema.Types.Find(t => t.type_oid == rcol.udt_name_oid);
+            col.CLR_Type = provided_type; // do this anyway
+            col.PGTypeType = PgTypeTypeConverter.FromString(pgtype.type_type);
+
+            if (rcol.data_type == "USER-DEFINED")
             {
                 col.PG_Type = rcol.udt_name;
-                col.CLR_Type = provided_type; // do this anyway
-                pg_type ptype = InformationSchema.GetPgTypeByName(rcol.udt_name);
-
-                if (ResolvePgType != null)
-                {
-                    SchemaReaderResolvePGTypeEventArgs e = new SchemaReaderResolvePGTypeEventArgs(rcol.udt_name);
-                    ResolvePgType(e);
-                    if (e.Converter != null)
-                        col.CLR_Type = e.Converter.CLR_Type();
-                }
             }
+            else if (rcol.data_type == "ARRAY")
+            {
+                col.PG_Type = pgtype.base_type;
+                col.IsPgArray = true;
+                pg_type b_pgtype = InformationSchema.Types.Find(t => t.type_oid == pgtype.base_type_oid);
+                col.PGTypeType = PgTypeTypeConverter.FromString(b_pgtype.type_type);
+            }
+            else
+                col.PG_Type = rcol.data_type;
         }
         
         #endregion

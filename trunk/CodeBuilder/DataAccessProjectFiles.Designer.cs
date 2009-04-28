@@ -134,7 +134,8 @@ namespace CodeBuilder {
         ///		Default,
         ///		Changed,
         ///		New,
-        ///		Deleted
+        ///		Deleted,
+        ///        ChangeMany
         ///	}
         ///	#endregion
         ///	
@@ -257,6 +258,35 @@ namespace CodeBuilder {
         internal static string Helper {
             get {
                 return ResourceManager.GetString("Helper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///using System.Collections.Generic;
+        ///using System.Linq;
+        ///using System.Text;
+        ///
+        ///namespace MY_NAMESPACE
+        ///{
+        ///    //TODO: test and experimental code to resolve unknown types
+        ///    public class PostgreSQLTypeConverter
+        ///    {
+        ///        public virtual object FromString(string data)
+        ///        {
+        ///            throw new NotImplementedException();
+        ///        }
+        ///
+        ///        public virtual Type CLR_Type()
+        ///        {
+        ///            throw new NotImplementedException();
+        ///        }
+        ///
+        ///        public virtual string ToStri [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string PostgreSQLTypeConverter {
+            get {
+                return ResourceManager.GetString("PostgreSQLTypeConverter", resourceCulture);
             }
         }
     }

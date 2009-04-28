@@ -26,6 +26,7 @@ namespace CodeBuilder
             File.WriteAllText(string.Format(@"{0}\DataObjectValue.cs", daBuildFolder), DataAccessProjectFiles.DataObjectValue.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectValueTypeConverter.cs", daBuildFolder), DataAccessProjectFiles.DataObjectValueTypeConverter.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectRecordSetBase.cs", daBuildFolder), DataAccessProjectFiles.DataObjectRecordSetBase.Replace("MY_NAMESPACE", p_Project.RootNamespace));
+            File.WriteAllText(string.Format(@"{0}\PostgreSQLTypeConverter.cs", daBuildFolder), DataAccessProjectFiles.PostgreSQLTypeConverter.Replace("MY_NAMESPACE", p_Project.RootNamespace));
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(asmInfo, this);

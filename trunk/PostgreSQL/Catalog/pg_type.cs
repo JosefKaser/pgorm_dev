@@ -14,6 +14,8 @@ namespace PostgreSQL.Catalog
 		public String type_long_name {get; set;}
 		public String type_type {get; set;}
 		public String delimiter {get; set;}
+		public String base_type {get; set;}
+		public Int64? base_type_oid {get; set;}
 
         public static pg_type FromReader(IDataReader reader)
         {
@@ -23,6 +25,8 @@ namespace PostgreSQL.Catalog
 			result.type_long_name = DataAccess.Convert<String>(reader["type_long_name"],null);
 			result.type_type = DataAccess.Convert<String>(reader["type_type"],null);
 			result.delimiter = DataAccess.Convert<String>(reader["delimiter"],null);
+			result.base_type = DataAccess.Convert<String>(reader["base_type"],null);
+			result.base_type_oid = DataAccess.Convert<Int64?>(reader["base_type_oid"],null);
 
             return result;
         }

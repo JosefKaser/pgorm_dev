@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PostgreSQL;
+using PostgreSQL.Catalog;
 
 namespace PostgreSQL.Objects
 {
-
     public class Column
     {
         public string ColumnName { get; set; }
@@ -18,11 +19,10 @@ namespace PostgreSQL.Objects
         public bool IsPgArray { get; set; }
         public string DefaultValue { get; set; }
         public string DB_Comment { get; set; }
-        public PostgreSQLTypeConverter Converter { get; set; }
+        public PgTypeType PGTypeType { get; set; }
 
         public Column()
         {
-            Converter = null;
         }
     }
 }
