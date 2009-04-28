@@ -60,7 +60,8 @@ from
 
            CAST(current_database() AS varchar) AS udt_catalog,
            CAST(coalesce(nbt.nspname, nt.nspname) AS varchar) AS udt_schema,
-           CAST(coalesce(bt.typname, t.typname) AS varchar) AS udt_name
+           CAST(coalesce(bt.typname, t.typname) AS varchar) AS udt_name,
+           CAST(coalesce(bt.oid, t.oid) AS oid) AS udt_name_oid
 
            --CAST(null AS varchar) AS scope_catalog,
            --CAST(null AS varchar) AS scope_schema,
@@ -127,7 +128,8 @@ select
           CAST(null  AS varchar) AS domain_name,
           CAST(null AS varchar) AS udt_catalog,
           CAST(null AS varchar) AS udt_schema,
-          CAST(null AS varchar) AS udt_name
+          CAST(null AS varchar) AS udt_name,
+          CAST(null AS oid) AS udt_name_oid
           --CAST(null AS varchar) AS scope_catalog,
           --CAST(null AS varchar) AS scope_schema,
          -- CAST(null AS varchar) AS scope_name,

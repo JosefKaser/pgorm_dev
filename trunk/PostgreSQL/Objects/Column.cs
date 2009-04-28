@@ -15,6 +15,7 @@ namespace PostgreSQL.Objects
         public bool IsNullable { get; set; }
         public bool IsSerial { get; set; }
         public bool IsEntity { get; set; }
+        public bool IsPgArray { get; set; }
         public string DefaultValue { get; set; }
         public string DB_Comment { get; set; }
         public PostgreSQLTypeConverter Converter { get; set; }

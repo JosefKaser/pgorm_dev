@@ -28,6 +28,7 @@ namespace PostgreSQL.Catalog
 		public String udt_catalog {get; set;}
 		public String udt_schema {get; set;}
 		public String udt_name {get; set;}
+		public Int64? udt_name_oid {get; set;}
 
         public static pg_column FromReader(IDataReader reader)
         {
@@ -51,6 +52,7 @@ namespace PostgreSQL.Catalog
 			result.udt_catalog = DataAccess.Convert<String>(reader["udt_catalog"],null);
 			result.udt_schema = DataAccess.Convert<String>(reader["udt_schema"],null);
 			result.udt_name = DataAccess.Convert<String>(reader["udt_name"],null);
+			result.udt_name_oid = DataAccess.Convert<Int64?>(reader["udt_name_oid"],null);
 
             return result;
         }

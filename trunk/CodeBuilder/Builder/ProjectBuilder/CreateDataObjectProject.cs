@@ -25,7 +25,7 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            //foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "1tbluser"))
+            #region tables
             foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
@@ -75,8 +75,9 @@ namespace CodeBuilder
 
                 factoryBuilder.Create(rel, doBuildFolder);
             }
+            #endregion
 
-
+            #region views
             foreach (TemplateRelation rel in p_Schema.Views.FindAll(r => r.RelationName == "right_join"))
             {
                 rel.Prepare(p_Project);
@@ -96,6 +97,22 @@ namespace CodeBuilder
 
                 factoryBuilder.Create(rel, doBuildFolder);
             }
+            #endregion
+
+            #region composite types
+            foreach (TemplateRelation rel in p_Schema.CompositeTypes)
+            {
+                rel.Prepare(p_Project);
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
+
+                objectBuilder.Create(rel, doBuildFolder);
+                recordsetBuilder.Create(rel, doBuildFolder);
+
+                factoryBuilder.Reset();
+                factoryBuilder.Create(rel, doBuildFolder);
+            }
+
+            #endregion
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);

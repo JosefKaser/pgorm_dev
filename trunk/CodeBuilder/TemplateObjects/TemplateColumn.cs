@@ -48,6 +48,7 @@ namespace CodeBuilder.TemplateObjects
                 string s =
                     "<para>Datatype: {0}</para>"
                     + "<para>Is array: {7}</para>"
+                    + "<para>Is PG array: {8}</para>"
                     + "<para>Autonumber: {1}</para>"
                     + "<para>Entity: {2}</para>"
                     + "<para>Nullable: {3}</para>"
@@ -55,7 +56,7 @@ namespace CodeBuilder.TemplateObjects
                     + "<para>Length: {5}</para>"
                     + GetDBComment(DB_Comment);
                     ;
-                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray);
+                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray,IsPgArray);
             }
         }
 

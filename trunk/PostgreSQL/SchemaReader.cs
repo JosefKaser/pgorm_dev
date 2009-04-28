@@ -87,6 +87,7 @@ namespace PostgreSQL
         } 
         #endregion
 
+        #region DeConflictStoredFunctions
         private void DeConflictStoredFunctions()
         {
             foreach (StoredFunction func in p_Schema.StoredFunctions)
@@ -98,7 +99,8 @@ namespace PostgreSQL
                 if (cfunc != null)
                     cfunc.DeconflictName();
             }
-        }
+        } 
+        #endregion
 
         #region SetFunstionReturnType
         private bool SetFunstionReturnType(pg_proc proc, StoredFunction func)
@@ -297,9 +299,14 @@ namespace PostgreSQL
             {
                 if (col.data_type == "USER-DEFINED")
                     data_type = col.udt_name;
+                if (col.data_type == "ARRAY")
+                {
+                    SetCorrectPgTypeWhenArray(col);
+                    data_type = col.data_type;
+                }
                 else
                     data_type = col.data_type;
-                sql += string.Format("null::{0} as \"{1}\",", data_type, col.column_name);
+                sql += string.Format("\r\nnull::{0} as \"{1}\",", data_type, col.column_name);
             }
             sql = string.Format("select {0} ", sql.Substring(0, sql.Length - 1));
             return sql;
@@ -357,12 +364,32 @@ namespace PostgreSQL
         } 
         #endregion
 
+        void SetCorrectPgTypeWhenArray(pg_column rcol)
+        {
+            pg_type ptype = InformationSchema.GetPgTypeByName(rcol.udt_name);
+            rcol.data_type = ptype.type_long_name;
+        }
+
+        void SetCorrectPgTypeWhenArray(pg_column rcol, Column col)
+        {
+            pg_type ptype = InformationSchema.GetPgTypeByName(rcol.udt_name);
+            col.PG_Type = ptype.type_long_name;
+        }
+
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(pg_column rcol, Column col, Type provided_type)
         {
             if (rcol.data_type != "USER-DEFINED")
             {
-                col.PG_Type = rcol.data_type;
+                if (rcol.data_type == "ARRAY" || rcol.data_type.Contains("[]"))
+                {
+                    SetCorrectPgTypeWhenArray(rcol, col);
+                    col.IsPgArray = true;
+                }
+                else
+                {
+                    col.PG_Type = rcol.data_type;
+                }
                 col.CLR_Type = provided_type;
             }
             else
