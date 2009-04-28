@@ -19,6 +19,11 @@ namespace CodeBuilder
             return string.Format(@"{0}\{1}.{2}", path, name, a);
         }
 
+        public static string MakeCLRSafe(string data)
+        {
+            return data.Replace(" ", "_");
+        }
+
         public static string RemovePrefix(string source, List<string> items)
         {
             foreach (string prefix in items)

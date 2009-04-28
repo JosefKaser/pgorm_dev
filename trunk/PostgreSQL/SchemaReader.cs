@@ -299,7 +299,7 @@ namespace PostgreSQL
             {
                 if (col.data_type == "USER-DEFINED")
                     data_type = col.udt_name;
-                if (col.data_type == "ARRAY")
+                else if (col.data_type == "ARRAY")
                 {
                     SetCorrectPgTypeWhenArray(col);
                     data_type = col.data_type;

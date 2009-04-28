@@ -65,7 +65,7 @@ namespace CodeBuilder.TemplateObjects
 
         public void Prepare(Project p_Project)
         {
-            p_TemplateColumnName = ColumnName;
+            p_TemplateColumnName = Helper.MakeCLRSafe(ColumnName);
             if (Helper.IsReservedWord(ColumnName))
                 p_TemplateColumnName = string.Format("_{0}", p_TemplateColumnName);
         }

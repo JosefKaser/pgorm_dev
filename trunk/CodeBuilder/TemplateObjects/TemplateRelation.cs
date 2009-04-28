@@ -42,6 +42,10 @@ namespace CodeBuilder.TemplateObjects
             {
                 if (RelationType == RelationType.View)
                     return "View";
+                else if (RelationType == RelationType.CompositeType)
+                    return "UserDefinedType";
+                else if (RelationType == RelationType.Enum)
+                    return "EnumType";
                 else
                     return "Object";
 
@@ -61,7 +65,7 @@ namespace CodeBuilder.TemplateObjects
 
         public void Prepare(Project p_Project)
         {
-            p_TemplateRelationName = Helper.RemovePrefix(RelationName, p_Project.RemoveTablePrefix);
+            p_TemplateRelationName = Helper.MakeCLRSafe(Helper.RemovePrefix(RelationName, p_Project.RemoveTablePrefix));
             p_RecordsetName = string.Format("{0}_{1}RecordSet", TemplateRelationName,PostFixName);
             p_FactoryName = string.Format("{0}_{1}Factory", TemplateRelationName, PostFixName);
             p_TemplateRelationName = string.Format("{0}{1}", p_TemplateRelationName,PostFixName);

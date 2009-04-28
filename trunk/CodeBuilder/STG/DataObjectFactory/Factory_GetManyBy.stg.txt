@@ -1,4 +1,4 @@
-﻿get_method(table,method_name,icolumns,sep_comma,summary) ::=<<
+﻿get_method(table,method_name,icolumns,sep_comma,summary,isgetall) ::=<<
 #region getall_method
 <summary>
 <intelli_tans()>
@@ -10,7 +10,11 @@
 public static R <method_name><generic("T,R")>(<create_parameters(icolumns)><sep_comma>NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
 {
 	<sort_and_page_ops()>
-	string sql = string.Format(Helper.SQL_SELECT_WHERE,"*",<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",operations);
+    <if(isgetall)>
+	    string sql = string.Format(Helper.SQL_SELECT,<table.TemplateRelationName>.RELATION_NAME,operations);
+    <else>
+        string sql = string.Format(Helper.SQL_SELECT_WHERE,"*",<table.TemplateRelationName>.RELATION_NAME,"<icolumns:create_sql_asign_parameter(); separator=" AND ">",operations);
+    <endif>
 	Debug.WriteLine(sql);
 	return DataAccess.ExecuteObjectQuery<generic("T,R")>(
 			sql,

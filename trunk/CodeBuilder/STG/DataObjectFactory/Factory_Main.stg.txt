@@ -83,7 +83,7 @@ create_parameters(columns) ::=<<
 
 create_parameter(column) ::="<column.CLR_Type> p_<column.TemplateColumnName>"
 
-create_sql_asign_parameter(column) ::=" \\\"<column.TemplateColumnName>\\\"=@<column.TemplateColumnName> "
+create_sql_asign_parameter(column) ::=" \\\"<column.ColumnName>\\\"=@<column.TemplateColumnName> "
 
 create_npgsql_newparameter(column) ::=<<
 DataAccess.NewParameter("@<column.TemplateColumnName>",p_<column.TemplateColumnName>)

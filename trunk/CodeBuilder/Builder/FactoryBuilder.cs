@@ -115,6 +115,7 @@ namespace CodeBuilder
             get_method.Reset();
             get_method.SetAttribute("table", rel);
             get_method.SetAttribute("method_name", "GetList");
+            get_method.SetAttribute("isgetall", "true");
             get_method.SetAttribute("summary", CodeSummary("Retrives a generic List&lt;{0}&gt;", rel.TemplateRelationName));
             return get_method.ToString();
         } 
