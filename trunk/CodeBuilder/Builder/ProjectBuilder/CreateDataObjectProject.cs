@@ -25,8 +25,8 @@ namespace CodeBuilder
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
-            foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "tblcv_exper" || t.RelationName == "tbluser"))
-            //foreach (TemplateRelation rel in p_Schema.Tables)
+            //foreach (TemplateRelation rel in p_Schema.Tables.FindAll(t => t.RelationName == "1tbluser"))
+            foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
 
@@ -75,17 +75,16 @@ namespace CodeBuilder
                 factoryBuilder.Create(rel, doBuildFolder);
             }
 
-            /*
             foreach (TemplateRelation rel in p_Schema.Views)
             {
                 rel.Prepare(p_Project);
+
                 objectBuilder.Create(rel, doBuildFolder);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
                 factoryBuilder.Create(rel, doBuildFolder);
             }
-            */
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);

@@ -16,6 +16,7 @@ from
 where 
 	i.indisprimary=false
 	and ns.nspname not in ('pg_catalog','information_schema')
+	and i.indkey::text <> '0' -- exclude indexes with computed columns
 
 union
 

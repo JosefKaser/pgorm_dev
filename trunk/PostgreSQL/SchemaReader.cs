@@ -165,35 +165,26 @@ namespace PostgreSQL
                 // for every index create index object and get columns from this table
                 foreach (pg_index idx in dindexes)
                 {
-                    Index<C> index = new Index<C>();
-                    index.IndexType = GetIndexType(idx.constraint_type);
-                    index.IndexName = idx.constraint_name;
+                    // exclude indexes on hidden columns like oid
+                    List<int> hidden_check = idx.constraint_keys.ToList<int>();
+                    if (!hidden_check.Exists(i => i < 0))
+                    {
+                        Index<C> index = new Index<C>();
+                        index.IndexType = GetIndexType(idx.constraint_type);
+                        index.IndexName = idx.constraint_name;
 
-                    foreach (int col_index in idx.constraint_keys)
-                        index.Columns.Add(rel.Columns.Find(c => c.ColumnIndex == col_index));
+                        foreach (int col_index in idx.constraint_keys)
+                            index.Columns.Add(rel.Columns.Find(c => c.ColumnIndex == col_index));
 
-                    if (index.Columns.Count != 0)
-                        rel.Indexes.Add(index);
+                        if (index.Columns.Count != 0)
+                            rel.Indexes.Add(index);
+                    }
                 }
-
-            //// Get PK only
-            //    pg_index pkindex = InformationSchema.Indexes.Find(i => i.table_name == rel.RelationName && 
-            //        i.table_namespace == rel.SchemaName && 
-            //        i.constraint_type == "p");
-            //    if (pkindex != null)
-            //    {
-            //        Index<C> index = new Index<C>();
-            //        foreach (int col_index in pkindex.constraint_keys)
-            //            index.Columns.Add(rel.Columns.Find(c => c.ColumnIndex == col_index));
-
-            //        if (index.Columns.Count != 0)
-            //            rel.PrimaryKey = index;
-            //    }
-
             }
         }
         #endregion
 
+        #region GetIndexType
         private IndexType GetIndexType(string t)
         {
             if (t == "p")
@@ -207,7 +198,8 @@ namespace PostgreSQL
                 return IndexType.CustomIndex;
 
             throw new SchemaNotImplementedException(string.Format("Index type ({0}) is not implemented in this version", t));
-        }
+        } 
+        #endregion
 
         #region GetViewDependedTables
         public List<Relation<C>> GetViewDependedTables(Relation<C> rel)
@@ -337,7 +329,8 @@ namespace PostgreSQL
         } 
         #endregion
 
-        private bool IsPartOfEntity(Column col,Relation<C> rel)
+        #region IsPartOfEntity
+        private bool IsPartOfEntity(Column col, Relation<C> rel)
         {
             return InformationSchema.EntityColumns.Exists
                 (
@@ -345,7 +338,8 @@ namespace PostgreSQL
                     c.table_name == rel.RelationName &&
                     c.table_schema == rel.SchemaName
                     );
-        }
+        } 
+        #endregion
 
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(pg_column rcol, Column col, Type provided_type)
