@@ -29,6 +29,7 @@ namespace CodeBuilder
             foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 rel.Prepare(p_Project);
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
                 objectBuilder.Create(rel, doBuildFolder);
                 recordsetBuilder.Create(rel, doBuildFolder);
@@ -75,6 +76,7 @@ namespace CodeBuilder
                 factoryBuilder.Create(rel, doBuildFolder);
             }
 
+            /*
             foreach (TemplateRelation rel in p_Schema.Views)
             {
                 rel.Prepare(p_Project);
@@ -85,6 +87,7 @@ namespace CodeBuilder
                 factoryBuilder.Reset();
                 factoryBuilder.Create(rel, doBuildFolder);
             }
+            */
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);
@@ -93,6 +96,8 @@ namespace CodeBuilder
             //p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.Objects.dll", p_Project.OutputFolder, p_Project.RootNamespace);
             string p_ProjAsmName = Path.GetFileNameWithoutExtension(p_Project.AssemblyName);
             p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.dll", p_Project.OutputFolder, p_ProjAsmName);
+
+            SendMessage(this, ProjectBuilderMessageType.Major, "Building {0} assembly.", p_DataObjectAssemblyFile);
 
             CSharpCodeProvider cscProvider = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
             CompilerParameters compParams = new CompilerParameters();

@@ -28,7 +28,6 @@ namespace CodeBuilder
     }
     #endregion
 
-
     public delegate void ProjectBuilderEventHandler(object sender, ProjectBuilderEventArgs e);
 
 }

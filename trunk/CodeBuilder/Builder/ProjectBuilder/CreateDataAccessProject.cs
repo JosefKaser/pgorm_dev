@@ -16,6 +16,7 @@ namespace CodeBuilder
     {
         private void CreateDataAccessProject()
         {
+            SendMessage(this, ProjectBuilderMessageType.Major, "Creating Core components.");
             string daBuildFolder = string.Format(@"{0}\DataAccess", p_BuildFolder);
             Directory.CreateDirectory(daBuildFolder);
             File.WriteAllText(string.Format(@"{0}\Helper.cs", daBuildFolder), DataAccessProjectFiles.Helper.Replace("MY_NAMESPACE", p_Project.RootNamespace));
@@ -32,6 +33,8 @@ namespace CodeBuilder
 
             string p_ProjAsmName = Path.GetFileNameWithoutExtension(p_Project.AssemblyName);
             p_DataAccessAssemblyFile = string.Format(@"{0}\{1}.core.dll", p_Project.OutputFolder, p_ProjAsmName);
+
+            SendMessage(this, ProjectBuilderMessageType.Major, "Building {0} assembly.", p_DataAccessAssemblyFile);
 
             CSharpCodeProvider cscProvider = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
             CompilerParameters compParams = new CompilerParameters();

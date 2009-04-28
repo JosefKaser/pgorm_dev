@@ -19,7 +19,7 @@ namespace DevHelper
 
             CodeBuilder.Project project = new CodeBuilder.Project();
             project.DatabaseConnectionInfo.Server = "localhost";
-            project.DatabaseConnectionInfo.Database = "testdb2";
+            project.DatabaseConnectionInfo.Database = "testdb";
             project.DatabaseConnectionInfo.Username = "postgres";
             project.DatabaseConnectionInfo.Password = "postgres";
             project.OutputFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Output";

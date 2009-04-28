@@ -56,9 +56,12 @@ namespace CodeBuilder
             p_Project.InternalReferences.Add(p_Project.RootNamespace);
             p_Project.InternalReferences.Add(string.Format(@"{0}.Core", p_Project.RootNamespace));
 
+            SendMessage(this, ProjectBuilderMessageType.Major, "Preparing build environment.");
             PrepareBuildenvironment();
             CreateDataAccessProject();
+            SendMessage(this, ProjectBuilderMessageType.Major, "Reading database schema.");
             ReadSchema();
+            SendMessage(this, ProjectBuilderMessageType.Major, "Creating entities.");
             CreateDataObjectProject();
         }
 
