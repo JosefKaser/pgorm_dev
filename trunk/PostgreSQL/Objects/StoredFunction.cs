@@ -29,10 +29,29 @@ namespace PostgreSQL.Objects
         public bool IsSetReturning { get; set; }
         public StoredFunctionReturnType ReturnTypeType { get; set; }
         public List<StoredFunctionArgument> Arguments { get; set; }
+        private int deconflict_index;
 
         public StoredFunction()
         {
+            deconflict_index = 0;
             Arguments = new List<StoredFunctionArgument>();
+        }
+
+        public void DeconflictName()
+        {
+            deconflict_index++;
+            FunstionName = string.Format("{0}{1}",FunstionName,deconflict_index);
+        }
+
+        public string CLR_Signiture()
+        {
+            string sarg = "";
+            Arguments.ForEach(a => sarg += a.ArgCLRTypeName);
+            string s = string.Format("{0}{1}{2}",
+                FunstionName,
+                sarg,
+                Arguments.Count);
+            return s;
         }
     }
 }

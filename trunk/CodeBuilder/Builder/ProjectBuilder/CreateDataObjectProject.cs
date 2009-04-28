@@ -76,18 +76,26 @@ namespace CodeBuilder
                 factoryBuilder.Create(rel, doBuildFolder);
             }
 
-            /*
-            foreach (TemplateRelation rel in p_Schema.Views)
+
+            foreach (TemplateRelation rel in p_Schema.Views.FindAll(r => r.RelationName == "right_join"))
             {
                 rel.Prepare(p_Project);
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
                 objectBuilder.Create(rel, doBuildFolder);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
+
+                foreach (Index<TemplateColumn> index in rel.Indexes)
+                {
+                    string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
+                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName, index.IndexType, method_sub_name);
+                    factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
+                }
+
                 factoryBuilder.Create(rel, doBuildFolder);
             }
-            */
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);

@@ -81,8 +81,24 @@ namespace PostgreSQL
                 if (SetFunstionReturnType(proc, func))
                     p_Schema.StoredFunctions.Add(func);
             }
+
+            // deconflict functions
+            DeConflictStoredFunctions();
         } 
         #endregion
+
+        private void DeConflictStoredFunctions()
+        {
+            foreach (StoredFunction func in p_Schema.StoredFunctions)
+            {
+                // and any function that has the same signiture. 
+                // Meaning after creating from pg_proc the CLR represenation
+                // is conflicting.
+                StoredFunction cfunc = p_Schema.StoredFunctions.Find(f => f != func && f.CLR_Signiture() == func.CLR_Signiture());
+                if (cfunc != null)
+                    cfunc.DeconflictName();
+            }
+        }
 
         #region SetFunstionReturnType
         private bool SetFunstionReturnType(pg_proc proc, StoredFunction func)
