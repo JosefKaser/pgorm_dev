@@ -24,6 +24,7 @@ namespace CodeBuilder
             DataObjectBuilder objectBuilder = new DataObjectBuilder(this,p_ObjectNamespace);
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
+            CLREnumBuilder enumBuilder = new CLREnumBuilder(this,"Enums");
 
             #region tables
             foreach (TemplateRelation rel in p_Schema.Tables)
@@ -114,19 +115,13 @@ namespace CodeBuilder
             #endregion
 
             #region composite enums
-            /*
             foreach (TemplateRelation rel in p_Schema.Enums)
             {
                 rel.Prepare(p_Project);
+                enumBuilder.Reset();
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
-
-                objectBuilder.Create(rel, doBuildFolder);
-                recordsetBuilder.Create(rel, doBuildFolder);
-
-                factoryBuilder.Reset();
-                factoryBuilder.Create(rel, doBuildFolder);
+                enumBuilder.Create(rel, doBuildFolder);
             }
-            */
             #endregion
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();

@@ -89,6 +89,40 @@ namespace CodeBuilder {
         ///using &lt;lib&gt;;
         ///&gt;&gt;
         ///
+        ///create_enum(libs,namespace,table) ::=&lt;&lt;
+        ///using System;
+        ///using System.Collections.Generic;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Data;
+        ///using System.Data.Common;
+        ///using System.Reflection;
+        ///using System.Diagnostics;
+        ///using Npgsql;
+        ///&lt;libs:usings(); separator=&quot;\r\n&quot;&gt;
+        ///
+        ///namespace &lt;namespace&gt;
+        ///{
+        ///    #region &lt;table.TemplateRelationName&gt;
+        ///    public enum &lt;table.TemplateRelationName&gt;
+        ///    {
+        ///        &lt;table.Columns; separator=&quot;,\n&quot;&gt;
+        ///    }
+        ///    # [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string CLREnum_stg {
+            get {
+                return ResourceManager.GetString("CLREnum_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to group main;
+        ///
+        ///usings(lib) ::=&lt;&lt;
+        ///using &lt;lib&gt;;
+        ///&gt;&gt;
+        ///
         ///dataobject(libs,namespace,table,properties) ::=&lt;&lt;
         ///using System;
         ///using System.Collections.Generic;
@@ -195,7 +229,7 @@ namespace CodeBuilder {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to get_method(table,method_name,icolumns,sep_comma,summary) ::=&lt;&lt;
+        ///   Looks up a localized string similar to get_method(table,method_name,icolumns,sep_comma,summary,isgetall) ::=&lt;&lt;
         ///#region getall_method
         ///&lt;summary&gt;
         ///&lt;intelli_tans()&gt;
@@ -204,7 +238,7 @@ namespace CodeBuilder {
         ///&lt;intelli_type_param_table(table)&gt;
         ///&lt;icolumns:intelli_param_column(); separator=&quot;\r\n&quot;&gt;
         ///&lt;intelli_returns_table_list()&gt;
-        ///public static R &lt;method_name&gt;&lt;generic(&quot;T,R&quot;)&gt;(&lt;create_parameters(icolumns)&gt;&lt;sep_comma&gt;NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : &lt;table.TemplateRelat [rest of string was truncated]&quot;;.
+        ///public static R &lt;method_name&gt;&lt;generic(&quot;T,R&quot;)&gt;(&lt;create_parameters(icolumns)&gt;&lt;sep_comma&gt;NpgsqlTransaction p_Transaction,SortOperation p_SortOperation,PagingOperation p_PagingOperation) where T : &lt;table.Temp [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Factory_GetManyBy_stg {
             get {

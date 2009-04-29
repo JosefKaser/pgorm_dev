@@ -45,7 +45,7 @@ namespace CodeBuilder.TemplateObjects
                 else if (RelationType == RelationType.CompositeType)
                     return "UserDefinedType";
                 else if (RelationType == RelationType.Enum)
-                    return "EnumType";
+                    return "";
                 else
                     return "Object";
 

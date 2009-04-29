@@ -109,6 +109,7 @@
     <Compile Include="DataAccessProjectFiles\Helper.cs" />
     <Content Include="ReservedWords.txt" />
     <Content Include="STG\AssemblyInfo.stg.txt" />
+    <Content Include="STG\CLREnum.stg.txt" />
     <Content Include="STG\DataObject.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Delete.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Main.stg.txt" />
@@ -121,6 +122,7 @@
     <Content Include="STG\DataObjectRecordSet.stg.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\CLREnumBuilder.cs" />
     <Compile Include="Builder\DataObjectBuilder.cs" />
     <Compile Include="Builder\DataObjectFactoryBuilder.cs" />
     <Compile Include="Builder\FactoryBuilder.cs" />

@@ -136,7 +136,7 @@ namespace PostgreSQL
                 col.column_name = string.Format("return_type_{0}", func.FunstionName);
                 List<pg_column> cols = new List<pg_column>();
                 cols.Add(col);
-                string sql = z_CreateCompositeTypeTemplateSQL(cols);
+                string sql = CreateCompositeTypeTemplateSQL(cols);
                 NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
                 NpgsqlDataReader reader = command.ExecuteReader();
                 reader.Read();
@@ -289,7 +289,8 @@ namespace PostgreSQL
         #endregion
 
         #region CreateCompositeTypeTemplateSQL
-        private string z_CreateCompositeTypeTemplateSQL(List<pg_column> columns)
+        [Obsolete()]
+        private string CreateCompositeTypeTemplateSQL(List<pg_column> columns)
         {
             string sql = "",data_type="";
             foreach (pg_column col in columns)
@@ -302,6 +303,15 @@ namespace PostgreSQL
         } 
         #endregion
 
+        private string GetEnumCreationSql(List<pg_column> cols)
+        {
+            string sql = "";
+            foreach (pg_column col in cols)
+                sql += string.Format("\n\r''::varchar as \"{0}\",", col.column_name);
+            sql = string.Format("select {0}", sql.Substring(0, sql.Length - 1));
+            return sql;
+        }
+
         #region CreateRelationColumns
         private void CreateRelationColumns(Relation<C> rel, pg_relation pg_rel)
         {
@@ -311,8 +321,10 @@ namespace PostgreSQL
 
             if (rel.RelationType == RelationType.CompositeType)
                 sql = string.Format("select * from {0}.\"{1}_{2}\"()", InformationSchema.TEMP_SCHEMA, pg_rel.table_schema, pg_rel.table_name);
-            else if(rel.RelationType == RelationType.Table || rel.RelationType == RelationType.View)
+            else if (rel.RelationType == RelationType.Table || rel.RelationType == RelationType.View)
                 sql = string.Format("select * from {0} where 1=0", rel.FullName);
+            else if (rel.RelationType == RelationType.Enum)
+                sql = GetEnumCreationSql(rel_cols);
 
 
             NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
@@ -324,7 +336,7 @@ namespace PostgreSQL
                 pg_column_comment comment = InformationSchema.GetColumnComment(rcol);
                 C col = new C();
                 col.ColumnName = CorrectUnknownColumn(column_name, a);
-                GetCorrectPGAndCLRType(rcol, col, reader.GetFieldType(a));
+                GetCorrectPGAndCLRType(rel,rcol, col, reader.GetFieldType(a));
                 col.ColumnIndex = (int)rcol.ordinal_position;
                 col.IsSerial = IsSerial(rcol,rel);
                 col.DefaultValue = col.IsSerial ? "" : rcol.column_default;
@@ -351,11 +363,14 @@ namespace PostgreSQL
 
 
         #region GetCorrectPGAndCLRType
-        private void GetCorrectPGAndCLRType(pg_column rcol, Column col, Type provided_type)
+        private void GetCorrectPGAndCLRType(Relation<C> rel, pg_column rcol, Column col, Type provided_type)
         {
             pg_type pgtype = InformationSchema.Types.Find(t => t.type_oid == rcol.udt_name_oid);
             col.CLR_Type = provided_type; // do this anyway
-            col.PGTypeType = PgTypeTypeConverter.FromString(pgtype.type_type);
+            if (rel.RelationType == RelationType.Enum)
+                col.PGTypeType = PgTypeType.EnumType;
+            else
+                col.PGTypeType = PgTypeTypeConverter.FromString(pgtype.type_type);
 
             if (rcol.data_type == "USER-DEFINED")
             {

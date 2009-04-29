@@ -24,6 +24,14 @@ namespace MY_NAMESPACE.Core
         }
     }
 
+    public class PostgreSQLEnumConverter<E> : PostgreSQLTypeConverter
+    {
+        public override Type CLR_Type()
+        {
+            return typeof(E);
+        }
+    }
+
     //TODO: test and experimental code to resolve unknown types
     public delegate void SchemaReaderResolvePGTypeEventHandler(SchemaReaderResolvePGTypeEventArgs e);
     //TODO: test and experimental code to resolve unknown types

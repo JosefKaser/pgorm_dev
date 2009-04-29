@@ -187,7 +187,8 @@ namespace CodeBuilder
         } 
         #endregion
 
-        public TemplateMethod CreateUpdateManyMethod(TemplateRelation rel, string method_name,Index<TemplateColumn> index, string summary)
+        #region CreateUpdateManyMethod
+        public TemplateMethod CreateUpdateManyMethod(TemplateRelation rel, string method_name, Index<TemplateColumn> index, string summary)
         {
             TemplateMethod method = new TemplateMethod();
             update_many_method.Reset();
@@ -198,7 +199,8 @@ namespace CodeBuilder
             method.Content = update_many_method.ToString();
             method.Signiture = "update_many_" + index.Signiture;
             return method;
-        }
+        } 
+        #endregion
 
         #region CreateUpdateMethodSingle
         public TemplateMethod CreateUpdateSingleMethod(TemplateRelation rel, Index<TemplateColumn> index)
