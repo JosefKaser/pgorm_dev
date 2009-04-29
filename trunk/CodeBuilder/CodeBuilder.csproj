@@ -128,6 +128,7 @@
     <Compile Include="Builder\FactoryBuilder.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataAccessProject.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataObjectProject.cs" />
+    <Compile Include="ConverterProxy.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectRecordSetBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectValue.cs" />

@@ -15,29 +15,6 @@ using CodeBuilder.TemplateObjects;
 
 namespace CodeBuilder
 {
-    public class ConverterProxy
-    {
-        public  object instance;
-
-        public string PgType {get;private set;}
-        public string PgTypeSchema { get; private set; }
-        public Type CLRType { get; private set; }
-        public string Converter { get; private set; }
-
-        public ConverterProxy(object obj)
-        {
-            instance = obj;
-            PgType = (string)GetPropertyValue("PgType");
-            PgTypeSchema = (string)GetPropertyValue("PgTypeSchema");
-            CLRType = (Type)GetPropertyValue("CLRType");
-            Converter = obj.GetType().ToString(); // provides the full name
-        }
-
-        private object GetPropertyValue(string name)
-        {
-            return instance.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, instance, null);
-        }
-    }
     public partial class ProjectBuilder
     {
         public Project p_Project {get;set;}
