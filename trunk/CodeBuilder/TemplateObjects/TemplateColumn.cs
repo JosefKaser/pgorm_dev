@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PostgreSQL.Objects;
 using MY_NAMESPACE.Core;
 
 namespace CodeBuilder.TemplateObjects
@@ -9,22 +10,31 @@ namespace CodeBuilder.TemplateObjects
     public class TemplateColumn : PostgreSQL.Objects.Column
     {
         public string p_TemplateColumnName;
-        public PostgreSQLTypeConverter Converter { get; set; }
+        public bool HasConverter { get; set; }
+        public ConverterProxy ConverterProxy;
+        private Schema<TemplateRelation, StoredFunction, TemplateColumn> Schema { get; set; }
+        public TemplateRelation Relation;
 
+        #region TemplateColumn
         public TemplateColumn()
             : base()
         {
-            Converter = null;
-        }
+            HasConverter = false;
 
+        } 
+        #endregion
+
+        #region TemplateColumnName
         public string TemplateColumnName
         {
             get
             {
                 return p_TemplateColumnName;
             }
-        }
+        } 
+        #endregion
 
+        #region CLR_Nullable
         public string CLR_Nullable
         {
             get
@@ -39,16 +49,20 @@ namespace CodeBuilder.TemplateObjects
                     return "";
                 }
             }
-        }
+        } 
+        #endregion
 
+        #region GetDBComment
         private string GetDBComment(string c)
         {
             if (!string.IsNullOrEmpty(c))
                 return "<para>Database comment: {6}</para>";
             else
                 return "<para>{6}</para>";
-        }
+        } 
+        #endregion
 
+        #region CLR_Description
         public string CLR_Description
         {
             get
@@ -64,19 +78,37 @@ namespace CodeBuilder.TemplateObjects
                     + "<para>Default value: {4}</para>"
                     + "<para>Length: {5}</para>"
                     + GetDBComment(DB_Comment);
-                    ;
-                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray,IsPgArray,PGTypeType);
+                ;
+                return string.Format(s, PG_Type, IsSerial, IsEntity, IsNullable, (DefaultValue != "" ? DefaultValue : "none"), "Length", DB_Comment, CLR_Type.IsArray, IsPgArray, PGTypeType);
             }
-        }
+        } 
+        #endregion
 
-        public string TemplateRelationName { get; set; } 
-        
+        #region TemplateRelationName
+        public string TemplateRelationName { get { return Relation.TemplateRelationName; } }
+        public string TemplateSchemaName { get { return Relation.TemplateNamespace; } }
+        #endregion        
 
-        public void Prepare(Project p_Project)
+        #region Prepare
+        public void Prepare(ProjectBuilder p_Builder)
         {
             p_TemplateColumnName = Helper.MakeCLRSafe(ColumnName);
             if (Helper.IsReservedWord(ColumnName))
                 p_TemplateColumnName = string.Format("_{0}", p_TemplateColumnName);
-        }
+            Schema = p_Builder.p_Schema;
+
+            //rewrite types if possible
+            if (PGTypeType == PostgreSQL.PgTypeType.EnumType && Relation.RelationType != RelationType.Enum)
+            {
+                ConverterProxy cp = p_Builder.Converters.Find(c => c.PgType == this.TypeInfo.TypeShortName && c.PgTypeSchema == this.TypeInfo.TypeNamespace);
+                if (cp != null)
+                {
+                    HasConverter = true;
+                    CLR_Type = cp.CLRType;
+                    ConverterProxy = cp;
+                }
+            }
+        } 
+        #endregion
     }
 }

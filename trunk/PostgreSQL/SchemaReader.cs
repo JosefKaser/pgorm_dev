@@ -162,7 +162,7 @@ namespace PostgreSQL
                 {
                     foreach (Index<C> index in dtable.Indexes)
                         if (QualifiesAsIndexForRelation(index, rel) && !rel.Indexes.Exists(i => i.Equals(index)))
-                            rel.Indexes.Add(index);
+                            rel.Indexes.Add((Index<C>)index.Clone());
                 }
             }
         } 
@@ -303,6 +303,7 @@ namespace PostgreSQL
         } 
         #endregion
 
+        #region GetEnumCreationSql
         private string GetEnumCreationSql(List<pg_column> cols)
         {
             string sql = "";
@@ -310,7 +311,8 @@ namespace PostgreSQL
                 sql += string.Format("\n\r''::varchar as \"{0}\",", col.column_name);
             sql = string.Format("select {0}", sql.Substring(0, sql.Length - 1));
             return sql;
-        }
+        } 
+        #endregion
 
         #region CreateRelationColumns
         private void CreateRelationColumns(Relation<C> rel, pg_relation pg_rel)
@@ -361,7 +363,6 @@ namespace PostgreSQL
         } 
         #endregion
 
-
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(Relation<C> rel, pg_column rcol, Column col, Type provided_type)
         {
@@ -372,21 +373,40 @@ namespace PostgreSQL
             else
                 col.PGTypeType = PgTypeTypeConverter.FromString(pgtype.type_type);
 
+            col.TypeInfo = CreateTypeInformationFromPgType(pgtype);// do this anyway
+
             if (rcol.data_type == "USER-DEFINED")
             {
-                col.PG_Type = rcol.udt_name;
+                col.PG_Type = GetCorrectTypeName(rcol.udt_schema,rcol.udt_name,col.PGTypeType);
             }
             else if (rcol.data_type == "ARRAY")
             {
-                col.PG_Type = pgtype.base_type;
+                //col.PG_Type = pgtype.base_type;
                 col.IsPgArray = true;
                 pg_type b_pgtype = InformationSchema.Types.Find(t => t.type_oid == pgtype.base_type_oid);
                 col.PGTypeType = PgTypeTypeConverter.FromString(b_pgtype.type_type);
+                col.PG_Type = GetCorrectTypeName(pgtype.base_type_schema, pgtype.base_type,col.PGTypeType);
+                col.TypeInfo = CreateTypeInformationFromPgType(b_pgtype);
             }
             else
-                col.PG_Type = rcol.data_type;
+                col.PG_Type = GetCorrectTypeName(rcol.udt_schema, rcol.data_type,col.PGTypeType);
         }
         
+        #endregion
+
+        #region GetCorrectTypeName
+        public string GetCorrectTypeName(string schema_name, string type_name, PgTypeType type_type)
+        {
+            if (type_type == PgTypeType.BaseType)
+                return type_name;
+
+            if (schema_name == "pg_catalog")
+                return type_name;
+            else if (schema_name == "public")
+                return string.Format("public.\"{0}\"", type_name.Replace(schema_name, ""));
+            else
+                return string.Format("\"{0}\".\"{1}\"", schema_name, type_name.Replace(schema_name, ""));
+        } 
         #endregion
 
         #region CorrectUnknownColumn
@@ -407,6 +427,21 @@ namespace PostgreSQL
                 c.table_name == rel.RelationName &&
                 c.table_schema == rel.SchemaName);
         }
+        #endregion
+
+        #region CreateTypeInformationFromPgType
+        private TypeInformation CreateTypeInformationFromPgType(pg_type type)
+        {
+            TypeInformation t = new TypeInformation();
+            t.BaseTypeName = type.base_type;
+            t.BaseTypeSchemaName = type.base_type_schema;
+            t.Delimiter = type.delimiter;
+            t.TypeLongName = type.type_long_name;
+            t.TypeNamespace = type.type_namespace;
+            t.TypeShortName = type.type_short_name;
+            t.TypeType = PgTypeTypeConverter.FromString(type.type_type);
+            return t;
+        } 
         #endregion
     }
 }

@@ -51,7 +51,14 @@ intelli_tans() ::=<<
 
 create_implicit_check(column) ::=<<
 if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
+    <if(column.HasConverter)>
+    {
+        <column.ConverterProxy.Converter> converter = new <column.ConverterProxy.Converter>();
+        oprParams.Add(new OperationParameter() { DbValue = converter.ToString(p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue) , ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
+    }
+    <else>
     oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
+    <endif>
     
 >>
 
@@ -65,8 +72,12 @@ idatareader_converter(column) ::=<<
 #region <column.TemplateColumnName>
 try
 {
-    <if(column.Converter)>
-        throw new NotImplementedException("Converter for <column.TemplateColumnName> is not implemented");
+    <if(column.HasConverter)>
+        <column.ConverterProxy.Converter> converter = new <column.ConverterProxy.Converter>();
+        result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
+        if(result.<column.TemplateColumnName>.DbValue != DBNull.Value)
+                result.<column.TemplateColumnName>.DbValue = converter.FromString(result.<column.TemplateColumnName>.DbValue.ToString());
+        //throw new NotImplementedException("Converter for <column.TemplateColumnName> is not implemented");
     <else>
         result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
     <endif>

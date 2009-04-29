@@ -32,7 +32,7 @@ namespace DevHelper
             projectBuilder.OnBuildStep += new CodeBuilder.ProjectBuilderEventHandler(projectBuilder_OnBuildStep);
             projectBuilder.Build();
             Console.WriteLine("Done.");
-            if (has_error)
+            //if (has_error)
                 Console.ReadLine();
         }
 

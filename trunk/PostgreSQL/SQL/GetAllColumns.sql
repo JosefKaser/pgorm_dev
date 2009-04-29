@@ -127,9 +127,9 @@ select
           CAST(null  AS varchar) AS domain_schema,
           CAST(null  AS varchar) AS domain_name,
           CAST(null AS varchar) AS udt_catalog,
-          CAST(null AS varchar) AS udt_schema,
-          CAST(null AS varchar) AS udt_name,
-          CAST(null AS oid) AS udt_name_oid
+          CAST('public' AS varchar) AS udt_schema,
+          CAST('varchar' AS varchar) AS udt_name,
+          CAST(t.oid AS oid) AS udt_name_oid
           --CAST(null AS varchar) AS scope_catalog,
           --CAST(null AS varchar) AS scope_schema,
          -- CAST(null AS varchar) AS scope_name,

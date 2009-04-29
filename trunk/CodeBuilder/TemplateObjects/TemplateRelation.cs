@@ -63,31 +63,35 @@ namespace CodeBuilder.TemplateObjects
 
         public List<Column> DMLColumns { get; set; }
 
-        public void Prepare(Project p_Project)
+        public void Prepare(ProjectBuilder p_Builder)
         {
-            p_TemplateRelationName = Helper.MakeCLRSafe(Helper.RemovePrefix(RelationName, p_Project.RemoveTablePrefix));
+            p_TemplateRelationName = Helper.MakeCLRSafe(Helper.RemovePrefix(RelationName, p_Builder.p_Project.RemoveTablePrefix));
             p_RecordsetName = string.Format("{0}_{1}RecordSet", TemplateRelationName,PostFixName);
             p_FactoryName = string.Format("{0}_{1}Factory", TemplateRelationName, PostFixName);
             p_TemplateRelationName = string.Format("{0}{1}", p_TemplateRelationName,PostFixName);
 
             foreach (TemplateColumn col in this.Columns)
             {
-                col.TemplateRelationName = p_TemplateRelationName;
-                col.Prepare(p_Project);
+                col.Relation = this;
+                //col.TemplateRelationName = p_TemplateRelationName;
+                //col.TemplateSchemaName = this.TemplateNamespace;
+                col.Prepare(p_Builder);
             }
 
             foreach (Index<TemplateColumn> index in Indexes)
             {
                 foreach (TemplateColumn col in index.Columns)
                 {
-                    col.TemplateRelationName = p_TemplateRelationName;
-                    col.Prepare(p_Project);
+                    col.Relation = this;
+                    //col.TemplateRelationName = p_TemplateRelationName;
+                    //col.TemplateSchemaName = this.TemplateNamespace; ;
+                    col.Prepare(p_Builder);
                 }
             }
 
             DMLColumns = new List<Column>();
             #region Get all columns that can be used to insert and update
-            foreach (Column col in Columns)
+            foreach (Column col in this.Columns)
                 if (!col.IsEntity && !col.IsSerial)
                     DMLColumns.Add(col);
                 else if (col.IsEntity && !col.IsSerial)

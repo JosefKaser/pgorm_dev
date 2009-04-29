@@ -36,7 +36,6 @@ namespace CodeBuilder
             st.SetAttribute("table", relation);
             st.SetAttribute("namespace", Helper.GetExplicitNamespace(p_Project, relation));
             st.SetAttribute("libs", p_Project.InternalReferences);
-            st.SetAttribute("libs", string.Format("{0}.Factory", nspace));
 
             File.WriteAllText(fname, st.ToString());
         }

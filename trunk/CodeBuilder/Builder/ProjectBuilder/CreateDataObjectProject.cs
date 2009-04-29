@@ -24,12 +24,10 @@ namespace CodeBuilder
             DataObjectBuilder objectBuilder = new DataObjectBuilder(this,p_ObjectNamespace);
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
-            CLREnumBuilder enumBuilder = new CLREnumBuilder(this,"Enums");
 
             #region tables
             foreach (TemplateRelation rel in p_Schema.Tables)
             {
-                rel.Prepare(p_Project);
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
                 objectBuilder.Create(rel, doBuildFolder);
@@ -79,9 +77,8 @@ namespace CodeBuilder
             #endregion
 
             #region views
-            foreach (TemplateRelation rel in p_Schema.Views.FindAll(r => r.RelationName == "right_join"))
+            foreach (TemplateRelation rel in p_Schema.Views)
             {
-                rel.Prepare(p_Project);
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
                 objectBuilder.Create(rel, doBuildFolder);
@@ -103,7 +100,6 @@ namespace CodeBuilder
             #region composite types
             foreach (TemplateRelation rel in p_Schema.CompositeTypes)
             {
-                rel.Prepare(p_Project);
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
                 objectBuilder.Create(rel, doBuildFolder);
@@ -111,16 +107,6 @@ namespace CodeBuilder
 
                 factoryBuilder.Reset();
                 factoryBuilder.Create(rel, doBuildFolder);
-            }
-            #endregion
-
-            #region composite enums
-            foreach (TemplateRelation rel in p_Schema.Enums)
-            {
-                rel.Prepare(p_Project);
-                enumBuilder.Reset();
-                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
-                enumBuilder.Create(rel, doBuildFolder);
             }
             #endregion
 

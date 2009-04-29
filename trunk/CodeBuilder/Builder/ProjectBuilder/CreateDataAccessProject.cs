@@ -8,12 +8,27 @@ using PostgreSQL.Objects;
 using System.Diagnostics;
 using System.CodeDom.Compiler;
 using System.CodeDom;
+using CodeBuilder.TemplateObjects;
 
 
 namespace CodeBuilder
 {
     public partial class ProjectBuilder
     {
+        private void CreateEnums(string daBuildFolder)
+        {
+            p_Schema.Enums.ForEach(i => i.Prepare(this));
+            CLREnumBuilder enumBuilder = new CLREnumBuilder(this, "Enums");
+            #region composite enums
+            foreach (TemplateRelation rel in p_Schema.Enums)
+            {
+                enumBuilder.Reset();
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
+                enumBuilder.Create(rel, daBuildFolder);
+            }
+            #endregion
+        }
+
         private void CreateDataAccessProject()
         {
             SendMessage(this, ProjectBuilderMessageType.Major, "Creating Core components.");
@@ -27,6 +42,7 @@ namespace CodeBuilder
             File.WriteAllText(string.Format(@"{0}\DataObjectValueTypeConverter.cs", daBuildFolder), DataAccessProjectFiles.DataObjectValueTypeConverter.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectRecordSetBase.cs", daBuildFolder), DataAccessProjectFiles.DataObjectRecordSetBase.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\PostgreSQLTypeConverter.cs", daBuildFolder), DataAccessProjectFiles.PostgreSQLTypeConverter.Replace("MY_NAMESPACE", p_Project.RootNamespace));
+            CreateEnums(daBuildFolder);
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(asmInfo, this);

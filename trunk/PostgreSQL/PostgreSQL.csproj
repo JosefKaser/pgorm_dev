@@ -68,6 +68,7 @@
     <Compile Include="Objects\Index.cs" />
     <Compile Include="Objects\Relation.cs" />
     <Compile Include="Objects\StoredFunction.cs" />
+    <Compile Include="Objects\TypeInformation.cs" />
     <Compile Include="PgTypeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\Schema.cs" />

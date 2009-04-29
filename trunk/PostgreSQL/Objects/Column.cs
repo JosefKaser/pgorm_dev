@@ -20,9 +20,32 @@ namespace PostgreSQL.Objects
         public string DefaultValue { get; set; }
         public string DB_Comment { get; set; }
         public PgTypeType PGTypeType { get; set; }
+        public TypeInformation TypeInfo { get; set; }
 
         public Column()
         {
         }
+
+        #region ICloneable Members
+
+        public C Clone<C>() where C : Column ,new()
+        {
+            C c = new C();
+            c.ColumnName = this.ColumnName;
+            c.CLR_Type = this.CLR_Type;
+            c.PG_Type = this.PG_Type;
+            c.ColumnIndex = this.ColumnIndex;
+            c.IsNullable = this.IsNullable;
+            c.IsSerial = this.IsSerial;
+            c.IsEntity = this.IsEntity;
+            c.IsPgArray = this.IsPgArray;
+            c.DefaultValue = this.DefaultValue;
+            c.DB_Comment = this.DB_Comment;
+            c.PGTypeType = this.PGTypeType;
+            c.TypeInfo = (TypeInformation)this.TypeInfo.Clone();
+            return c;
+        }
+
+        #endregion
     }
 }

@@ -5,31 +5,18 @@ using System.Text;
 
 namespace MY_NAMESPACE.Core
 {
-    //TODO: test and experimental code to resolve unknown types
-    public class PostgreSQLTypeConverter
+    public interface IPostgreSQLTypeConverter
     {
-        public virtual object FromString(string data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Type CLR_Type()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual string ToString(object obj)
-        {
-            throw new NotImplementedException();
-        }
+        object FromString(string data);
+        string ToString(object obj);
+        string PgType();
+        string PgTypeSchema();
+        Type CLRType();
     }
 
-    public class PostgreSQLEnumConverter<E> : PostgreSQLTypeConverter
+    [AttributeUsageAttribute(AttributeTargets.Class)]
+    public class PostgreSQLTypeConverterAttribute : Attribute
     {
-        public override Type CLR_Type()
-        {
-            return typeof(E);
-        }
     }
 
     //TODO: test and experimental code to resolve unknown types
@@ -38,7 +25,7 @@ namespace MY_NAMESPACE.Core
     public class SchemaReaderResolvePGTypeEventArgs : EventArgs
     {
         public string PG_TypeName { get; set; }
-        public PostgreSQLTypeConverter Converter { get; set; }
+        public IPostgreSQLTypeConverter Converter { get; set; }
 
         public SchemaReaderResolvePGTypeEventArgs(string p_PG_TypeName)
         {

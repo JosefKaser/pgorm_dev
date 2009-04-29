@@ -22,15 +22,31 @@ namespace <namespace>.Enum
     #endregion
 
     #region <table.TemplateRelationName>Converter
-    public class <table.TemplateRelationName>Converter : PostgreSQLEnumConverter<generic({<table.TemplateRelationName>})>
+    [PostgreSQLTypeConverterAttribute()]
+    public class <table.TemplateRelationName>Converter : IPostgreSQLTypeConverter
     {
-        public override object FromString(string data)
+        public object FromString(string data)
         {
             <table.Columns:from_string_parse(); separator="\r\n">
             throw new NotImplementedException(string.Format("Enum value {0} is not implemented.",data));
-        }      
-  
-        public override string ToString(object obj)
+        }
+    
+        public string PgType()
+        {
+            return "<table.RelationName>";
+        }
+
+        public string PgTypeSchema()
+        {
+            return "<table.SchemaName>";
+        }
+
+        public Type CLRType()
+        {
+            return typeof(<namespace>.Enum.<table.TemplateRelationName>);
+        }
+        
+        public string ToString(object obj)
         {
             return obj.ToString();
         }
