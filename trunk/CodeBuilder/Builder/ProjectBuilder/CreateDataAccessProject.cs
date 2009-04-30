@@ -37,6 +37,7 @@ namespace CodeBuilder
             File.WriteAllText(string.Format(@"{0}\Helper.cs", daBuildFolder), DataAccessProjectFiles.Helper.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataAccess.cs", daBuildFolder), DataAccessProjectFiles.DataAccess.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DatabaseOperation.cs", daBuildFolder), DataAccessProjectFiles.DatabaseOperation.Replace("MY_NAMESPACE", p_Project.RootNamespace));
+            File.WriteAllText(string.Format(@"{0}\StringSplitter.cs", daBuildFolder), DataAccessProjectFiles.StringSplitter.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectBase.cs", daBuildFolder), DataAccessProjectFiles.DataObjectBase.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectValue.cs", daBuildFolder), DataAccessProjectFiles.DataObjectValue.Replace("MY_NAMESPACE", p_Project.RootNamespace));
             File.WriteAllText(string.Format(@"{0}\DataObjectValueTypeConverter.cs", daBuildFolder), DataAccessProjectFiles.DataObjectValueTypeConverter.Replace("MY_NAMESPACE", p_Project.RootNamespace));

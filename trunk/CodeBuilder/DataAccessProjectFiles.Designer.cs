@@ -267,26 +267,56 @@ namespace CodeBuilder {
         ///using System.Linq;
         ///using System.Text;
         ///
-        ///namespace MY_NAMESPACE
+        ///namespace MY_NAMESPACE.Core
         ///{
-        ///    //TODO: test and experimental code to resolve unknown types
-        ///    public class PostgreSQLTypeConverter
+        ///    public interface IPostgreSQLTypeConverter
         ///    {
-        ///        public virtual object FromString(string data)
-        ///        {
-        ///            throw new NotImplementedException();
-        ///        }
+        ///        object FromString(string data);
+        ///        string ToString(object obj);
+        ///        string PgType();
+        ///        string PgTypeSchema();
+        ///        Type CLRType();
+        ///    }
         ///
-        ///        public virtual Type CLR_Type()
-        ///        {
-        ///            throw new NotImplementedException();
-        ///        }
+        ///    [AttributeUsageAttribute(AttributeTargets.Class)]
+        ///    public class PostgreSQLTypeConverterAttribute : Attribute
+        ///    {
+        ///    }
         ///
-        ///        public virtual string ToStri [rest of string was truncated]&quot;;.
+        ///    //TODO: test and experime [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string PostgreSQLTypeConverter {
             get {
                 return ResourceManager.GetString("PostgreSQLTypeConverter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///using System.Collections.Generic;
+        ///using System.Linq;
+        ///using System.Text;
+        ///
+        ///namespace CodeBuilder.DataAccessProjectFiles
+        ///{
+        ///    class StringSplitter
+        ///    {
+        ///        #region Properties
+        ///        private TextReader stream;
+        ///        private bool EOS = false;
+        ///        private bool EOL = false;
+        ///        private char[] buffer = new char[8192];
+        ///        private int pos = 0;
+        ///        private int length = 0; 
+        ///        #endregion
+        ///
+        ///        #region GetNextItem
+        ///        private string GetNextItem()
+        ///   [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string StringSplitter {
+            get {
+                return ResourceManager.GetString("StringSplitter", resourceCulture);
             }
         }
     }

@@ -128,13 +128,14 @@
     <Compile Include="Builder\FactoryBuilder.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataAccessProject.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataObjectProject.cs" />
-    <Compile Include="ConverterProxy.cs" />
+    <Compile Include="Core\ConverterProxy.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectRecordSetBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectValue.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectValueTypeConverter.cs" />
     <Compile Include="Builder\RecordSetBuilder.cs" />
     <Compile Include="DataAccessProjectFiles\PostgreSQLTypeConverter.cs" />
+    <Compile Include="DataAccessProjectFiles\StringSplitter.cs" />
     <Compile Include="HelperResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
