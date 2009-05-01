@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PostgreSQL.Objects;
-using MY_NAMESPACE.Core;
+using TemplateNS.Core;
 
 namespace CodeBuilder.TemplateObjects
 {

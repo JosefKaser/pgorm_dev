@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
     #region DataObjectValueTypeConverter
     public class DataObjectValueTypeConverter : TypeConverter
@@ -36,7 +36,7 @@ namespace MY_NAMESPACE.Core
         public static Type GetGenericType(string innerType)
         {
             // construct the mangled name
-            string mangledName = string.Format("MY_NAMESPACE.DataObjectValue`1[[{0}]]", innerType);
+            string mangledName = string.Format("TemplateNS.DataObjectValue`1[[{0}]]", innerType);
 
             // get the open generic type
             Type genericType = Type.GetType(mangledName);

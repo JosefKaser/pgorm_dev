@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Data.Common;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
     #region CompareOption
     public enum CompareOption

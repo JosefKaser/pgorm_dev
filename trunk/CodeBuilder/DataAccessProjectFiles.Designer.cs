@@ -69,7 +69,7 @@ namespace CodeBuilder {
         ///using System.Data.Common;
         ///using System.Data;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    #region ObjectRelationMapper
         ///    public delegate T ObjectRelationMapper&lt;T&gt;(IDataReader reader);
@@ -96,7 +96,7 @@ namespace CodeBuilder {
         ///using System.ComponentModel;
         ///using System.Data.Common;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    #region CompareOption
         ///    public enum CompareOption
@@ -126,7 +126,7 @@ namespace CodeBuilder {
         ///using System.Linq;
         ///using System.Text;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    #region EntityStatus
         ///    public enum EntityStatus
@@ -166,7 +166,7 @@ namespace CodeBuilder {
         ///using System.Text;
         ///using System.ComponentModel;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{    
         ///    #region DataObjectRecordSetBase
         ///    public class DataObjectRecordSetBase&lt;T&gt; : List&lt;T&gt; where T : DataObjectBase
@@ -188,7 +188,7 @@ namespace CodeBuilder {
         ///using System.Text;
         ///using System.ComponentModel;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    #region DataObjectValue
         ///    [DefaultProperty(&quot;Value&quot;)]
@@ -220,7 +220,7 @@ namespace CodeBuilder {
         ///using System.ComponentModel;
         ///using System.Reflection;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    #region DataObjectValueTypeConverter
         ///    public class DataObjectValueTypeConverter : TypeConverter
@@ -245,7 +245,7 @@ namespace CodeBuilder {
         ///using System.Text;
         ///using System.ComponentModel;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///	#region Helper
         ///	public class Helper
@@ -267,7 +267,7 @@ namespace CodeBuilder {
         ///using System.Linq;
         ///using System.Text;
         ///
-        ///namespace MY_NAMESPACE.Core
+        ///namespace TemplateNS.Core
         ///{
         ///    public interface IPostgreSQLTypeConverter
         ///    {

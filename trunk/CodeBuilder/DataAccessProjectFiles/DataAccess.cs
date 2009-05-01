@@ -6,7 +6,7 @@ using Npgsql;
 using System.Data.Common;
 using System.Data;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
     #region ObjectRelationMapper
     public delegate T ObjectRelationMapper<T>(IDataReader reader);

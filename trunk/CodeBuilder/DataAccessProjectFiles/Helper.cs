@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
 	#region Helper
 	public class Helper

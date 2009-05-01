@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
     public class StringSplitter
     {
@@ -18,13 +18,13 @@ namespace MY_NAMESPACE.Core
         private char delimiter;
         #endregion
 
-        public static string[] Split(string s, char delimitter)
+        public static object[] Split(string s, char delimitter)
         {
             StringSplitter splitter = new StringSplitter(new StringReader(s), delimitter);
             return splitter.GetNextRow();
         }
 
-        public static string[] Split(string s)
+        public static object[] Split(string s)
         {
             StringSplitter splitter = new StringSplitter(new StringReader(s), ',');
             return splitter.GetNextRow();
@@ -40,14 +40,14 @@ namespace MY_NAMESPACE.Core
         #endregion
 
         #region GetNextRow
-        private string[] GetNextRow()
+        private object[] GetNextRow()
         {
             ArrayList row = new ArrayList();
             while (true)
             {
                 string item = GetNextItem();
                 if (item == null)
-                    return row.Count == 0 ? null : (string[])row.ToArray(typeof(string));
+                    return row.Count == 0 ? null : (object[])row.ToArray(typeof(object));
                 row.Add(item);
             }
         } 

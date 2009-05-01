@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MY_NAMESPACE.Core
+namespace TemplateNS.Core
 {
     public interface IPostgreSQLTypeConverter
     {
