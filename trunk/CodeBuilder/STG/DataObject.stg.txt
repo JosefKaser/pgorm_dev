@@ -26,7 +26,7 @@ namespace <namespace>
 		#endregion
 		
 		#region Static Properties
-		public static readonly string RELATION_NAME = "\"<table.RelationName>\"";
+		public static readonly string RELATION_NAME = "\"<table.SchemaName>\".\"<table.RelationName>\"";
 		<table.Columns:static_db_column_name(); separator="\r\n">
 		#endregion				
 		<table.Columns:property(); separator="\r\n">

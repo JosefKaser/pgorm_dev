@@ -32,11 +32,18 @@ public static void CopyIn<generic("T,R")>(R p_objects) where T : <table.Template
 
 <code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
 <intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
-<intelli_type_param_table(table)>
 <intelli_tans()>
 public static void CopyIn(List<generic({<table.TemplateRelationName>})> p_objects,NpgsqlTransaction p_Transaction)
 {
     CopyIn<generic({<table.TemplateRelationName>,List\<<table.TemplateRelationName>\>})>(p_objects,p_Transaction);
 }
+
+<code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
+<intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
+public static void CopyIn(List<generic({<table.TemplateRelationName>})> p_objects)
+{
+    CopyIn<generic({<table.TemplateRelationName>,List\<<table.TemplateRelationName>\>})>(p_objects,null);
+}
+
 
 >>
