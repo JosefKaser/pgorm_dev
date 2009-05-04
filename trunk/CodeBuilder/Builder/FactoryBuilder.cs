@@ -21,6 +21,8 @@ namespace CodeBuilder
         StringTemplate record_count;
         StringTemplate update_method_single;
         StringTemplate update_many_method;
+        StringTemplate delete_all_method;
+        StringTemplate copy_in_method;
 
         string p_ObjectNamespace;
         string p_RecordSetNamespace;
@@ -29,7 +31,7 @@ namespace CodeBuilder
         #region FactoryTemplate
         private static string FactoryTemplate()
         {
-            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n{5}\r\n{6}\r\n{7}\r\n",
+            return string.Format("{0}\r\n{1}\r\n{2}\r\n{3}\r\n{4}\r\n{5}\r\n{6}\r\n{7}\r\n{8}\r\n",
                 Templates.Factory_Main_stg,
                 Templates.Factory_InsertInto_stg,
                 Templates.Factory_GetSingle_stg,
@@ -37,7 +39,10 @@ namespace CodeBuilder
                 Templates.Factory_Factory_stg,
                 Templates.Factory_Delete_stg,
                 Templates.Factory_RecordCount_stg,
-                Templates.Factoty_Update_stg);
+                Templates.Factoty_Update_stg,
+                Templates.Factory_Copy_stg
+                );
+
         } 
         #endregion
 
@@ -55,9 +60,12 @@ namespace CodeBuilder
             code_summary = p_stgGroup.GetInstanceOf("code_summary");
             create_method_sub_name = p_stgGroup.GetInstanceOf("create_method_sub_name");
             delete_method = p_stgGroup.GetInstanceOf("delete_method");
+            delete_all_method = p_stgGroup.GetInstanceOf("delete_all_method");
             record_count = p_stgGroup.GetInstanceOf("record_count");
             update_method_single = p_stgGroup.GetInstanceOf("update_method_single");
             update_many_method = p_stgGroup.GetInstanceOf("update_many_method");
+            copy_in_method = p_stgGroup.GetInstanceOf("copy_in_method");
+
 
             Methods = new List<TemplateMethod>();
         } 
@@ -99,15 +107,41 @@ namespace CodeBuilder
         } 
         #endregion
 
+        #region CreateDeleteAllMethod
+        public TemplateMethod CreateDeleteAllMethod(TemplateRelation rel)
+        {
+            TemplateMethod method = new TemplateMethod();
+            delete_all_method.Reset();
+            delete_all_method.SetAttribute("table", rel);
+            method.Content = delete_all_method.ToString();
+            method.Signiture = "delete_all" + rel.TemplateRelationName;
+            return method;
+        }
+        #endregion
+
+
         #region CreateInsertMethod
         public string CreateInsertMethod(TemplateRelation relation)
         {
             insert_method.Reset();
             insert_method.SetAttribute("table", relation);
-            string s = insert_method.ToString();
+            insert_method.SetAttribute("method_name", "Insert");
             return insert_method.ToString();
         } 
         #endregion
+
+        #region CreateCopyInMethod
+        public TemplateMethod CreateCopyInMethod(TemplateRelation relation)
+        {
+            TemplateMethod method = new TemplateMethod();
+            copy_in_method.Reset();
+            copy_in_method.SetAttribute("table", relation);
+            method.Content = copy_in_method.ToString();
+            method.Signiture = "copyin_" + relation.RelationName;
+            return method;
+        }
+        #endregion
+
 
         #region CreateGetAllMethod
         public string CreateGetAllMethod(TemplateRelation rel)

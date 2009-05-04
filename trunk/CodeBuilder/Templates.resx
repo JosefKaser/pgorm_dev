@@ -130,6 +130,9 @@
   <data name="DataObject_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobject.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Factory_Copy_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stg\dataobjectfactory\factory_copy.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="Factory_Delete_stg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>stg\dataobjectfactory\factory_delete.stg.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

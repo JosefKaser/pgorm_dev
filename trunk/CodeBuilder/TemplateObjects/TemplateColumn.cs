@@ -110,5 +110,13 @@ namespace CodeBuilder.TemplateObjects
             }
         } 
         #endregion
+
+        public int CounterIndex
+        {
+            get
+            {
+                return this.ColumnIndex - 1;
+            }
+        }
     }
 }

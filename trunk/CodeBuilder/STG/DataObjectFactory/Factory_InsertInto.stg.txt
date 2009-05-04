@@ -1,11 +1,11 @@
-﻿insert_method(table) ::=<<
-#region insert_method
+﻿insert_method(table,method_name,all_columns) ::=<<
+#region <method_name>
 <code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
 <intelli_type_param_table(table)>
-public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
+public static void <method_name><generic("T")>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
 {
 	Insert<generic("T")>(ref p_<table.TemplateRelationName>,null);
 }
@@ -16,7 +16,7 @@ public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>) wh
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
 <intelli_type_param_table(table)>
 <intelli_tans()>
-public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
+public static void <method_name><generic("T")>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
 {
 	string sqlStatement = "";
 	DbParameter[] dbParams = null;
@@ -24,7 +24,11 @@ public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>,Npg
 	List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
 	
 	#region Implicit value assignment.
+    <if(all_columns)>
+    <table.Columns:create_implicit_check();separator="\r\n">
+    <else>
 	<table.DMLColumns:create_implicit_check();separator="\r\n">	
+    <endif>
 	#endregion
 	
     if (oprParams.Count != 0)
@@ -65,7 +69,7 @@ public static void Insert<generic("T")>(ref T p_<table.TemplateRelationName>,Npg
 /// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
 /// with the latest affected column values.})>
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
-public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
+public static void <method_name>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
 {
 	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,null);
 }
@@ -75,7 +79,7 @@ public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRela
 /// with the latest affected column values.})>
 <intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
 <intelli_tans()>
-public static void Insert(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
+public static void <method_name>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
 {
 	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,p_Transaction);
 }

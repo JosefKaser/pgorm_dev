@@ -18,7 +18,7 @@ namespace TemplateNS.Core
         #region Props
         public static NpgsqlConnection Connection { get; set; }
         public static bool ThrowMapperException { get; set; }
-        private static bool IsDatabaseInitialized { get; set; }
+        public static bool IsDatabaseInitialized { get; set; }
         #endregion
 
         #region DataAccess
@@ -39,10 +39,10 @@ namespace TemplateNS.Core
         #endregion
 
         #region InitializeDatabase
-        public static void InitializeDatabase(string host, string database, string username, string password)
+        public static void InitializeDatabase(string host, string database, string username, string password,string options,bool throw_exception)
         {
-            string conn = string.Format("host={0};database={1};user={2};password={3};",
-                host, database, username, password);
+            string conn = string.Format("host={0};database={1};user={2};password={3};{4}",
+                host, database, username, password,options);
 
             Connection = new NpgsqlConnection(conn);
 
@@ -54,7 +54,8 @@ namespace TemplateNS.Core
             catch (Exception e)
             {
                 IsDatabaseInitialized = false;
-                throw e;
+                if(throw_exception)
+                    throw e;
             }
         }
         #endregion

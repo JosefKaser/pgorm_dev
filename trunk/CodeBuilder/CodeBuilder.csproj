@@ -111,6 +111,7 @@
     <Content Include="STG\AssemblyInfo.stg.txt" />
     <Content Include="STG\CLREnum.stg.txt" />
     <Content Include="STG\DataObject.stg.txt" />
+    <Content Include="STG\DataObjectFactory\Factory_Copy.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Delete.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Main.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factory_Factory.stg.txt" />

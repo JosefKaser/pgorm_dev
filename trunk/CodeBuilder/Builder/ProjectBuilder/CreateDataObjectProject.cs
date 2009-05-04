@@ -38,6 +38,12 @@ namespace CodeBuilder
                 // create insert method
                 factoryBuilder.AddMethod("insert",factoryBuilder.CreateInsertMethod(rel));
 
+                // create import method
+                factoryBuilder.AddMethod(factoryBuilder.CreateCopyInMethod(rel));
+
+                // create delete all method
+                factoryBuilder.AddMethod(factoryBuilder.CreateDeleteAllMethod(rel));
+
                 // create get all method
                 factoryBuilder.AddMethod("getall", factoryBuilder.CreateGetAllMethod(rel));
 

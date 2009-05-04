@@ -30,3 +30,19 @@ delete_summary(table) ::=<<
 delete_returns() ::=<<
 <intelli_returns({Returns the number of affected records.})>
 >>
+
+
+delete_all_method(table) ::=<<
+public static int DeleteAll(NpgsqlTransaction p_Transaction)
+{
+    return DataAccess.ExecuteNoneQuery(string.Format(Helper.SQL_DELETE_TABLE,<table.TemplateRelationName>.RELATION_NAME),
+						p_Transaction);
+}
+
+public static int DeleteAll()
+{
+    return DataAccess.ExecuteNoneQuery(string.Format(Helper.SQL_DELETE_TABLE,<table.TemplateRelationName>.RELATION_NAME),
+						null);
+}
+
+>>

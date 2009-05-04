@@ -1,0 +1,8 @@
+* Implement generation per project relation list.
+* Implement stored procedures.
+* Include the test framework in the repository
+* Add BSN copyright notice to project files
+* Recreate the GUI app (wizard) for the new PGORM 
+* Create sample projects
+* Create quit start documentation.
+* Remove DEVHelper from the source tree and replace it with the test project

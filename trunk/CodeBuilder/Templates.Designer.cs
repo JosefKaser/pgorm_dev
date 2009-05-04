@@ -89,26 +89,25 @@ namespace CodeBuilder {
         ///using &lt;lib&gt;;
         ///&gt;&gt;
         ///
+        ///generic(T) ::=&quot;\&lt;&lt;T&gt;\&gt;&quot;
+        ///
         ///create_enum(libs,namespace,table) ::=&lt;&lt;
         ///using System;
         ///using System.Collections.Generic;
-        ///using System.Linq;
-        ///using System.Text;
-        ///using System.Data;
-        ///using System.Data.Common;
-        ///using System.Reflection;
-        ///using System.Diagnostics;
         ///using Npgsql;
         ///&lt;libs:usings(); separator=&quot;\r\n&quot;&gt;
         ///
-        ///namespace &lt;namespace&gt;
+        ///namespace &lt;namespace&gt;.Enum
         ///{
         ///    #region &lt;table.TemplateRelationName&gt;
         ///    public enum &lt;table.TemplateRelationName&gt;
         ///    {
-        ///        &lt;table.Columns; separator=&quot;,\n&quot;&gt;
+        ///        &lt;table.Columns:enum_item(); separator=&quot;,\r\n&quot;&gt;
         ///    }
-        ///    # [rest of string was truncated]&quot;;.
+        ///    #endregion
+        ///
+        ///    #region &lt;table.TemplateRelationName&gt;Converter
+        ///    [PostgreSQLTypeConverterAt [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CLREnum_stg {
             get {
@@ -182,6 +181,24 @@ namespace CodeBuilder {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to copy_in_method(table) ::=&lt;&lt;
+        ///&lt;summar({Copies a list of &lt;table.TemplateRelationName&gt; into &lt;table.RelationName&gt;})&gt;
+        ///&lt;intelli_param(name={p_Objects},desc={A generic list of type &lt;table.TemplateRelationName&gt;.})&gt;
+        ///&lt;intelli_type_param_table(table)&gt;
+        ///&lt;intelli_tans()&gt;
+        ///public static void CopyIn&lt;generic(&quot;R&quot;)&gt;(R p_Objects,NpgsqlTransaction p_Transaction)
+        ///{
+        ///    StringWriter writer = new StringWriter();
+        ///    p_Objects.ForEach(i =&gt; writer.WriteLine(i.ToCopyString()));
+        ///    MemoryStream buffer = new MemoryStream(System [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Factory_Copy_stg {
+            get {
+                return ResourceManager.GetString("Factory_Copy_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to delete_method(table,icolumns) ::=&lt;&lt;
         ///#region delete_method
         ///&lt;delete_summary(table)&gt;
@@ -203,6 +220,7 @@ namespace CodeBuilder {
         /// <summary>
         ///   Looks up a localized string similar to factory(libs,namespace,table,methods) ::=&lt;&lt;
         ///using System;
+        ///using System.IO;
         ///using System.Collections.Generic;
         ///using System.Linq;
         ///using System.Text;
@@ -220,7 +238,7 @@ namespace CodeBuilder {
         ///	public class &lt;table.FactoryName&gt;
         ///	{
         ///		&lt;methods; separator=&quot;\r\n&quot;&gt;
-        ///		#region CreateFromRea [rest of string was truncated]&quot;;.
+        ///		#re [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Factory_Factory_stg {
             get {
@@ -263,14 +281,14 @@ namespace CodeBuilder {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert_method(table) ::=&lt;&lt;
-        ///#region insert_method
+        ///   Looks up a localized string similar to insert_method(table,method_name,all_columns) ::=&lt;&lt;
+        ///#region &lt;method_name&gt;
         ///&lt;code_summary({Inserts a new record into table [&lt;table.RelationName&gt;] based on an object 
         ////// of type &lt;table.TemplateRelationName&gt;. This method updates the [ref p_&lt;table.TemplateRelationName&gt;]
         ////// with the latest affected column values.})&gt;
         ///&lt;intelli_param(name={p_&lt;table.TemplateRelationName&gt;},desc={A ref object of type &lt;table.TemplateRelationName&gt;.})&gt;
         ///&lt;intelli_type_param_table(table)&gt;
-        ///public static void Insert&lt;generic(&quot;T&quot;)&gt;(ref T p_&lt;table.TemplateRelati [rest of string was truncated]&quot;;.
+        ///public static void &lt;method_name&gt;&lt;generic(&quot;T&quot;) [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Factory_InsertInto_stg {
             get {
@@ -324,7 +342,7 @@ namespace CodeBuilder {
         
         /// <summary>
         ///   Looks up a localized string similar to update_method_single(table,icolumns) ::=&lt;&lt;
-        ///#region insert_method
+        ///#region update_method
         ///&lt;code_summary({Updates an existing record in table [&lt;table.RelationName&gt;] based on an object 
         ////// of type &lt;table.TemplateRelationName&gt;. This method updates the [ref p_&lt;table.TemplateRelationName&gt;]
         ////// with the latest affected column values.})&gt;
