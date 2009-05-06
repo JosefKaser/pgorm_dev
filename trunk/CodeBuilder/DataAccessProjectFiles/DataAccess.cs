@@ -39,13 +39,14 @@ namespace TemplateNS.Core
         #endregion
 
         #region InitializeDatabase
-        public static void InitializeDatabase(string host, string database, string username, string password,string options,bool throw_exception)
+        public static void InitializeDatabase(string connectionstring, bool throw_exception)
         {
-            string conn = string.Format("host={0};database={1};user={2};password={3};{4}",
-                host, database, username, password,options);
+            if (Connection != null)
+                if (Connection.State == ConnectionState.Open)
+                    Connection.Close();
 
-            Connection = new NpgsqlConnection(conn);
-
+            Connection = null;
+            Connection = new NpgsqlConnection(connectionstring);
             try
             {
                 Connection.Open();
@@ -54,9 +55,14 @@ namespace TemplateNS.Core
             catch (Exception e)
             {
                 IsDatabaseInitialized = false;
-                if(throw_exception)
+                if (throw_exception)
                     throw e;
             }
+        }
+        public static void InitializeDatabase(string host, string database, string username, string password, string options, bool throw_exception)
+        {
+            string constr = string.Format("host={0};database={1};user={2};password={3};{4}", host, database, username, password, options);
+            InitializeDatabase(constr, throw_exception);
         }
         #endregion
 
@@ -128,10 +134,12 @@ namespace TemplateNS.Core
                 {
                     result.Add(ormFunction(reader));
                 }
+                reader.Close();
                 return result;
             }
             else
             {
+                reader.Close();
                 return null;
             }
         }
@@ -150,10 +158,12 @@ namespace TemplateNS.Core
                 {
                     result.Add(ormFunction(reader));
                 }
+                reader.Close();
                 return result;
             }
             else
             {
+                reader.Close();
                 return null;
             }
         }
