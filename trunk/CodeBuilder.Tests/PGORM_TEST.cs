@@ -156,6 +156,36 @@ namespace CodeBuilder.Tests
             }
         } 
         #endregion
+
+        #region Test0012_INParameters
+        [Test]
+        public void Test0012_INParameters()
+        {
+            test2_ObjectFactory.DeleteAll();
+            List<test2Object> import = new List<test2Object>();
+            for (int a = 0; a != 10; a++)
+            {
+                test2Object obj = new test2Object();
+                obj.id = 100 + a;
+                obj.field1 = Guid.NewGuid().ToString();
+                import.Add(obj);
+            }
+            test2_ObjectFactory.CopyIn(import);
+
+            string sql = "select * from test2 where id in @values";
+            List<int> ids = new List<int>();
+            ids.AddRange(new int[] { 100, 102, 104 });
+            List<test2Object> r = DataAccess.ExecuteObjectQuery<test2Object>(
+                sql,
+                test2_ObjectFactory.CreateFromReader<test2Object>,
+                null,
+                DataAccess.NewINParameter("@values", ids));
+            Assert.IsTrue(r.Count() == 3);
+            Assert.IsTrue((int)r[0].id == 100);
+            Assert.IsTrue((int)r[1].id == 102);
+            Assert.IsTrue((int)r[2].id == 104);
+        } 
+        #endregion
     }
 #endif
 }
