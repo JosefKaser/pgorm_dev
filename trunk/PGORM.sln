@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHelper", "DevHelper\DevH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBuilder", "CodeBuilder\CodeBuilder.csproj", "{867A82F5-FEF4-4D2B-9555-8A5B27D50A69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBuilder.Tests", "CodeBuilder.Tests\CodeBuilder.Tests.csproj", "{4B2F1DFC-C54B-4B55-935D-CDF5804B7459}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{867A82F5-FEF4-4D2B-9555-8A5B27D50A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{867A82F5-FEF4-4D2B-9555-8A5B27D50A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{867A82F5-FEF4-4D2B-9555-8A5B27D50A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B2F1DFC-C54B-4B55-935D-CDF5804B7459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B2F1DFC-C54B-4B55-935D-CDF5804B7459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B2F1DFC-C54B-4B55-935D-CDF5804B7459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B2F1DFC-C54B-4B55-935D-CDF5804B7459}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
