@@ -12,6 +12,155 @@ namespace TemplateNS.Core
     public delegate T ObjectRelationMapper<T>(IDataReader reader);
     #endregion
 
+    #region DbINParameter
+    public class DbINParameter<T> : DbParameter
+    {
+        private string p_param_name;
+        private string p_param_value;
+        public DbINParameter(string parameter_name, List<T> value_list)
+        {
+            p_param_name = parameter_name;
+            p_param_value = ExplodeArray(value_list, ",");
+        }
+
+        /// <summary>
+        /// Flattens an arry of objects to an string using a separator
+        /// </summary>
+        /// <typeparam name="T">Generic type of array elements</typeparam>
+        /// <param name="array">Generic list of T</param>
+        /// <param name="separator">item separator</param>
+        /// <returns>Flatten string of array.</returns>
+        private string ExplodeArray(List<T> array, string separator)
+        {
+            string result = "";
+            if (typeof(T) == typeof(string))
+                array.ForEach(i => result += (i != null ? string.Format("E'{0}',", i) : ""));
+            else
+                array.ForEach(i => result += (i != null ? string.Format("{0},", i) : ""));
+            if (result != "")
+                result = result.Substring(0, result.Length - 1);
+            return result;
+        }
+
+
+        public override DbType DbType
+        {
+            get
+            {
+                if (typeof(T) == typeof(string))
+                    return DbType.String;
+                else
+                    return DbType.VarNumeric;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override ParameterDirection Direction
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool IsNullable
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override string ParameterName
+        {
+            get
+            {
+                return p_param_name;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override void ResetDbType()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int Size
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override string SourceColumn
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool SourceColumnNullMapping
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override DataRowVersion SourceVersion
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override object Value
+        {
+            get
+            {
+                return p_param_value;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+    } 
+    #endregion
+
     #region DataAccess
     public class DataAccess
     {
@@ -196,7 +345,10 @@ namespace TemplateNS.Core
         private static void SetupParameters(DbCommand command, DbParameter[] parameters)
         {
             foreach (DbParameter param in parameters)
-                command.Parameters.Add(param);
+                if (param.GetType().ToString().Contains("DbINParameter"))
+                    command.CommandText = command.CommandText.Replace(param.ParameterName, string.Format("({0})", param.Value));
+                else
+                    command.Parameters.Add(param);
         } 
         #endregion
 
@@ -217,6 +369,12 @@ namespace TemplateNS.Core
         } 
         #endregion
 
+        #region DbINParameter
+        public static DbINParameter<T> NewINParameter<T>(string name, List<T> values)
+        {
+            return new DbINParameter<T>(name, values);
+        } 
+        #endregion
     } 
     #endregion
 }
