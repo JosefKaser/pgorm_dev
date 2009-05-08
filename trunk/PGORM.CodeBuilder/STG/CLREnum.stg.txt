@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Npgsql;
 <libs:usings(); separator="\r\n">
 
-namespace <namespace>.Enum
+namespace <namespace>.Enums
 {
     #region <table.TemplateRelationName>
     public enum <table.TemplateRelationName>
@@ -43,7 +43,7 @@ namespace <namespace>.Enum
 
         public Type CLRType()
         {
-            return typeof(<namespace>.Enum.<table.TemplateRelationName>);
+            return typeof(<namespace>.Enums.<table.TemplateRelationName>);
         }
         
         public string ToString(object obj)

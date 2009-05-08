@@ -38,6 +38,10 @@ namespace PGORM.Tests
             project.DatabaseConnectionInfo.Password = "postgres";
             project.OutputFolder = test_output_folder;
             project.BuildInDebugMode = true;
+
+            project.Tables.Add("public.enum_table");
+
+
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = test_db_name;
             PGORM.CodeBuilder.ProjectBuilder projectBuilder = new PGORM.CodeBuilder.ProjectBuilder(project);
