@@ -30,6 +30,14 @@ namespace PGORM.PostgreSQL.Objects
             }
         }
 
+        public string FullNameInvariant
+        {
+            get
+            {
+                return FullName.Replace("\"", "");
+            }
+        }
+
         #endregion
         public Relation()
         {

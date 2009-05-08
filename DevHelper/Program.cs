@@ -26,13 +26,17 @@ namespace DevHelper
             project.RemoveTablePrefix.Add("tbl");
             project.RemoveTablePrefix.Add("view_");
             project.BuildInDebugMode = true;
+
+            project.Tables.Add("public.table2");
+            project.Views.Add("public.view_table3");
+
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = @"test1.dll";
             PGORM.CodeBuilder.ProjectBuilder projectBuilder = new PGORM.CodeBuilder.ProjectBuilder(project);
             projectBuilder.OnBuildStep += new PGORM.CodeBuilder.ProjectBuilderEventHandler(projectBuilder_OnBuildStep);
             projectBuilder.Build();
             Console.WriteLine("Done.");
-            if (has_error)
+            //if (has_error)
                 Console.ReadLine();
         }
 

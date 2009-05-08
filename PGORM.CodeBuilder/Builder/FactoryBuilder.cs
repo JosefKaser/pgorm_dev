@@ -119,7 +119,6 @@ namespace PGORM.CodeBuilder
         }
         #endregion
 
-
         #region CreateInsertMethod
         public string CreateInsertMethod(TemplateRelation relation)
         {
@@ -141,7 +140,6 @@ namespace PGORM.CodeBuilder
             return method;
         }
         #endregion
-
 
         #region CreateGetAllMethod
         public string CreateGetAllMethod(TemplateRelation rel)

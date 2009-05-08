@@ -15,20 +15,30 @@ namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
     {
+        #region CreateEnums
         private void CreateEnums(string daBuildFolder)
         {
-            p_Schema.Enums.ForEach(i => i.Prepare(this));
+            var lst = from e in p_Schema.Enums
+                             join i in UsedEnums on e.FullName equals i
+                             select e;
+
+            List<TemplateRelation> used_enums = lst.ToList();
+            used_enums.ForEach(i => i.Prepare(this));
+
             CLREnumBuilder enumBuilder = new CLREnumBuilder(this, "Enums");
+
             #region composite enums
-            foreach (TemplateRelation rel in p_Schema.Enums)
+            foreach (TemplateRelation rel in used_enums)
             {
                 enumBuilder.Reset();
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
                 enumBuilder.Create(rel, daBuildFolder);
             }
             #endregion
-        }
+        } 
+        #endregion
 
+        #region CreateDataAccessProject
         private void CreateDataAccessProject()
         {
             SendMessage(this, ProjectBuilderMessageType.Major, "Creating Core components.");
@@ -86,6 +96,7 @@ namespace PGORM.CodeBuilder
                         ", '" + CompErr.ErrorText + ";");
                 }
             }
-        }
+        } 
+        #endregion
 	}
 }
