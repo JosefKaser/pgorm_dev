@@ -31,8 +31,8 @@ create type "RDBMS" as enum
 	'MSSQL'
 );
 
-create table gen_test1
+create table enum_table
 (
-	id integer,
+	id serial not null primary key,
 	dbtype "RDBMS"
 );

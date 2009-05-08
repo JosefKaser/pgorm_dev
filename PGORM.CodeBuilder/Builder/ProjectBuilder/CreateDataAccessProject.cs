@@ -25,7 +25,7 @@ namespace PGORM.CodeBuilder
             List<TemplateRelation> used_enums = lst.ToList();
             used_enums.ForEach(i => i.Prepare(this));
 
-            CLREnumBuilder enumBuilder = new CLREnumBuilder(this, "Enums");
+            CLREnumBuilder enumBuilder = new CLREnumBuilder(this, "Core");
 
             #region composite enums
             foreach (TemplateRelation rel in used_enums)

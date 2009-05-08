@@ -10,6 +10,7 @@ using System.Reflection;
 
 #if ORM_GENERATED
 using PGORM_TEST.Core;
+using PGORM_TEST.PUBLIC.Enums;
 using PGORM_TEST.PUBLIC.Entities;
 using PGORM_TEST.PUBLIC.Factory;
 using PGORM_TEST.PUBLIC.RecordSet;
@@ -20,11 +21,11 @@ namespace PGORM.Tests
 #if ORM_GENERATED
 
     [TestFixture]
-    public class PGORM_TEST
+    public class PGORM_TEST_CLASS
     {
         NpgsqlConnection Connection;
 
-    #region InitializeDatabase
+        #region InitializeDatabase
         [TestFixtureSetUp]
         public void InitializeDatabase()
         {
@@ -33,15 +34,15 @@ namespace PGORM.Tests
         }
         #endregion
 
-    #region Test0001_ConnectionTest
+        #region Test0001_ConnectionTest
         [Test]
         public void Test0001_ConnectionTest()
         {
             Assert.NotNull(Connection);
-        } 
+        }
         #endregion
 
-    #region Test0002_InsertTest
+        #region Test0002_InsertTest
         [Test]
         public void Test0002_InsertTest()
         {
@@ -49,27 +50,27 @@ namespace PGORM.Tests
             obj.field1 = "Hello";
             test1_ObjectFactory.Insert(ref obj);
             Assert.AreEqual((int)obj.id, 1);
-        } 
+        }
         #endregion
 
-    #region Test0003_GetSingleTest
+        #region Test0003_GetSingleTest
         [Test]
         public void Test0003_GetSingleTest()
         {
             test2Object obj = test2_ObjectFactory.GetBy_id(1);
             Assert.True(obj.field1 == "TEST OK");
-        } 
+        }
         #endregion
 
-    #region Test0004_DeleteSingle
+        #region Test0004_DeleteSingle
         [Test]
         public void Test0004_DeleteSingle()
         {
             Assert.True(test2_ObjectFactory.DeleteBy_id(1) == 1);
-        } 
+        }
         #endregion
 
-    #region Test0005_DeleteAll
+        #region Test0005_DeleteAll
         [Test]
         public void Test0005_DeleteAll()
         {
@@ -82,36 +83,36 @@ namespace PGORM.Tests
                 test2_ObjectFactory.Insert(ref obj);
             }
             Assert.True(test2_ObjectFactory.DeleteAll() == 10);
-        } 
+        }
         #endregion
 
-    #region Test0006_GetList
+        #region Test0006_GetList
         [Test]
         public void Test0006_GetList()
         {
             List<test3Object> r = test3_ObjectFactory.GetList();
             Assert.IsTrue(r.Count() == 3);
-        } 
+        }
         #endregion
 
-    #region Test0007_GetMany
+        #region Test0007_GetMany
         [Test]
         public void Test0007_GetMany()
         {
             List<test3Object> r = test3_ObjectFactory.GetManyBy_field2(2);
             Assert.IsTrue(r.Count() == 2);
-        } 
+        }
         #endregion
 
-    #region Test0008_CountRecords
+        #region Test0008_CountRecords
         [Test]
         public void Test0008_CountRecords()
         {
             Assert.IsTrue(test3_ObjectFactory.CountRecords() == 3);
-        } 
+        }
         #endregion
 
-    #region Test0009_DeleteSingle
+        #region Test0009_DeleteSingle
         [Test]
         public void Test0009_DeleteSingle()
         {
@@ -120,10 +121,10 @@ namespace PGORM.Tests
             Assert.IsTrue(r.Count() == 2);
             Assert.IsTrue(r[0].field1 == "TEST1");
             Assert.IsTrue(r[1].field1 == "TEST3");
-        } 
+        }
         #endregion
 
-    #region Test0010_UpdateSingle
+        #region Test0010_UpdateSingle
         [Test]
         public void Test0010_UpdateSingle()
         {
@@ -135,10 +136,10 @@ namespace PGORM.Tests
             test3Object obj2 = test3_ObjectFactory.GetBy_id(1);
             Assert.IsTrue(obj2.field1 == "UPDATED");
             Assert.IsTrue((int)obj2.field2 == 9);
-        } 
+        }
         #endregion
 
-    #region Test0011_CopyIn
+        #region Test0011_CopyIn
         [Test]
         public void Test0011_CopyIn()
         {
@@ -158,10 +159,10 @@ namespace PGORM.Tests
             {
                 Assert.IsTrue((int)r[a].id == (100 + a));
             }
-        } 
+        }
         #endregion
 
-    #region Test0012_INParameters
+        #region Test0012_INParameters
         [Test]
         public void Test0012_INParameters()
         {
@@ -188,6 +189,17 @@ namespace PGORM.Tests
             Assert.IsTrue((int)r[0].id == 100);
             Assert.IsTrue((int)r[1].id == 102);
             Assert.IsTrue((int)r[2].id == 104);
+        }
+        #endregion
+
+        #region Test0013_Enum
+        [Test]
+        public void Test0013_Enum()
+        {
+            enum_tableObject obj = new enum_tableObject();
+            obj.dbtype = RDBMS.ORACLE;
+            enum_table_ObjectFactory.Insert(ref obj);
+            Assert.IsTrue((int)obj.id == 1);
         } 
         #endregion
     }
