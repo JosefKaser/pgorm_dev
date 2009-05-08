@@ -1,0 +1,50 @@
+﻿factory(libs,namespace,table,methods) ::=<<
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Reflection;
+using System.Diagnostics;
+using Npgsql;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>.Factory
+{
+	#region <table.FactoryName>
+	<code_summary({Factory class for relation <table.RelationName>})>
+	public class <table.FactoryName>
+	{
+		<methods; separator="\r\n">
+		#region CreateFromReader
+        <code_summary({ObjectRelationMapper for table [<table.RelationName>].})>
+        <intelli_param(name={reader},desc={An IDataReader from DataAccess.ExecuteObjectQuery.})>
+        <intelli_returns_table(table)>
+        <intelli_type_param_table(table)>
+        public static T CreateFromReader<generic("T")>(IDataReader reader) where T : <table.TemplateRelationName>,new()
+        {
+            T result = new T();
+            <table.Columns:idatareader_converter(); separator="\r\n">
+            result.EntityStatus = EntityStatus.Default;
+            return result;
+        }
+        #endregion   
+    
+        #region copy string
+        public static string CreateCopyString<generic("T")>(T p_object) where T : <table.TemplateRelationName>,new() 
+        {
+            return string.Format("<table.Columns:string_format_params(); separator="\t">",
+                <table.Columns:string_format_args(); separator=",\r\n">
+                );
+        }
+        #endregion
+ 
+	}
+	#endregion
+}
+>>
+
+string_format_params(column) ::="{<column.CounterIndex>}"
+string_format_args(column) ::="Helper.MakeCopyIOSafe(p_object.<column.TemplateColumnName>)"

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PGORM.PostgreSQL</RootNamespace>
+    <AssemblyName>PGORM.PostgreSQL</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Catalog\InformationSchema.cs" />
+    <Compile Include="Catalog\pg_column.cs" />
+    <Compile Include="Catalog\pg_column_comment.cs" />
+    <Compile Include="Catalog\pg_dindex.cs" />
+    <Compile Include="Catalog\pg_entitycolumn.cs" />
+    <Compile Include="Catalog\pg_index.cs" />
+    <Compile Include="Catalog\pg_proc.cs" />
+    <Compile Include="Catalog\pg_relation.cs" />
+    <Compile Include="Catalog\pg_serial.cs" />
+    <Compile Include="Catalog\pg_type.cs" />
+    <Compile Include="Catalog\pg_view_depend.cs" />
+    <Compile Include="CodeHelper.cs" />
+    <Compile Include="DataAccess.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Exception.cs" />
+    <Compile Include="Objects\Column.cs" />
+    <Compile Include="Objects\Index.cs" />
+    <Compile Include="Objects\Relation.cs" />
+    <Compile Include="Objects\Schema.cs" />
+    <Compile Include="Objects\StoredFunction.cs" />
+    <Compile Include="Objects\TypeInformation.cs" />
+    <Compile Include="PgTypeType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchemaReader.cs" />
+    <Compile Include="SQLScripts.Designer.cs">
+      <DependentUpon>SQLScripts.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SQL\GetAllColumnComments.sql" />
+    <None Include="SQL\GetAllColumns.sql" />
+    <None Include="SQL\GetAllEntityColumns.sql" />
+    <None Include="SQL\GetAllFunctions.sql" />
+    <None Include="SQL\GetAllIndexes.sql" />
+    <None Include="SQL\GetAllSerials.sql" />
+    <None Include="SQL\GetAllTablesViews.sql" />
+    <None Include="SQL\GetAllTypes.sql" />
+    <None Include="SQL\GetDistinctIndex.sql" />
+    <None Include="SQL\GetViewTableDepends.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQLScripts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLScripts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

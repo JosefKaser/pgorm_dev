@@ -1,0 +1,49 @@
+﻿copy_in_method(table) ::=<<
+<code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
+<intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<intelli_tans()>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+public static void CopyIn<generic("T,R")>(R p_objects,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+    StringWriter writer = new StringWriter();
+    p_objects.ForEach(i => writer.WriteLine(<table.FactoryName>.CreateCopyString(i)));
+    MemoryStream buffer = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(writer.ToString()));
+    
+    NpgsqlCopyIn copyIn = new NpgsqlCopyIn(
+        new NpgsqlCommand(string.Format(Helper.SQL_COPY_IN,<table.TemplateRelationName>.RELATION_NAME),DataAccess.Connection,p_Transaction)
+            ,DataAccess.Connection,buffer);
+    copyIn.Start();
+    copyIn.End();
+}
+
+<code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
+<intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<intelli_type_param_list(table)>
+<intelli_type_param_table(table)>
+public static void CopyIn<generic("T,R")>(R p_objects) where T : <table.TemplateRelationName>,new() where R : List\<T\>,new()
+{
+    CopyIn<generic("T,R")>(p_objects,null);
+}
+
+/////////////////// non generic ///////////////////
+
+<code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
+<intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
+<intelli_tans()>
+public static void CopyIn(List<generic({<table.TemplateRelationName>})> p_objects,NpgsqlTransaction p_Transaction)
+{
+    CopyIn<generic({<table.TemplateRelationName>,List\<<table.TemplateRelationName>\>})>(p_objects,p_Transaction);
+}
+
+<code_summary({Copies a list of <table.TemplateRelationName> into <table.RelationName>})>
+<intelli_param(name={p_objects},desc={A generic list of type <table.TemplateRelationName>.})>
+public static void CopyIn(List<generic({<table.TemplateRelationName>})> p_objects)
+{
+    CopyIn<generic({<table.TemplateRelationName>,List\<<table.TemplateRelationName>\>})>(p_objects,null);
+}
+
+
+>>
