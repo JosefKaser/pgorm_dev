@@ -1,0 +1,22 @@
+﻿record_count(table) ::=<<
+#region record count
+<intelli_tans()>
+<code_summary({Counts the number of records in [<table.TemplateRelationName>]})>
+<intelli_returns({long containing the number of records})>
+public static long CountRecords(NpgsqlTransaction p_Transaction)
+{
+    return DataAccess.ExecuteScalarQuery<generic("long")>(
+        string.Format(Helper.SQL_SELECT_COUNT,<table.TemplateRelationName>.RELATION_NAME),
+        p_Transaction);
+}
+
+<intelli_tans()>
+<code_summary({Counts the number of records in [<table.TemplateRelationName>]})>
+<intelli_returns({long containing the number of records})>
+public static long CountRecords()
+{
+    return CountRecords(null);
+}
+#endregion
+
+>>

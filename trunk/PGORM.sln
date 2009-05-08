@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHelper", "DevHelper\DevHelper.csproj", "{1168AB3F-993A-4341-AD72-28B753C70E26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGORM.CodeBuilder", "PGORM.CodeBuilder\PGORM.CodeBuilder.csproj", "{44077DD8-66B0-41C3-AC5D-261426DB1B48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGORM.PostgreSQL", "PGORM.PostgreSQL\PGORM.PostgreSQL.csproj", "{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGORM.Tests", "PGORM.Tests\PGORM.Tests.csproj", "{4CDB6837-98A4-412F-A1E0-673478D0AD08}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1168AB3F-993A-4341-AD72-28B753C70E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1168AB3F-993A-4341-AD72-28B753C70E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1168AB3F-993A-4341-AD72-28B753C70E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1168AB3F-993A-4341-AD72-28B753C70E26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44077DD8-66B0-41C3-AC5D-261426DB1B48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44077DD8-66B0-41C3-AC5D-261426DB1B48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44077DD8-66B0-41C3-AC5D-261426DB1B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44077DD8-66B0-41C3-AC5D-261426DB1B48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD28CCB9-55CB-4B41-A48A-E3BF8F792620}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CDB6837-98A4-412F-A1E0-673478D0AD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CDB6837-98A4-412F-A1E0-673478D0AD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CDB6837-98A4-412F-A1E0-673478D0AD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CDB6837-98A4-412F-A1E0-673478D0AD08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

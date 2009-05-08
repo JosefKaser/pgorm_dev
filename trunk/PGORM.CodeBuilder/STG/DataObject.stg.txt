@@ -1,0 +1,70 @@
+﻿group main;
+
+usings(lib) ::=<<
+using <lib>;
+>>
+
+dataobject(libs,namespace,table,properties) ::=<<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Reflection;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>
+{
+	#region <table.TemplateRelationName>
+	public class <table.TemplateRelationName> : DataObjectBase
+	{
+		#region ctor
+		public <table.TemplateRelationName>()
+		{
+		}
+		#endregion
+		
+		#region Static Properties
+		public static readonly string RELATION_NAME = "\"<table.SchemaName>\".\"<table.RelationName>\"";
+		<table.Columns:static_db_column_name(); separator="\r\n">
+		#endregion				
+		<table.Columns:property(); separator="\r\n">
+	}
+	#endregion
+}
+>>
+
+static_db_column_name(column) ::=<<
+internal static readonly string COL_<column.TemplateColumnName>_CLR = "<column.ColumnName>";
+<code_summary({Represents the explicit and quoted database column name to be used in SQL queries.})>
+public static readonly string COL_<column.TemplateColumnName>_Quoted = "\"<column.ColumnName>\"";
+>>
+
+
+property(column) ::=<<
+#region <column.TemplateColumnName>
+protected  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> p_<column.TemplateColumnName> = 
+		new DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\>();
+<code_summary({<column.CLR_Description>})>		
+public  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> <column.TemplateColumnName> 
+{
+	get
+	{
+		return p_<column.TemplateColumnName>;		
+	}
+	set
+	{
+		p_<column.TemplateColumnName> = value;
+		if(this.EntityStatus != EntityStatus.New)
+			this.EntityStatus = EntityStatus.Changed;
+	}
+}
+#endregion
+>>
+
+code_summary(text) ::=<<
+/// \<summary\>
+/// <text>
+/// \</summary\>
+>>

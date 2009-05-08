@@ -1,0 +1,89 @@
+﻿insert_method(table,method_name,all_columns) ::=<<
+#region <method_name>
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+public static void <method_name><generic("T")>(ref T p_<table.TemplateRelationName>) where T : <table.TemplateRelationName>,new()
+{
+	Insert<generic("T")>(ref p_<table.TemplateRelationName>,null);
+}
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_type_param_table(table)>
+<intelli_tans()>
+public static void <method_name><generic("T")>(ref T p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction) where T : <table.TemplateRelationName>,new()
+{
+	string sqlStatement = "";
+	DbParameter[] dbParams = null;
+		
+	List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
+	
+	#region Implicit value assignment.
+    <if(all_columns)>
+    <table.Columns:create_implicit_check();separator="\r\n">
+    <else>
+	<table.DMLColumns:create_implicit_check();separator="\r\n">	
+    <endif>
+	#endregion
+	
+    if (oprParams.Count != 0)
+    {
+		if(p_<table.TemplateRelationName>.EntityStatus == EntityStatus.New)
+		{
+			InsertOperation insertOpr = new InsertOperation(oprParams);
+			
+			sqlStatement = string.Format(Helper.SQL_INSERT_INTO,
+				<table.TemplateRelationName>.RELATION_NAME,
+				insertOpr.InsertColumns,
+				insertOpr.InsertArguments);
+				
+			dbParams = insertOpr.DbParameters;
+
+		    p_<table.TemplateRelationName> = DataAccess.ExecuteSingleObjectQuery<generic("T")>
+		    (
+    			sqlStatement,
+			    CreateFromReader<generic("T")>,
+			    p_Transaction,
+			    dbParams
+            );			
+		}
+        else
+        {
+            throw new OperationCanceledException("Unable to insert an object that is not EntityStatus == EntityStatus.New");
+        }		
+    }
+    else
+    {
+        throw new OperationCanceledException("Unable to insert an empty [<table.TemplateRelationName>] into the database");
+    }	
+}
+
+/************************* non generic ****************************************/
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+public static void <method_name>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>)
+{
+	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,null);
+}
+
+<code_summary({Inserts a new record into table [<table.RelationName>] based on an object 
+/// of type <table.TemplateRelationName>. This method updates the [ref p_<table.TemplateRelationName>]
+/// with the latest affected column values.})>
+<intelli_param(name={p_<table.TemplateRelationName>},desc={A ref object of type <table.TemplateRelationName>.})>
+<intelli_tans()>
+public static void <method_name>(ref <table.TemplateRelationName> p_<table.TemplateRelationName>,NpgsqlTransaction p_Transaction)
+{
+	Insert<generic({<table.TemplateRelationName>})>(ref p_<table.TemplateRelationName>,p_Transaction);
+}
+
+#endregion
+
+>>
