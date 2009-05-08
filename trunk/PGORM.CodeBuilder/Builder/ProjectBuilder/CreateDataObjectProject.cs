@@ -15,13 +15,14 @@ namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
     {
+        #region CreateDataObjectProject
         private void CreateDataObjectProject()
         {
             string doBuildFolder = string.Format(@"{0}\Objects", p_BuildFolder);
             Directory.CreateDirectory(doBuildFolder);
 
             string p_ObjectNamespace = "Entities";
-            DataObjectBuilder objectBuilder = new DataObjectBuilder(this,p_ObjectNamespace);
+            DataObjectBuilder objectBuilder = new DataObjectBuilder(this, p_ObjectNamespace);
             RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
             FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
 
@@ -36,7 +37,7 @@ namespace PGORM.CodeBuilder
                 factoryBuilder.Reset();
 
                 // create insert method
-                factoryBuilder.AddMethod("insert",factoryBuilder.CreateInsertMethod(rel));
+                factoryBuilder.AddMethod("insert", factoryBuilder.CreateInsertMethod(rel));
 
                 // create import method
                 factoryBuilder.AddMethod(factoryBuilder.CreateCopyInMethod(rel));
@@ -56,7 +57,7 @@ namespace PGORM.CodeBuilder
                     if (index.IndexType == IndexType.PrimaryKey || index.IndexType == IndexType.UniqueIndex)
                     {
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetSingleReturnMethod(rel, index));
-                        factoryBuilder.AddMethod(factoryBuilder.CreateDeleteMethod(rel,index));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateDeleteMethod(rel, index));
                         factoryBuilder.AddMethod(factoryBuilder.CreateUpdateSingleMethod(rel, index));
                     }
                 }
@@ -64,14 +65,14 @@ namespace PGORM.CodeBuilder
                 foreach (Index<TemplateColumn> index in rel.Indexes)
                 {
                     string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
-                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName,index.IndexType,method_sub_name);
+                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName, index.IndexType, method_sub_name);
                     string update_many_summary = factoryBuilder.CodeSummary("Updates table [{0}] using p_{0} as UPDATE SET parameters and retrives a generic List&lt;{0}&gt; of all updated/affected records. Use this method when updating foreign records.", rel.TemplateRelationName, index.IndexType, method_sub_name);
 
 
                     if (index.IndexType == IndexType.ForeignKey)
                     {
                         factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
-                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateManyMethod(rel, string.Format("UpdateManyBy_{0}", method_sub_name), index,update_many_summary));
+                        factoryBuilder.AddMethod(factoryBuilder.CreateUpdateManyMethod(rel, string.Format("UpdateManyBy_{0}", method_sub_name), index, update_many_summary));
                     }
 
                     if (index.IndexType == IndexType.CustomIndex)
@@ -130,7 +131,7 @@ namespace PGORM.CodeBuilder
             CompilerParameters compParams = new CompilerParameters();
 
             compParams.GenerateExecutable = false;
-            compParams.CompilerOptions = string.Format("/optimize /doc:{0}", p_DataObjectAssemblyFile.Replace(".dll",".xml"));
+            compParams.CompilerOptions = string.Format("/optimize /doc:{0}", p_DataObjectAssemblyFile.Replace(".dll", ".xml"));
             compParams.IncludeDebugInformation = p_Project.BuildInDebugMode;
             compParams.OutputAssembly = p_DataObjectAssemblyFile;
             compParams.ReferencedAssemblies.Add("System.dll");
@@ -154,12 +155,13 @@ namespace PGORM.CodeBuilder
                 foreach (CompilerError CompErr in results.Errors)
                 {
                     SendMessage(this, ProjectBuilderMessageType.Error, "{0}",
-                        "\r\nFile: " + CompErr.FileName + 
+                        "\r\nFile: " + CompErr.FileName +
                         "\n\rLine number: " + CompErr.Line +
                         "\n\rError Number: " + CompErr.ErrorNumber +
                         "\n\r" + CompErr.ErrorText + ";\n\r");
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

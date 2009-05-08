@@ -403,7 +403,7 @@ namespace PGORM.PostgreSQL
             if (schema_name == "pg_catalog")
                 return type_name;
             else if (schema_name == "public")
-                return string.Format("public.\"{0}\"", type_name.Replace(schema_name, ""));
+                return string.Format("\"public\".\"{0}\"", type_name.Replace(schema_name, ""));
             else
                 return string.Format("\"{0}\".\"{1}\"", schema_name, type_name.Replace(schema_name, ""));
         } 

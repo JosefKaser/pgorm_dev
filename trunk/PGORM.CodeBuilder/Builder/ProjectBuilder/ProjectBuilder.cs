@@ -17,22 +17,28 @@ namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
     {
-        public Project p_Project {get;set;}
-        public Schema<TemplateRelation,StoredFunction,TemplateColumn> p_Schema{ get; set; }
+        #region Props
+        public Project p_Project { get; set; }
+        public Schema<TemplateRelation, StoredFunction, TemplateColumn> p_Schema { get; set; }
         public List<ConverterProxy> Converters { get; set; }
 
         private string p_BuildFolder;
         private string p_Output;
         private string p_DataAccessAssemblyFile;
         private string p_DataObjectAssemblyFile;
-
         public event ProjectBuilderEventHandler OnBuildStep;
 
+        private List<string> UsedEnums = new List<string>();
+        #endregion
+
+        #region ProjectBuilder
         public ProjectBuilder(Project propject)
         {
             p_Project = propject;
             Converters = new List<ConverterProxy>();
         }
+        
+        #endregion
 
         #region PrepareBuildenvironment
         private void PrepareBuildenvironment()
@@ -66,6 +72,10 @@ namespace PGORM.CodeBuilder
 
             SendMessage(this, ProjectBuilderMessageType.Major, "Reading database schema.");
             ReadSchema();
+
+            SendMessage(this, ProjectBuilderMessageType.Major, "Resolving Dependencies.");
+            ResolveDepencencies();
+
             SendMessage(this, ProjectBuilderMessageType.Major, "Preparing build environment.");
             PrepareBuildenvironment();
             CreateDataAccessProject();
@@ -78,15 +88,18 @@ namespace PGORM.CodeBuilder
         } 
         #endregion
 
+        #region PrepareTypeConverters
         private void PrepareTypeConverters()
         {
             LoadAssembly(p_DataAccessAssemblyFile);
-        }
+        } 
+        #endregion
 
+        #region LoadAssembly
         private void LoadAssembly(string fname)
         {
-            SendMessage(this, ProjectBuilderMessageType.Major, "Loading {0}",fname);
-            Assembly assembly =  Assembly.LoadFile(fname);
+            SendMessage(this, ProjectBuilderMessageType.Major, "Loading {0}", fname);
+            Assembly assembly = Assembly.LoadFile(fname);
             List<Type> public_types = assembly.GetExportedTypes().ToList();
             List<object> converters = new List<object>();
 
@@ -96,15 +109,38 @@ namespace PGORM.CodeBuilder
                 if (type.GetInterface("IPostgreSQLTypeConverter", true) != null)
                     Converters.Add(new ConverterProxy(Activator.CreateInstance(type)));
             }
-        }
+        } 
+        #endregion
 
-
+        #region PrepareAll
         private void PrepareAll()
         {
             p_Schema.Tables.ForEach(i => i.Prepare(this));
             p_Schema.Views.ForEach(i => i.Prepare(this));
             p_Schema.CompositeTypes.ForEach(i => i.Prepare(this));
-        }
+        } 
+        #endregion
+
+        #region ResolveDepencencies
+        private void ResolveDepencencies()
+        {
+            //tables types
+            List<TemplateRelation> rels = new List<TemplateRelation>();
+
+            rels.AddRange((from t in p_Schema.Tables
+                           join i in p_Project.Tables on t.FullNameInvariant equals i
+                           select t).ToList());
+
+            rels.AddRange((from t in p_Schema.Views
+                           join i in p_Project.Views on t.FullNameInvariant equals i
+                           select t).ToList());
+
+            foreach (TemplateRelation rel in rels)
+                foreach (Column col in rel.Columns)
+                    if (col.PGTypeType == PgTypeType.EnumType && !UsedEnums.Contains(col.PG_Type))
+                        UsedEnums.Add(col.PG_Type);
+        } 
+        #endregion
 
         #region SendMessage
         public void SendMessage(object sender, ProjectBuilderMessageType messageType, string data, params object[] args)

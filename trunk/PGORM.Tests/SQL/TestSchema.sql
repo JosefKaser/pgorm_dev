@@ -23,3 +23,16 @@ create index test3_field2_index on test3 (field2);
 insert into test3(field1,field2) values ('TEST1',1);
 insert into test3(field1,field2) values ('TEST2',2);
 insert into test3(field1,field2) values ('TEST3',2);
+
+create type "RDBMS" as enum
+(
+	'POSTGRES',
+	'ORACLE',
+	'MSSQL'
+);
+
+create table gen_test1
+(
+	id integer,
+	dbtype "RDBMS"
+);

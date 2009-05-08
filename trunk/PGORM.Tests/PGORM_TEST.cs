@@ -7,14 +7,17 @@ using Npgsql;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-namespace PGORM.Tests
-{
-#if ORM_GENERATED
 
+#if ORM_GENERATED
 using PGORM_TEST.Core;
 using PGORM_TEST.PUBLIC.Entities;
 using PGORM_TEST.PUBLIC.Factory;
 using PGORM_TEST.PUBLIC.RecordSet;
+#endif
+
+namespace PGORM.Tests
+{
+#if ORM_GENERATED
 
     [TestFixture]
     public class PGORM_TEST
