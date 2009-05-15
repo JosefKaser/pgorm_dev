@@ -43,7 +43,7 @@ namespace PGORM.CodeBuilder.TemplateObjects
                 if (RelationType == RelationType.View)
                     return "View";
                 else if (RelationType == RelationType.CompositeType)
-                    return "UserDefinedType";
+                    return "UDT";
                 else if (RelationType == RelationType.Enum)
                     return "";
                 else

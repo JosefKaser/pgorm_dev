@@ -19,6 +19,7 @@ namespace PGORM.Tests
         string server = "localhost";
         string username = "postgres";
         string password = "postgres";
+        string options = "";
         string test_db_name = "PGORM_TEST";
         string test_output_folder = AppDomain.CurrentDomain.BaseDirectory + @"\Output";
         string out_file_dll;
@@ -36,10 +37,13 @@ namespace PGORM.Tests
             project.DatabaseConnectionInfo.Database = test_db_name;
             project.DatabaseConnectionInfo.Username = "postgres";
             project.DatabaseConnectionInfo.Password = "postgres";
+            project.DatabaseConnectionInfo.Port = "5432";
             project.OutputFolder = test_output_folder;
             project.BuildInDebugMode = true;
 
             project.Tables.Add("public.enum_table");
+            project.Tables.Add("public.use_type");
+            project.Tables.Add("public.inner_type_test");
 
 
             project.SetDefaultsByDatabaseName();
@@ -130,7 +134,7 @@ namespace PGORM.Tests
 
         private NpgsqlConnection NewConnection()
         {
-            return new NpgsqlConnection(string.Format("server={0};username={1};password={2}", server, username, password));
+            return new NpgsqlConnection(string.Format("server={0};username={1};password={2};{3}", server, username, password,options));
         }
 
         private void RunCreateSchemaScript()

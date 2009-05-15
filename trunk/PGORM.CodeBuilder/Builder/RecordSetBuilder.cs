@@ -11,14 +11,13 @@ namespace PGORM.CodeBuilder
     public class RecordSetBuilder : TemplateBase
     {
         StringTemplate st;
-        string p_ObjectNamespace;
+        string[] p_libs;
 
-        public RecordSetBuilder(ProjectBuilder p_builder,string object_namespace)
+        public RecordSetBuilder(ProjectBuilder p_builder,string[] p_Libs)
             : base(Templates.DataObjectRecordSet_stg, p_builder)
         {
             st = p_stgGroup.GetInstanceOf("recordset");
-            p_ObjectNamespace = object_namespace;
-
+            p_libs = p_Libs;
         }
 
         public void Create(TemplateRelation relation, string destFolder)
@@ -30,8 +29,10 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("namespace", Helper.GetExplicitNamespace(p_Project, relation));
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.RecordSet", nspace));
-            if (!string.IsNullOrEmpty(p_ObjectNamespace))
-                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), p_ObjectNamespace));
+
+            foreach (string lib in p_libs)
+                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), lib));
+
             File.WriteAllText(fname, st.ToString());
         }
     }

@@ -24,9 +24,11 @@ namespace PGORM.CodeBuilder
         StringTemplate delete_all_method;
         StringTemplate copy_in_method;
 
-        string p_ObjectNamespace;
-        string p_RecordSetNamespace;
+        //string p_ObjectNamespace;
+        //string p_RecordSetNamespace;
+        string[] p_libs;
         public List<TemplateMethod> Methods;
+        
 
         #region FactoryTemplate
         private static string FactoryTemplate()
@@ -47,12 +49,13 @@ namespace PGORM.CodeBuilder
         #endregion
 
         #region FactoryBuilder
-        public FactoryBuilder(ProjectBuilder p_builder, string object_namespace, string recordet_namespace)
+        public FactoryBuilder(ProjectBuilder p_builder,string[] p_Libs)
             : base(FactoryTemplate(), p_builder)
         {
             st = p_stgGroup.GetInstanceOf("factory");
-            p_ObjectNamespace = object_namespace;
-            p_RecordSetNamespace = recordet_namespace;
+            //p_ObjectNamespace = object_namespace;
+            //p_RecordSetNamespace = recordet_namespace;
+            p_libs = p_Libs;
 
             insert_method = p_stgGroup.GetInstanceOf("insert_method");
             getby_single_return_method = p_stgGroup.GetInstanceOf("getby_single_return_method");
@@ -256,11 +259,9 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("namespace", Helper.GetExplicitNamespace(p_Project, relation));
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.Factory", nspace));
-            if (!string.IsNullOrEmpty(p_ObjectNamespace))
-                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), p_ObjectNamespace));
 
-            if (!string.IsNullOrEmpty(p_RecordSetNamespace))
-                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), p_RecordSetNamespace));
+            foreach (string lib in p_libs)
+                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), lib));
 
             if (Methods.Count != 0)
             {

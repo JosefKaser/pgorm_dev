@@ -29,6 +29,7 @@ namespace PGORM.CodeBuilder
         public event ProjectBuilderEventHandler OnBuildStep;
 
         private List<string> UsedEnums = new List<string>();
+        private List<string> UsedCompositeTypes = new List<string>();
         #endregion
 
         #region ProjectBuilder
@@ -135,10 +136,35 @@ namespace PGORM.CodeBuilder
                            join i in p_Project.Views on t.FullNameInvariant equals i
                            select t).ToList());
 
+            //resolve enums
             foreach (TemplateRelation rel in rels)
                 foreach (Column col in rel.Columns)
                     if (col.PGTypeType == PgTypeType.EnumType && !UsedEnums.Contains(col.PG_Type))
                         UsedEnums.Add(col.PG_Type);
+            ResolveTypes(rels);
+
+            //clear the list and parse for composite type using composite type
+            rels.Clear();
+            rels.AddRange((from t in p_Schema.CompositeTypes
+                           join i in UsedCompositeTypes on t.FullNameInvariant equals i.Replace("\"","")
+                           select t).ToList());
+            ResolveTypes(rels);
+
+        } 
+        #endregion
+
+        #region ResolveTypes
+        private void ResolveTypes(List<TemplateRelation> rels)
+        {
+            foreach (TemplateRelation rel in rels)
+                foreach (Column col in rel.Columns)
+                {
+                    if (col.PGTypeType == PgTypeType.CompositeType && !UsedCompositeTypes.Contains(col.PG_Type))
+                    {
+                        Console.WriteLine(col.PG_Type);
+                        UsedCompositeTypes.Add(col.PG_Type);
+                    }
+                }
         } 
         #endregion
 
