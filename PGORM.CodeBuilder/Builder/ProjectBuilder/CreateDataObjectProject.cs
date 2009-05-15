@@ -15,23 +15,61 @@ namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
     {
-        #region CreateDataObjectProject
-        private void CreateDataObjectProject()
+        string p_ObjectNamespace = "Entities";
+        string p_TypesNamespace = "Types";
+
+        #region CreateCompositeTypes
+        private void CreateCompositeTypes(DataObjectBuilder objectBuilder,FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder,string doBuildFolder)
         {
-            string doBuildFolder = string.Format(@"{0}\Objects", p_BuildFolder);
-            Directory.CreateDirectory(doBuildFolder);
+            var lst = from r in p_Schema.CompositeTypes
+                      join i in UsedCompositeTypes on r.FullName equals i
+                      select r;
 
-            string p_ObjectNamespace = "Entities";
-            DataObjectBuilder objectBuilder = new DataObjectBuilder(this, p_ObjectNamespace);
-            RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, p_ObjectNamespace);
-            FactoryBuilder factoryBuilder = new FactoryBuilder(this, p_ObjectNamespace, "RecordSet");
+            foreach (TemplateRelation rel in lst)
+            {
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
-            #region tables
+                objectBuilder.Create(rel,p_TypesNamespace,doBuildFolder);
+                recordsetBuilder.Create(rel, doBuildFolder);
+
+                factoryBuilder.Reset();
+                factoryBuilder.Create(rel, doBuildFolder);
+            }
+        }
+        #endregion
+
+        #region CreateViews
+        private void CreateViews(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
+        {
+            foreach (TemplateRelation rel in p_Schema.Views)
+            {
+                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
+
+                objectBuilder.Create(rel, p_ObjectNamespace, doBuildFolder);
+                recordsetBuilder.Create(rel, doBuildFolder);
+
+                factoryBuilder.Reset();
+
+                foreach (Index<TemplateColumn> index in rel.Indexes)
+                {
+                    string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
+                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName, index.IndexType, method_sub_name);
+                    factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
+                }
+
+                factoryBuilder.Create(rel, doBuildFolder);
+            }
+        } 
+        #endregion
+
+        #region CreateTables
+        private void CreateTables(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
+        {
             foreach (TemplateRelation rel in p_Schema.Tables)
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
-                objectBuilder.Create(rel, doBuildFolder);
+                objectBuilder.Create(rel, "Entities", doBuildFolder);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
@@ -81,41 +119,22 @@ namespace PGORM.CodeBuilder
 
                 factoryBuilder.Create(rel, doBuildFolder);
             }
-            #endregion
+        }
+        #endregion
 
-            #region views
-            foreach (TemplateRelation rel in p_Schema.Views)
-            {
-                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
+        #region CreateDataObjectProject
+        private void CreateDataObjectProject()
+        {
+            string doBuildFolder = string.Format(@"{0}\Objects", p_BuildFolder);
+            Directory.CreateDirectory(doBuildFolder);
 
-                objectBuilder.Create(rel, doBuildFolder);
-                recordsetBuilder.Create(rel, doBuildFolder);
+            DataObjectBuilder objectBuilder = new DataObjectBuilder(this, new string[] { p_ObjectNamespace, p_TypesNamespace });
+            RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, new string[] { p_ObjectNamespace,p_TypesNamespace });
+            FactoryBuilder factoryBuilder = new FactoryBuilder(this, new string[] { p_ObjectNamespace,p_TypesNamespace, "RecordSet" });
 
-                factoryBuilder.Reset();
-
-                foreach (Index<TemplateColumn> index in rel.Indexes)
-                {
-                    string method_sub_name = factoryBuilder.CreateMethodSubName(index.Columns);
-                    string getby_summary = factoryBuilder.CodeSummary("Retrives a generic List&lt;{0}&gt; based on {1}", rel.TemplateRelationName, index.IndexType, method_sub_name);
-                    factoryBuilder.AddMethod(factoryBuilder.CreateGetMultiReturnMethod(rel, string.Format("GetManyBy_{0}", method_sub_name), index, getby_summary));
-                }
-
-                factoryBuilder.Create(rel, doBuildFolder);
-            }
-            #endregion
-
-            #region composite types
-            foreach (TemplateRelation rel in p_Schema.CompositeTypes)
-            {
-                SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
-
-                objectBuilder.Create(rel, doBuildFolder);
-                recordsetBuilder.Create(rel, doBuildFolder);
-
-                factoryBuilder.Reset();
-                factoryBuilder.Create(rel, doBuildFolder);
-            }
-            #endregion
+            CreateTables(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
+            CreateViews(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
+            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);

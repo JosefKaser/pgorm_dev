@@ -29,7 +29,7 @@ namespace PGORM.Tests
         [TestFixtureSetUp]
         public void InitializeDatabase()
         {
-            DataAccess.InitializeDatabase("server=localhost;database=PGORM_TEST;username=postgres;password=postgres", true);
+            DataAccess.InitializeDatabase("server=localhost;database=PGORM_TEST;username=postgres;password=postgres;port=15432", true);
             Connection = DataAccess.Connection;
         }
         #endregion
@@ -49,7 +49,7 @@ namespace PGORM.Tests
             test1Object obj = new test1Object();
             obj.field1 = "Hello";
             test1_ObjectFactory.Insert(ref obj);
-            Assert.AreEqual((int)obj.id, 1);
+            Assert.AreEqual(1,(int)obj.id);
         }
         #endregion
 
