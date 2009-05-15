@@ -44,5 +44,10 @@ namespace PGORM.PostgreSQL.Objects
             Columns = new List<C>();
             Indexes = new List<Index<C>>();
         }
+
+        public override string ToString()
+        {
+            return FullNameInvariant;
+        }
     }
 }

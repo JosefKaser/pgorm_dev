@@ -4,7 +4,7 @@ usings(lib) ::=<<
 using <lib>;
 >>
 
-dataobject(libs,namespace,table,properties) ::=<<
+dataobject(libs,namespace,table,properties,is_udt) ::=<<
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +32,40 @@ namespace <namespace>
 		<table.Columns:property(); separator="\r\n">
 	}
 	#endregion
+
+    <if(is_udt)>
+    #region <table.TemplateRelationName>Converter
+    [PostgreSQLTypeConverterAttribute()]
+    public class <table.TemplateRelationName>Converter : IPostgreSQLTypeConverter
+    {
+        public object FromString(string data)
+        {
+            throw new NotImplementedException(string.Format("Enum value {0} is not implemented.",data));
+        }
+    
+        public string PgType()
+        {
+            return "<table.RelationName>";
+        }
+
+        public string PgTypeSchema()
+        {
+            return "<table.SchemaName>";
+        }
+
+        public Type CLRType()
+        {
+            return typeof(<namespace>.<table.TemplateRelationName>);
+        }
+        
+        public string ToString(object obj)
+        {
+            Console.WriteLine(obj.ToString());
+            return obj.ToString();
+        }
+    }
+    #endregion
+    <endif>
 }
 >>
 

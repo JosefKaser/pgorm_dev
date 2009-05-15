@@ -19,16 +19,17 @@ namespace DevHelper
 
             PGORM.CodeBuilder.Project project = new PGORM.CodeBuilder.Project();
             project.DatabaseConnectionInfo.Server = "localhost";
-            project.DatabaseConnectionInfo.Database = "testdb";
+            project.DatabaseConnectionInfo.Database = "PGORM_TEST";
             project.DatabaseConnectionInfo.Username = "postgres";
             project.DatabaseConnectionInfo.Password = "postgres";
             project.OutputFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Output";
-            project.RemoveTablePrefix.Add("tbl");
-            project.RemoveTablePrefix.Add("view_");
-            project.BuildInDebugMode = true;
 
-            project.Tables.Add("public.table2");
-            project.Views.Add("public.view_table3");
+            project.Tables.Add("public.test1");
+            project.Tables.Add("public.test2");
+            project.Tables.Add("public.test3");
+            project.Tables.Add("public.enum_table");
+            project.Tables.Add("public.building");
+
 
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = @"test1.dll";

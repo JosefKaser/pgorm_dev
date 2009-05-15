@@ -19,17 +19,13 @@ namespace PGORM.CodeBuilder
         string p_TypesNamespace = "Types";
 
         #region CreateCompositeTypes
-        private void CreateCompositeTypes(DataObjectBuilder objectBuilder,FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder,string doBuildFolder)
+        private void CreateCompositeTypes(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder,bool create_depend_converters,bool is_udt)
         {
-            var lst = from r in p_Schema.CompositeTypes
-                      join i in UsedCompositeTypes on r.FullName equals i
-                      select r;
-
-            foreach (TemplateRelation rel in lst)
+            foreach (TemplateRelation rel in SchemaUsedCompositeTypes)
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
-                objectBuilder.Create(rel,p_TypesNamespace,doBuildFolder);
+                objectBuilder.Create(rel, p_TypesNamespace, doBuildFolder,create_depend_converters,is_udt);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
@@ -41,11 +37,15 @@ namespace PGORM.CodeBuilder
         #region CreateViews
         private void CreateViews(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
         {
-            foreach (TemplateRelation rel in p_Schema.Views)
+            var views = from i in p_Schema.Views
+                        join j in p_Project.Views on i.FullNameInvariant equals j
+                        select i;
+
+            foreach (TemplateRelation rel in views)
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
-                objectBuilder.Create(rel, p_ObjectNamespace, doBuildFolder);
+                objectBuilder.Create(rel, p_ObjectNamespace, doBuildFolder,false,false);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
@@ -65,11 +65,15 @@ namespace PGORM.CodeBuilder
         #region CreateTables
         private void CreateTables(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
         {
-            foreach (TemplateRelation rel in p_Schema.Tables)
+            var tables = from i in p_Schema.Tables
+                        join j in p_Project.Tables on i.FullNameInvariant equals j
+                        select i;
+
+            foreach (TemplateRelation rel in tables)
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
-                objectBuilder.Create(rel, "Entities", doBuildFolder);
+                objectBuilder.Create(rel, "Entities", doBuildFolder,false,false);
                 recordsetBuilder.Create(rel, doBuildFolder);
 
                 factoryBuilder.Reset();
@@ -128,19 +132,26 @@ namespace PGORM.CodeBuilder
             string doBuildFolder = string.Format(@"{0}\Objects", p_BuildFolder);
             Directory.CreateDirectory(doBuildFolder);
 
-            DataObjectBuilder objectBuilder = new DataObjectBuilder(this, new string[] { p_ObjectNamespace, p_TypesNamespace });
-            RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, new string[] { p_ObjectNamespace,p_TypesNamespace });
-            FactoryBuilder factoryBuilder = new FactoryBuilder(this, new string[] { p_ObjectNamespace,p_TypesNamespace, "RecordSet" });
+            if (SchemaUsedCompositeTypes.Count() == 0)
+                p_TypesNamespace = null;
+
+            DataObjectBuilder objectBuilder = new DataObjectBuilder(this, new string[] {  p_TypesNamespace });
+            RecordSetBuilder recordsetBuilder = new RecordSetBuilder(this, new string[] { p_ObjectNamespace, p_TypesNamespace });
+            FactoryBuilder factoryBuilder = new FactoryBuilder(this, new string[] { p_ObjectNamespace, p_TypesNamespace, "RecordSet" });
+
+            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder,true,true);
+            // after creating the composite types we have to re-prepare everything in order for
+            // TemplateColumn to resolve to correct types
+            PrepareAll();
+            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder,false,true);
 
             CreateTables(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
             CreateViews(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
-            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);
             File.WriteAllText(string.Format(@"{0}\AssemblyInfo.cs", doBuildFolder), asmInfoBuilder.BuildToString());
 
-            //p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.Objects.dll", p_Project.OutputFolder, p_Project.RootNamespace);
             string p_ProjAsmName = Path.GetFileNameWithoutExtension(p_Project.AssemblyName);
             p_DataObjectAssemblyFile = string.Format(@"{0}\{1}.dll", p_Project.OutputFolder, p_ProjAsmName);
 
@@ -168,7 +179,7 @@ namespace PGORM.CodeBuilder
 
             CompilerResults results = cscProvider.CompileAssemblyFromFile(compParams, files);
             Helper.CopyNpgsqlAssemblies(p_Project.OutputFolder);
-
+            
             if (results.Errors.Count > 0)
             {
                 foreach (CompilerError CompErr in results.Errors)

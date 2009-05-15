@@ -250,40 +250,63 @@ namespace PGORM.PostgreSQL
         #endregion
 
         #region CreateTablesAndViews
+
+        private R CreateRelation(pg_relation pg_rel,RelationType rtype)
+        {
+            return new R()
+            {
+                SchemaName = pg_rel.table_schema,
+                RelationName = pg_rel.table_name,
+                RelationType = rtype
+            };
+        }
+
         private void CreateTablesAndViews()
         {
             foreach (pg_relation pg_rel in InformationSchema.Relations)
             {
-                R relation = new R();
-                relation.SchemaName = pg_rel.table_schema;
-                relation.RelationName = pg_rel.table_name;
-
                 if (pg_rel.table_type == "BASE TABLE")
                 {
-                    relation.RelationType = RelationType.Table;
-                    p_Schema.Tables.Add(relation);
+                    R table = CreateRelation(pg_rel, RelationType.Table);
+                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+
+                    p_Schema.Tables.Add(table);
+                    p_Schema.CompositeTypes.Add(udt);
+
+                    CreateRelationColumns(table, pg_rel);
+                    CreateRelationColumns(udt, pg_rel);
                 }
                 else if (pg_rel.table_type == "VIEW")
                 {
-                    relation.RelationType = RelationType.View;
-                    p_Schema.Views.Add(relation);
+                    R view = CreateRelation(pg_rel, RelationType.View);
+                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+
+                    p_Schema.Tables.Add(view);
+                    p_Schema.CompositeTypes.Add(udt);
+
+                    CreateRelationColumns(view, pg_rel);
+                    CreateRelationColumns(udt, pg_rel);
+
                 }
                 else if (pg_rel.table_type == "USER-DEFINED")
                 {
-                    relation.RelationType = RelationType.CompositeType;
-                    p_Schema.CompositeTypes.Add(relation);
+                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+                    p_Schema.CompositeTypes.Add(udt);
+                    CreateRelationColumns(udt, pg_rel);
                 }
                 else if (pg_rel.table_type == "ENUM")
                 {
-                    relation.RelationType = RelationType.Enum;
-                    p_Schema.Enums.Add(relation);
+                    R c_enum = CreateRelation(pg_rel, RelationType.Enum);
+                    p_Schema.Enums.Add(c_enum);
+
+                    CreateRelationColumns(c_enum, pg_rel);
                 }
                 else if (pg_rel.table_type == "SP ARGUMENT")
                 {
-                    sp_arguments.Add(relation);
+                    R rel = CreateRelation(pg_rel, RelationType.Table);
+                    sp_arguments.Add(rel);
+                    CreateRelationColumns(rel, pg_rel);
                 }
-
-                CreateRelationColumns(relation, pg_rel);
             }
         } 
         #endregion

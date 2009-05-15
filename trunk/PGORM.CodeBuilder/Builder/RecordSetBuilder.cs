@@ -30,8 +30,7 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.RecordSet", nspace));
 
-            foreach (string lib in p_libs)
-                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), lib));
+            SetLibs(st, p_libs, relation);
 
             File.WriteAllText(fname, st.ToString());
         }

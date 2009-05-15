@@ -81,8 +81,6 @@ namespace PGORM.CodeBuilder.TemplateObjects
                 foreach (TemplateColumn col in index.Columns)
                 {
                     col.Relation = this;
-                    //col.TemplateRelationName = p_TemplateRelationName;
-                    //col.TemplateSchemaName = this.TemplateNamespace; ;
                     col.Prepare(p_Builder);
                 }
             }
