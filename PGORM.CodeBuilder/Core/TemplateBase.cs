@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Antlr.StringTemplate;
+using PGORM.PostgreSQL.Objects;
+using PGORM.CodeBuilder.TemplateObjects;
 
 namespace PGORM.CodeBuilder
 {
@@ -67,6 +69,13 @@ namespace PGORM.CodeBuilder
         }
 
         #endregion
+
+        protected void SetLibs(StringTemplate st, string[] libs,TemplateRelation relation)
+        {
+            foreach (string lib in libs)
+                if(!string.IsNullOrEmpty(lib))
+                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), lib));
+        }
     } 
     #endregion
 }

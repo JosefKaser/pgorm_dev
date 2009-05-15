@@ -14,6 +14,7 @@ using PGORM_TEST.PUBLIC.Enums;
 using PGORM_TEST.PUBLIC.Entities;
 using PGORM_TEST.PUBLIC.Factory;
 using PGORM_TEST.PUBLIC.RecordSet;
+using PGORM_TEST.PUBLIC.Types;
 #endif
 
 namespace PGORM.Tests
@@ -29,7 +30,7 @@ namespace PGORM.Tests
         [TestFixtureSetUp]
         public void InitializeDatabase()
         {
-            DataAccess.InitializeDatabase("server=localhost;database=PGORM_TEST;username=postgres;password=postgres;port=15432", true);
+            DataAccess.InitializeDatabase("server=localhost;database=PGORM_TEST;username=postgres;password=postgres;", true);
             Connection = DataAccess.Connection;
         }
         #endregion
@@ -202,6 +203,29 @@ namespace PGORM.Tests
             Assert.IsTrue((int)obj.id == 1);
         } 
         #endregion
+
+        [Test]
+        public void Test0014_DependEntity_Insert()
+        {
+            buildingObject obj = new buildingObject();
+            obj.address = new t_addressUDT()
+            {                
+                city = "Den Haag",
+                country = "NL",
+                street = "Spui 7",
+                zipcode = new t_zipcodeUDT()
+                {
+                    locator = "KH",
+                    range = "2544"
+                }
+            };
+            obj.description = "big building";
+            obj.type = t_building_type.aparment;
+
+            building_ObjectFactory.Insert(ref obj);
+
+            Assert.AreEqual(1, obj.id);
+        }
     }
 #endif
 }

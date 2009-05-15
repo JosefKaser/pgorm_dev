@@ -41,10 +41,12 @@ namespace PGORM.Tests
             project.OutputFolder = test_output_folder;
             project.BuildInDebugMode = true;
 
+            project.Tables.Add("public.test1");
+            project.Tables.Add("public.test2");
+            project.Tables.Add("public.test3");
             project.Tables.Add("public.enum_table");
-            project.Tables.Add("public.use_type");
-            project.Tables.Add("public.inner_type_test");
-
+            project.Tables.Add("public.building");
+            project.Tables.Add("public.building_complex");
 
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = test_db_name;

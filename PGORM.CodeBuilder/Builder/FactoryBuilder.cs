@@ -24,8 +24,6 @@ namespace PGORM.CodeBuilder
         StringTemplate delete_all_method;
         StringTemplate copy_in_method;
 
-        //string p_ObjectNamespace;
-        //string p_RecordSetNamespace;
         string[] p_libs;
         public List<TemplateMethod> Methods;
         
@@ -53,8 +51,6 @@ namespace PGORM.CodeBuilder
             : base(FactoryTemplate(), p_builder)
         {
             st = p_stgGroup.GetInstanceOf("factory");
-            //p_ObjectNamespace = object_namespace;
-            //p_RecordSetNamespace = recordet_namespace;
             p_libs = p_Libs;
 
             insert_method = p_stgGroup.GetInstanceOf("insert_method");
@@ -159,7 +155,6 @@ namespace PGORM.CodeBuilder
         #region CreateGetMultiReturnMethod
         public TemplateMethod CreateGetMultiReturnMethod(TemplateRelation rel, string method_name, Index<TemplateColumn> index, string summary)
         {
-            //get_method(table,method_name,icolumns,sep_comma,summary)
             TemplateMethod method = new TemplateMethod();
             get_method.Reset();
             get_method.SetAttribute("table", rel);
@@ -260,8 +255,7 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.Factory", nspace));
 
-            foreach (string lib in p_libs)
-                st.SetAttribute("libs", string.Format("{0}.{1}", Helper.GetExplicitNamespace(p_Project, relation), lib));
+            SetLibs(st, p_libs, relation);
 
             if (Methods.Count != 0)
             {

@@ -67,7 +67,7 @@ namespace PGORM.PostgreSQL.Catalog
         private static void PrepareUserDefinedTypes()
         {
             TEMP_SCHEMA = GetTemporarySchemaName();
-            List<pg_relation> rels = Relations.FindAll(r => r.table_type == "USER-DEFINED");
+            List<pg_relation> rels = Relations.FindAll(r => r.table_type == "USER-DEFINED" || r.table_type == "BASE TABLE" || r.table_type == "VIEW");
             foreach (pg_relation rel in rels)
             {
                 string function_name = string.Format("{0}.\"{1}_{2}\"", TEMP_SCHEMA, rel.table_schema, rel.table_name);

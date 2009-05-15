@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PGORM.PostgreSQL.Objects;
+using PGORM.PostgreSQL;
 using TemplateNS.Core;
 
 namespace PGORM.CodeBuilder.TemplateObjects
@@ -40,7 +41,7 @@ namespace PGORM.CodeBuilder.TemplateObjects
             get
             {
 
-                if (!CLR_Type.IsArray && CLR_Type != typeof(string))
+                if (!CLR_Type.IsArray && CLR_Type != typeof(string) && ConverterProxy == null)
                 {
                     return "?";
                 }
@@ -97,8 +98,8 @@ namespace PGORM.CodeBuilder.TemplateObjects
                 p_TemplateColumnName = string.Format("_{0}", p_TemplateColumnName);
             Schema = p_Builder.p_Schema;
 
-            //rewrite types if possible
-            if (PGTypeType == PostgreSQL.PgTypeType.EnumType && Relation.RelationType != RelationType.Enum)
+            //rewrite enum types if possible
+            if (PGTypeType == PgTypeType.EnumType && Relation.RelationType != RelationType.Enum)
             {
                 ConverterProxy cp = p_Builder.Converters.Find(c => c.PgType == this.TypeInfo.TypeShortName && c.PgTypeSchema == this.TypeInfo.TypeNamespace);
                 if (cp != null)
@@ -106,6 +107,20 @@ namespace PGORM.CodeBuilder.TemplateObjects
                     HasConverter = true;
                     CLR_Type = cp.CLRType;
                     ConverterProxy = cp;
+                }
+            }
+            else if (PGTypeType != PgTypeType.EnumType && PGTypeType != PgTypeType.BaseType && Relation.RelationType != RelationType.Enum)
+            {
+                ConverterProxy cp = p_Builder.Converters.Find(c => c.PgType == this.TypeInfo.TypeShortName && c.PgTypeSchema == this.TypeInfo.TypeNamespace);
+                if (cp != null)
+                {
+                    HasConverter = true;
+                    CLR_Type = cp.CLRType;
+                    ConverterProxy = cp;
+                }
+                else
+                {
+                    object o = 1;
                 }
             }
         } 
@@ -117,6 +132,11 @@ namespace PGORM.CodeBuilder.TemplateObjects
             {
                 return this.ColumnIndex - 1;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}.{1}", Relation.FullNameInvariant, TemplateColumnName);
         }
     }
 }

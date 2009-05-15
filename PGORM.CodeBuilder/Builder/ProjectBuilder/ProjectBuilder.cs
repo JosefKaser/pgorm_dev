@@ -24,12 +24,13 @@ namespace PGORM.CodeBuilder
 
         private string p_BuildFolder;
         private string p_Output;
-        private string p_DataAccessAssemblyFile;
+        public string p_DataAccessAssemblyFile;
         private string p_DataObjectAssemblyFile;
         public event ProjectBuilderEventHandler OnBuildStep;
 
         private List<string> UsedEnums = new List<string>();
-        private List<string> UsedCompositeTypes = new List<string>();
+        private List<TemplateRelation> SchemaUsedCompositeTypes = new List<TemplateRelation>();
+
         #endregion
 
         #region ProjectBuilder
@@ -37,7 +38,22 @@ namespace PGORM.CodeBuilder
         {
             p_Project = propject;
             Converters = new List<ConverterProxy>();
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
+
+        #region CurrentDomain_AssemblyResolve
+        /*
+         * Try to resolve the core assmbly when loading the temporary composite types
+         */
+        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string core_asm = Path.GetFileNameWithoutExtension(p_DataAccessAssemblyFile);
+            if (args.Name.Contains(core_asm))
+                return Assembly.LoadFile(p_DataAccessAssemblyFile);
+            else
+                throw new NotImplementedException(args.Name);
+        } 
+        #endregion
         
         #endregion
 
@@ -92,15 +108,20 @@ namespace PGORM.CodeBuilder
         #region PrepareTypeConverters
         private void PrepareTypeConverters()
         {
-            LoadAssembly(p_DataAccessAssemblyFile);
+            LoadAssembly(p_DataAccessAssemblyFile,null);
         } 
         #endregion
 
         #region LoadAssembly
-        private void LoadAssembly(string fname)
+        public void LoadAssembly(string fname,Assembly preloaded_asm)
         {
-            SendMessage(this, ProjectBuilderMessageType.Major, "Loading {0}", fname);
-            Assembly assembly = Assembly.LoadFile(fname);
+            Assembly assembly;
+            if (preloaded_asm == null)
+                assembly = Assembly.LoadFile(fname);
+            else
+                assembly = preloaded_asm;
+
+            SendMessage(this, ProjectBuilderMessageType.Major, "Loading {0}", assembly.FullName);
             List<Type> public_types = assembly.GetExportedTypes().ToList();
             List<object> converters = new List<object>();
 
@@ -116,9 +137,9 @@ namespace PGORM.CodeBuilder
         #region PrepareAll
         private void PrepareAll()
         {
+            p_Schema.CompositeTypes.ForEach(i => i.Prepare(this));
             p_Schema.Tables.ForEach(i => i.Prepare(this));
             p_Schema.Views.ForEach(i => i.Prepare(this));
-            p_Schema.CompositeTypes.ForEach(i => i.Prepare(this));
         } 
         #endregion
 
@@ -141,28 +162,41 @@ namespace PGORM.CodeBuilder
                 foreach (Column col in rel.Columns)
                     if (col.PGTypeType == PgTypeType.EnumType && !UsedEnums.Contains(col.PG_Type))
                         UsedEnums.Add(col.PG_Type);
+
+            //resolve used udts in entities
             ResolveTypes(rels);
 
             //clear the list and parse for composite type using composite type
             rels.Clear();
             rels.AddRange((from t in p_Schema.CompositeTypes
-                           join i in UsedCompositeTypes on t.FullNameInvariant equals i.Replace("\"","")
+                           join i in SchemaUsedCompositeTypes on t.FullNameInvariant equals i.FullNameInvariant
                            select t).ToList());
             ResolveTypes(rels);
-
         } 
         #endregion
 
         #region ResolveTypes
         private void ResolveTypes(List<TemplateRelation> rels)
         {
+            List<TemplateRelation> all_types = new List<TemplateRelation>();
+            //all_types.AddRange(p_Schema.Tables);
+            //all_types.AddRange(p_Schema.Views);
+            all_types.AddRange(p_Schema.CompositeTypes);
+
             foreach (TemplateRelation rel in rels)
                 foreach (Column col in rel.Columns)
                 {
-                    if (col.PGTypeType == PgTypeType.CompositeType && !UsedCompositeTypes.Contains(col.PG_Type))
+                    if (col.PGTypeType == PgTypeType.CompositeType && !SchemaUsedCompositeTypes.Exists(i => i.FullName == col.PG_Type))
                     {
-                        Console.WriteLine(col.PG_Type);
-                        UsedCompositeTypes.Add(col.PG_Type);
+                        SchemaUsedCompositeTypes.Add(all_types.Find(i => i.FullName == col.PG_Type));
+                    }
+                    else if ((col.PGTypeType == PgTypeType.Relation || col.PGTypeType == PgTypeType.View) && !SchemaUsedCompositeTypes.Exists(i => i.FullName == col.PG_Type))
+                    {
+                        SchemaUsedCompositeTypes.Add(all_types.Find(i => i.FullName == col.PG_Type));
+                    }
+                    else if(col.PGTypeType != PgTypeType.BaseType && col.PGTypeType != PgTypeType.EnumType && col.PGTypeType != PgTypeType.CompositeType && col.PGTypeType != PgTypeType.View)
+                    {
+                        throw new NotImplementedException(col.PGTypeType.ToString());
                     }
                 }
         } 

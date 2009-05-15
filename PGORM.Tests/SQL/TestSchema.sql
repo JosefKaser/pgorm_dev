@@ -16,7 +16,8 @@ create table test3
 (
 	id serial not null primary key,
 	field1 varchar,
-	field2 int default 1	
+	field2 int default 1,
+	field_z	int
 );
 create index test3_field2_index on test3 (field2);
 
@@ -38,33 +39,39 @@ create table enum_table
 );
 
 
-create type type1 as
-(
-	field1 varchar,
-	field2 varchar
-);
-
-create table use_type
-(
-	field1 type1
-);
-
 create type t_zipcode as
 (
-	part1 varchar,
-	part2 varchar
+	range varchar(4),
+	locator varchar(2)
 );
 
 create type t_address as
 (
 	street varchar,
 	zipcode t_zipcode,
-	city varchar
+	city varchar,
+	country varchar
 );
 
+create type t_building_type as enum
+(
+	'block',
+	'aparment'
+);
 
-create table inner_type_test
+create table building
 (
 	id serial not null primary key,
-	address t_address
+	address t_address,
+	type t_building_type,
+	description varchar
+);
+
+create view view_building as select * from building;
+
+create table building_complex
+(
+	id serial not null primary key,
+	complex_building_view view_building,
+	complex_building_table building
 );

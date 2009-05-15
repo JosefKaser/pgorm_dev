@@ -19,9 +19,8 @@ namespace TemplateNS.Core
     {
     }
 
-    //TODO: test and experimental code to resolve unknown types
     public delegate void SchemaReaderResolvePGTypeEventHandler(SchemaReaderResolvePGTypeEventArgs e);
-    //TODO: test and experimental code to resolve unknown types
+
     public class SchemaReaderResolvePGTypeEventArgs : EventArgs
     {
         public string PG_TypeName { get; set; }
