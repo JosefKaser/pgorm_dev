@@ -8,12 +8,13 @@ namespace TemplateNS.Core
 {
     #region DataObjectValue
     [DefaultProperty("Value")]
-    [TypeConverter(typeof(DataObjectValueTypeConverter))]
     public class DataObjectValue<T>
     {
         #region props
         private object _value;
         #endregion
+
+        public Type Converter;
 
         #region DbValue
         public object DbValue
@@ -51,9 +52,13 @@ namespace TemplateNS.Core
         public override string ToString()
         {
             if (_value != null && _value != DBNull.Value)
+            {
                 return _value.ToString();
+            }
             else
+            {
                 return "";
+            }
         }
         #endregion
 

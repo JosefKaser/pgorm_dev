@@ -25,6 +25,53 @@ namespace TemplateNS.Core
             else
                 return data;
         }
+
+        public static string PrepareConvertedValue(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value[0] == '\"' && value[value.Length - 1] == '\"')
+                {
+                    value = string.Format("{0}", value.Substring(1, value.Length - 2));
+                }
+                return value;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        public static object PrepareStringValue(object value)
+        {
+            if (value != null &&  value.GetType() == typeof(string))
+            {
+                string s = value.ToString();
+                if (s.Contains(' '))
+                    return string.Format("\"{0}\"", s);
+                else
+                    return value;
+            }
+            else
+                return value;
+        }
+
+        public static string StripUDTValue(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value[0] == '(' && value[value.Length - 1] == ')')
+                {
+                    value = string.Format("{0}", value.Substring(1, value.Length - 2));
+                }
+                return value;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
 	}
 	#endregion
 }

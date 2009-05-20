@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
+using System.ComponentModel;
 using Npgsql;
 using PGORM.PostgreSQL.Catalog;
 using PGORM.PostgreSQL.Objects;
@@ -368,7 +369,10 @@ namespace PGORM.PostgreSQL
                 col.IsNullable = rcol.is_nullable == "YES" ? true : false;
                 col.IsEntity = IsPartOfEntity(col, rel);
                 col.DB_Comment = (comment == null ? "" : comment.description);
+                CorrectColumnDimation(col, rcol);
+                CorrectNullableType(col);
                 rel.Columns.Add(col);
+                
             }
             reader.Close();
         } 
@@ -386,11 +390,36 @@ namespace PGORM.PostgreSQL
         } 
         #endregion
 
+        private void CorrectColumnDimation(C column, pg_column rcol)
+        {
+            int dim = (int)rcol.column_dimation;
+            //if (dim > 0)
+                //dim = dim - 1;
+            column.Dimention = dim;
+        }
+
+        private void CorrectNullableType(C column)
+        {
+            if (column.IsNullable)
+            {
+                if(column.PGTypeType != PgTypeType.EnumType &&
+                    column.PGTypeType != PgTypeType.CompositeType &&
+                    column.CLR_Type != typeof(string) &&
+                        !column.IsPgArray)
+                {
+                    column.CLR_Type = typeof(Nullable<>).MakeGenericType(column.CLR_Type);
+                }
+            }
+        }
+
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(Relation<C> rel, pg_column rcol, Column col, Type provided_type)
         {
             pg_type pgtype = InformationSchema.Types.Find(t => t.type_oid == rcol.udt_name_oid);
-            col.CLR_Type = provided_type; // do this anyway
+
+            col.CLR_Type = provided_type;
+            col.CLR_TypeRaw = col.CLR_Type; // do this anyway
+
             if (rel.RelationType == RelationType.Enum)
                 col.PGTypeType = PgTypeType.EnumType;
             else
@@ -400,19 +429,18 @@ namespace PGORM.PostgreSQL
 
             if (rcol.data_type == "USER-DEFINED")
             {
-                col.PG_Type = GetCorrectTypeName(rcol.udt_schema,rcol.udt_name,col.PGTypeType);
+                col.PG_Type = GetCorrectTypeName(rcol.udt_schema, rcol.udt_name, col.PGTypeType);
             }
             else if (rcol.data_type == "ARRAY")
             {
-                //col.PG_Type = pgtype.base_type;
                 col.IsPgArray = true;
                 pg_type b_pgtype = InformationSchema.Types.Find(t => t.type_oid == pgtype.base_type_oid);
                 col.PGTypeType = PgTypeTypeConverter.FromString(b_pgtype.type_type);
-                col.PG_Type = GetCorrectTypeName(pgtype.base_type_schema, pgtype.base_type,col.PGTypeType);
+                col.PG_Type = GetCorrectTypeName(pgtype.base_type_schema, pgtype.base_type, col.PGTypeType);
                 col.TypeInfo = CreateTypeInformationFromPgType(b_pgtype);
             }
             else
-                col.PG_Type = GetCorrectTypeName(rcol.udt_schema, rcol.data_type,col.PGTypeType);
+                col.PG_Type = GetCorrectTypeName(rcol.udt_schema, rcol.data_type, col.PGTypeType);
         }
         
         #endregion

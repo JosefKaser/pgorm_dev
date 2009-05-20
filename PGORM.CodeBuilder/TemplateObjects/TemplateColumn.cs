@@ -10,11 +10,13 @@ namespace PGORM.CodeBuilder.TemplateObjects
 {
     public class TemplateColumn : PostgreSQL.Objects.Column
     {
+        #region Props
         public string p_TemplateColumnName;
         public bool HasConverter { get; set; }
         public ConverterProxy ConverterProxy;
         private Schema<TemplateRelation, StoredFunction, TemplateColumn> Schema { get; set; }
-        public TemplateRelation Relation;
+        public TemplateRelation Relation; 
+        #endregion
 
         #region TemplateColumn
         public TemplateColumn()
@@ -31,24 +33,6 @@ namespace PGORM.CodeBuilder.TemplateObjects
             get
             {
                 return p_TemplateColumnName;
-            }
-        } 
-        #endregion
-
-        #region CLR_Nullable
-        public string CLR_Nullable
-        {
-            get
-            {
-
-                if (!CLR_Type.IsArray && CLR_Type != typeof(string) && ConverterProxy == null)
-                {
-                    return "?";
-                }
-                else
-                {
-                    return "";
-                }
             }
         } 
         #endregion
@@ -106,6 +90,7 @@ namespace PGORM.CodeBuilder.TemplateObjects
                 {
                     HasConverter = true;
                     CLR_Type = cp.CLRType;
+                    CLR_TypeRaw = CLR_Type;
                     ConverterProxy = cp;
                 }
             }
@@ -115,28 +100,63 @@ namespace PGORM.CodeBuilder.TemplateObjects
                 if (cp != null)
                 {
                     HasConverter = true;
-                    CLR_Type = cp.CLRType;
+                    CLR_TypeRaw = cp.CLRType;
+                    if (!this.IsPgArray)
+                    {
+                        CLR_Type = cp.CLRType;
+                        
+                    }
+                    else
+                    {
+                        if(Dimention > 1)
+                            CLR_Type = CLR_TypeRaw.MakeArrayType(Dimention); 
+                        else
+                            CLR_Type = CLR_TypeRaw.MakeArrayType(); 
+                    }
                     ConverterProxy = cp;
-                }
-                else
-                {
-                    object o = 1;
                 }
             }
         } 
         #endregion
 
+        #region CounterIndex
         public int CounterIndex
         {
             get
             {
                 return this.ColumnIndex - 1;
             }
-        }
+        } 
+        #endregion
 
+        #region ToString
         public override string ToString()
         {
             return string.Format("{0}.{1}", Relation.FullNameInvariant, TemplateColumnName);
+        } 
+        #endregion
+
+        public string TemplateCLR_Type
+        {
+            get
+            {
+                if (CLR_Type.Name == typeof(Nullable<>).Name)
+                {
+                    Type innertType = CLR_Type.GetGenericArguments()[0];
+                    return string.Format("{0}?", innertType);
+                }
+                else if (CLR_Type.IsArray && PGTypeType == PgTypeType.CompositeType)
+                {
+                    string type = string.Format("{0}", CLR_Type);
+                    type = type.Replace("*", new String(',', Dimention));
+                    return type;
+                }
+                else
+                {
+                    return string.Format("{0}", CLR_Type);
+                }
+            }
         }
+
     }
 }
