@@ -133,9 +133,6 @@
   <data name="DataObjectValue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>dataaccessprojectfiles\dataobjectvalue.cs;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="DataObjectValueTypeConverter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>dataaccessprojectfiles\dataobjectvaluetypeconverter.cs;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="Helper" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>dataaccessprojectfiles\helper.cs;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -144,5 +141,8 @@
   </data>
   <data name="StringSplitter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>dataaccessprojectfiles\stringsplitter.cs;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ArrayHandling" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>dataaccessprojectfiles\arrayhandling.cs;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

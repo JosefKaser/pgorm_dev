@@ -61,6 +61,27 @@ namespace PGORM.CodeBuilder {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // NpgsqlTypes\ArrayHandling.cs
+        /////
+        ///// Author:
+        /////    Jon Hanna. (jon@hackcraft.net)
+        /////
+        /////    Copyright (C) 2007-2008 The Npgsql Development Team
+        /////    npgsql-general@gborg.postgresql.org
+        /////    http://gborg.postgresql.org/project/npgsql/projdisplay.php
+        /////
+        ///// Permission to use, copy, modify, and distribute this software and its
+        ///// documentation for any purpose, without fee, and without a written
+        ///// agreement is hereby granted, provided that the above copyright notice
+        ///// and this paragraph and the f [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ArrayHandling {
+            get {
+                return ResourceManager.GetString("ArrayHandling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to using System;
         ///using System.Collections.Generic;
         ///using System.Linq;
@@ -192,12 +213,13 @@ namespace PGORM.CodeBuilder {
         ///{
         ///    #region DataObjectValue
         ///    [DefaultProperty(&quot;Value&quot;)]
-        ///    [TypeConverter(typeof(DataObjectValueTypeConverter))]
         ///    public class DataObjectValue&lt;T&gt;
         ///    {
         ///        #region props
         ///        private object _value;
         ///        #endregion
+        ///
+        ///        public Type Converter;
         ///
         ///        #region DbValue
         ///        public object DbValue
@@ -205,37 +227,12 @@ namespace PGORM.CodeBuilder {
         ///            get
         ///            {
         ///				return _value;
-        /// [rest of string was truncated]&quot;;.
+        ///            }
+        ///           [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DataObjectValue {
             get {
                 return ResourceManager.GetString("DataObjectValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to using System;
-        ///using System.Collections.Generic;
-        ///using System.Linq;
-        ///using System.Text;
-        ///using System.ComponentModel;
-        ///using System.Reflection;
-        ///
-        ///namespace TemplateNS.Core
-        ///{
-        ///    #region DataObjectValueTypeConverter
-        ///    public class DataObjectValueTypeConverter : TypeConverter
-        ///    {
-        ///        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        ///        {
-        ///            return true;
-        ///        }
-        ///
-        ///        public override bool CanConvertTo(ITypeDescriptorContext context, Type [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DataObjectValueTypeConverter {
-            get {
-                return ResourceManager.GetString("DataObjectValueTypeConverter", resourceCulture);
             }
         }
         
@@ -284,7 +281,7 @@ namespace PGORM.CodeBuilder {
         ///    {
         ///    }
         ///
-        ///    //TODO: test and experiment [rest of string was truncated]&quot;;.
+        ///    public delegate void Schema [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string PostgreSQLTypeConverter {
             get {

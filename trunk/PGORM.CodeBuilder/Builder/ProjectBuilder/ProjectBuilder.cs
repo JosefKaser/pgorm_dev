@@ -179,8 +179,6 @@ namespace PGORM.CodeBuilder
         private void ResolveTypes(List<TemplateRelation> rels)
         {
             List<TemplateRelation> all_types = new List<TemplateRelation>();
-            //all_types.AddRange(p_Schema.Tables);
-            //all_types.AddRange(p_Schema.Views);
             all_types.AddRange(p_Schema.CompositeTypes);
 
             foreach (TemplateRelation rel in rels)

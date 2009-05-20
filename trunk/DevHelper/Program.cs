@@ -14,8 +14,8 @@ namespace DevHelper
         static bool has_error = false;
         static void Main(string[] args)
         {
-            //string constr = "server=localhost;database=testdb;username=postgres;password=postgres";
-            //DataAccess.InitializeDatabase(constr); PostgreSQL.CodeHelper.create_helper();
+            //string constr = "server=localhost;database=PGORM_TEST;username=postgres;password=postgres";
+            //DataAccess.InitializeDatabase(constr); PGORM.PostgreSQL.CodeHelper.create_helper();
 
             PGORM.CodeBuilder.Project project = new PGORM.CodeBuilder.Project();
             project.DatabaseConnectionInfo.Server = "localhost";
@@ -23,13 +23,17 @@ namespace DevHelper
             project.DatabaseConnectionInfo.Username = "postgres";
             project.DatabaseConnectionInfo.Password = "postgres";
             project.OutputFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Output";
+            project.BuildInDebugMode = true;
 
-            project.Tables.Add("public.test1");
-            project.Tables.Add("public.test2");
-            project.Tables.Add("public.test3");
-            project.Tables.Add("public.enum_table");
-            project.Tables.Add("public.building");
-
+            //project.Tables.Add("public.test1");
+            //project.Tables.Add("public.test2");
+            //project.Tables.Add("public.test3");
+            //project.Tables.Add("public.enum_table");
+            //project.Tables.Add("public.building");
+            //project.Tables.Add("public.building_complex");
+            //project.Tables.Add("public.udt_single_test");
+            //project.Tables.Add("public.udt_array_test");
+            project.Tables.Add("public.udt_multi_array_test");
 
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = @"test1.dll";

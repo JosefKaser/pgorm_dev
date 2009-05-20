@@ -70,6 +70,7 @@
     <Compile Include="Builder\ProjectBuilder\CreateDataObjectProject.cs" />
     <Compile Include="Builder\ProjectBuilder\ProjectBuilder.cs" />
     <Compile Include="Builder\RecordSetBuilder.cs" />
+    <Compile Include="DataAccessProjectFiles\ArrayHandling.cs" />
     <Compile Include="Core\AssemblyInfoData.cs" />
     <Compile Include="Core\ConverterProxy.cs" />
     <Compile Include="Core\DBConnectionInformation.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="DataAccessProjectFiles\DataObjectBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectRecordSetBase.cs" />
     <Compile Include="DataAccessProjectFiles\DataObjectValue.cs" />
-    <Compile Include="DataAccessProjectFiles\DataObjectValueTypeConverter.cs" />
     <Compile Include="DataAccessProjectFiles\Helper.cs" />
     <Compile Include="DataAccessProjectFiles\PostgreSQLTypeConverter.cs" />
     <Compile Include="DataAccessProjectFiles\StringSplitter.cs" />

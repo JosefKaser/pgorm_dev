@@ -40,7 +40,10 @@ namespace <namespace>
     {
         public object FromString(string data)
         {
-            throw new NotImplementedException(string.Format("Enum value {0} is not implemented.",data));
+            object[] parsed_values = ArrayBackendToNativeTypeConverter.TokenEnumeration(Helper.StripUDTValue(data)).ToArray();
+            <table.TemplateRelationName> result = new <table.TemplateRelationName>();
+            <table.Columns:create_parse_from_string(); separator="\r\n">
+            return result;
         }
     
         public string PgType()
@@ -60,8 +63,19 @@ namespace <namespace>
         
         public string ToString(object obj)
         {
-            Console.WriteLine(obj.ToString());
-            return obj.ToString();
+            <namespace>.<table.TemplateRelationName> entity = (<namespace>.<table.TemplateRelationName>)obj;
+            if(entity != null)
+            {
+                <table.Columns:create_format_values(); separator="\r\n">
+
+                return string.Format("(<table.Columns:string_format_params(); separator=",">)",
+                    <table.Columns:string_format_args(); separator=",\r\n">
+                    );
+            }
+            else
+            {
+                return "";
+            }
         }
     }
     #endregion
@@ -75,13 +89,14 @@ internal static readonly string COL_<column.TemplateColumnName>_CLR = "<column.C
 public static readonly string COL_<column.TemplateColumnName>_Quoted = "\"<column.ColumnName>\"";
 >>
 
+is_array(column) ::="<if(column.IsPgArray)>[]<endif>"
 
 property(column) ::=<<
 #region <column.TemplateColumnName>
-protected  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> p_<column.TemplateColumnName> = 
-		new DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\>();
+protected  DataObjectValue\<<column.TemplateCLR_Type>\> p_<column.TemplateColumnName> = 
+		new DataObjectValue\<<column.TemplateCLR_Type>\>();
 <code_summary({<column.CLR_Description>})>		
-public  DataObjectValue\<<column.CLR_Type><column.CLR_Nullable>\> <column.TemplateColumnName> 
+public  DataObjectValue\<<column.TemplateCLR_Type>\> <column.TemplateColumnName> 
 {
 	get
 	{
@@ -101,4 +116,28 @@ code_summary(text) ::=<<
 /// \<summary\>
 /// <text>
 /// \</summary\>
+>>
+
+
+string_format_params(column) ::="{<column.CounterIndex>}"
+string_format_args(column) ::="value_<column.CounterIndex>"
+
+create_format_values(column) ::=<<
+<if(column.HasConverter)>
+<column.ConverterProxy.Converter> converter_<column.CounterIndex> = new <column.ConverterProxy.Converter>();
+object value_<column.CounterIndex> = string.Format("\"{0}\"",converter_<column.CounterIndex>.ToString(entity.<column.TemplateColumnName>.Value));
+
+<else>
+object value_<column.CounterIndex> = Helper.PrepareStringValue(entity.<column.TemplateColumnName>.Value);
+<endif>
+>>
+
+create_parse_from_string(column) ::=<<
+<if(column.HasConverter)>
+<column.ConverterProxy.Converter> converter_<column.CounterIndex> = new <column.ConverterProxy.Converter>();
+result.<column.TemplateColumnName>.Value = (<column.TemplateCLR_Type>)converter_<column.CounterIndex>.FromString(parsed_values[<column.CounterIndex>] as string);
+
+<else>
+result.<column.TemplateColumnName>.Value = (<column.TemplateCLR_Type>)Convert.ChangeType(parsed_values[<column.CounterIndex>] as string,typeof(<column.TemplateCLR_Type>));
+<endif>
 >>

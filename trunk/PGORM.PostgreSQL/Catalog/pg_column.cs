@@ -14,6 +14,7 @@ namespace PGORM.PostgreSQL.Catalog
 		public String table_name {get; set;}
 		public String column_name {get; set;}
 		public Int32? ordinal_position {get; set;}
+		public Int32? column_dimation {get; set;}
 		public String column_default {get; set;}
 		public String is_nullable {get; set;}
 		public String data_type {get; set;}
@@ -38,6 +39,7 @@ namespace PGORM.PostgreSQL.Catalog
 			result.table_name = DataAccess.Convert<String>(reader["table_name"],null);
 			result.column_name = DataAccess.Convert<String>(reader["column_name"],null);
 			result.ordinal_position = DataAccess.Convert<Int32?>(reader["ordinal_position"],null);
+			result.column_dimation = DataAccess.Convert<Int32?>(reader["column_dimation"],null);
 			result.column_default = DataAccess.Convert<String>(reader["column_default"],null);
 			result.is_nullable = DataAccess.Convert<String>(reader["is_nullable"],null);
 			result.data_type = DataAccess.Convert<String>(reader["data_type"],null);

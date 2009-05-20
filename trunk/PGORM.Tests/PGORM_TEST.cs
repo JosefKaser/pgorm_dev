@@ -204,27 +204,116 @@ namespace PGORM.Tests
         } 
         #endregion
 
+        #region Test0014_UDT_Depend
         [Test]
-        public void Test0014_DependEntity_Insert()
+        public void Test0014_UDT_Depend()
         {
-            buildingObject obj = new buildingObject();
+            building_complexObject obj = new building_complexObject();
+            Type type = obj.GetType();
+            List<PropertyInfo> props = type.GetProperties().ToList();
+            Assert.IsTrue(props.Exists(p => p.Name == "complex_building_view"), "complex_building_view check.");
+            Assert.IsTrue(props.Exists(p => p.Name == "complex_building_table"), "complex_building_table check.");
+        } 
+        #endregion
+
+        #region Test0015_UDT_Single_Insert
+        [Test]
+        public void Test0015_UDT_Single_Insert()
+        {
+            udt_single_testObject obj = new udt_single_testObject();
             obj.address = new t_addressUDT()
-            {                
-                city = "Den Haag",
+            {
                 country = "NL",
-                street = "Spui 7",
+                street = "Main Street 10",
                 zipcode = new t_zipcodeUDT()
                 {
-                    locator = "KH",
-                    range = "2544"
+                    locator = "AA",
+                    range = "2500"
                 }
             };
-            obj.description = "big building";
-            obj.type = t_building_type.aparment;
+            udt_single_test_ObjectFactory.Insert(ref obj);
+            Assert.AreEqual(1, obj.id.Value);
+        } 
+        #endregion
 
-            building_ObjectFactory.Insert(ref obj);
+        #region Test0016_UDT_Multi_Insert
+        [Test]
+        public void Test0016_UDT_Multi_Insert()
+        {
+            t_addressUDT[] ads = new t_addressUDT[]
+            {
+                new t_addressUDT() { city = "The Hague",country="NL",street="Main Street 15",zipcode = new t_zipcodeUDT() {range = "2500",locator="AA"}},
+                new t_addressUDT() { city = "Rotterdam",country="NL",street="Main Street 10",zipcode = new t_zipcodeUDT() {range = "1500",locator="BB"}},
+                new t_addressUDT() { city = "LA",country="US",street="South Street",zipcode = new t_zipcodeUDT() {range = "9021"}}
+            };
 
-            Assert.AreEqual(1, obj.id);
+            udt_array_testObject obj = new udt_array_testObject();
+            obj.address = ads;
+            udt_array_test_ObjectFactory.Insert(ref obj);
+            Assert.AreEqual(1, obj.id.Value);
+        } 
+        #endregion
+
+        #region Test0017_UDT_Multi_Get
+        [Test]
+        public void Test0017_UDT_Multi_Get()
+        {
+            udt_array_testObject obj = udt_array_test_ObjectFactory.GetBy_id(1);
+            Assert.AreEqual(3, obj.address.Value.Length);
+            Assert.AreEqual("BB", obj.address.Value[1].zipcode.Value.locator.Value);
+        } 
+        #endregion
+
+        #region Test0018_UDT_Multi_Multi_Insert
+        [Test]
+        public void Test0018_UDT_Multi_Multi_Insert()
+        {
+            udt_multi_array_testObject obj = new udt_multi_array_testObject();
+            obj.multi_zip_2 = new t_zipcodeUDT[2, 2];
+
+            obj.multi_zip_2.Value[0, 0] = new t_zipcodeUDT() { range = "1111", locator = "AA" };
+            obj.multi_zip_2.Value[0, 1] = new t_zipcodeUDT() { range = "2222", locator = "BB" };
+            obj.multi_zip_2.Value[1, 0] = new t_zipcodeUDT() { range = "3333", locator = "CC" };
+            obj.multi_zip_2.Value[1, 1] = new t_zipcodeUDT() { range = "4444", locator = "DD" };
+
+            udt_multi_array_test_ObjectFactory.Insert(ref obj);
+            Assert.AreEqual(1, obj.id.Value);
+        } 
+        #endregion
+
+        #region Test0019_UDT_Multi_Multi_Get
+        [Test]
+        public void Test0019_UDT_Multi_Multi_Get()
+        {
+            udt_multi_array_testObject obj = udt_multi_array_test_ObjectFactory.GetBy_id(1);
+            Assert.AreEqual("CC", obj.multi_zip_2.Value[1, 0].locator.Value);
+        } 
+        #endregion
+
+        [Test]
+        public void Test0020_UDT_Multi_Multi_Multi_Insert()
+        {
+            udt_multi_array_testObject obj = new udt_multi_array_testObject();
+            obj.multi_zip_3 = new t_zipcodeUDT[2, 2, 2];
+
+            obj.multi_zip_3.Value[0, 0, 0] = new t_zipcodeUDT() { range = "1111", locator = "AA" };
+            obj.multi_zip_3.Value[1, 0, 0] = new t_zipcodeUDT() { range = "1111", locator = "AB" };
+            obj.multi_zip_3.Value[0, 1, 0] = new t_zipcodeUDT() { range = "1111", locator = "AC" };
+            obj.multi_zip_3.Value[0, 0, 1] = new t_zipcodeUDT() { range = "1111", locator = "AD" };
+            obj.multi_zip_3.Value[0, 1, 1] = new t_zipcodeUDT() { range = "1111", locator = "AE" };
+            obj.multi_zip_3.Value[1, 0, 1] = new t_zipcodeUDT() { range = "1111", locator = "AF" };
+            obj.multi_zip_3.Value[1, 1, 0] = new t_zipcodeUDT() { range = "1111", locator = "AG" };
+            obj.multi_zip_3.Value[1, 1, 1] = new t_zipcodeUDT() { range = "1111", locator = "AH" };
+
+            udt_multi_array_test_ObjectFactory.Insert(ref obj);
+            Assert.AreEqual(2, obj.id.Value);
+        }
+
+        [Test]
+        public void Test0021_UDT_Multi_Multi_Multi_Get()
+        {
+            udt_multi_array_testObject obj = udt_multi_array_test_ObjectFactory.GetBy_id(2);
+            Assert.AreEqual("AC", obj.multi_zip_3.Value[0, 1, 0].locator.Value);
         }
     }
 #endif

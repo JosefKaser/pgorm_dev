@@ -11,6 +11,7 @@ namespace PGORM.PostgreSQL.Objects
     {
         public string ColumnName { get; set; }
         public Type CLR_Type { get; set; }
+        public Type CLR_TypeRaw { get; set; }
         public string PG_Type { get; set; }
         public int ColumnIndex { get; set; }
         public bool IsNullable { get; set; }
@@ -21,6 +22,7 @@ namespace PGORM.PostgreSQL.Objects
         public string DB_Comment { get; set; }
         public PgTypeType PGTypeType { get; set; }
         public TypeInformation TypeInfo { get; set; }
+        public int Dimention { get; set; } 
 
         public Column()
         {
@@ -33,6 +35,7 @@ namespace PGORM.PostgreSQL.Objects
             C c = new C();
             c.ColumnName = this.ColumnName;
             c.CLR_Type = this.CLR_Type;
+            c.CLR_TypeRaw = this.CLR_TypeRaw;
             c.PG_Type = this.PG_Type;
             c.ColumnIndex = this.ColumnIndex;
             c.IsNullable = this.IsNullable;

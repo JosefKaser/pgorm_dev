@@ -9,6 +9,7 @@ from
            CAST(c.relname AS varchar) AS table_name,
            CAST(a.attname AS varchar) AS column_name,
            CAST(a.attnum AS integer) AS ordinal_position,
+           cast(a.attndims as integer) as column_dimation,
            CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
            CAST(CASE WHEN a.attnotnull OR (t.typtype = 'd' AND t.typnotnull) THEN 'NO' ELSE 'YES' END
              AS varchar)
@@ -115,6 +116,7 @@ select
           t.typname::varchar as table_name,
           e.enumlabel::varchar as column_name,
           0::integer as ordinal_position,
+          0::integer as column_dimation,
           null::varchar as column_default,
           'NO' AS is_nullable,
           format_type(1043, null) as data_type,

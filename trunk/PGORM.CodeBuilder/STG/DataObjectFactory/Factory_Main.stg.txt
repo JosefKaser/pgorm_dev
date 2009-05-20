@@ -51,15 +51,22 @@ intelli_tans() ::=<<
 
 create_implicit_check(column) ::=<<
 if (p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue != null)
+{
+    OperationParameter par = new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR };
     <if(column.HasConverter)>
+    if(par.DbValue != DBNull.Value)
     {
         <column.ConverterProxy.Converter> converter = new <column.ConverterProxy.Converter>();
-        oprParams.Add(new OperationParameter() { DbValue = converter.ToString(p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue) , ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
+        <if(column.IsPgArray)>
+        ArrayNativeToBackendTypeConverter array_converter = new ArrayNativeToBackendTypeConverter(converter);        
+        par.DbValue = array_converter.FromArray(converter,par.DbValue);
+        <else>
+        par.DbValue = Helper.PrepareConvertedValue(converter.ToString(par.DbValue));
+        <endif>
     }
-    <else>
-    oprParams.Add(new OperationParameter() { DbValue = p_<column.TemplateRelationName>.<column.TemplateColumnName>.DbValue, ColumnName = <column.TemplateRelationName>.COL_<column.TemplateColumnName>_Quoted, ParameterName = "@" + <column.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR });
     <endif>
-    
+    oprParams.Add(par);
+}    
 >>
 
 create_getby_method_name(columns) ::=<<
@@ -72,14 +79,18 @@ idatareader_converter(column) ::=<<
 #region <column.TemplateColumnName>
 try
 {
+    result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
     <if(column.HasConverter)>
+    if(result.<column.TemplateColumnName>.DbValue != DBNull.Value)
+    {
         <column.ConverterProxy.Converter> converter = new <column.ConverterProxy.Converter>();
-        result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
-        if(result.<column.TemplateColumnName>.DbValue != DBNull.Value)
-                result.<column.TemplateColumnName>.DbValue = converter.FromString(result.<column.TemplateColumnName>.DbValue.ToString());
-        //throw new NotImplementedException("Converter for <column.TemplateColumnName> is not implemented");
-    <else>
-        result.<column.TemplateColumnName>.DbValue = reader[<table.TemplateRelationName>.COL_<column.TemplateColumnName>_CLR];
+        <if(column.IsPgArray)>
+        ArrayBackendToNativeTypeConverter array_converter = new ArrayBackendToNativeTypeConverter(converter);        
+        result.<column.TemplateColumnName>.DbValue = array_converter.ToArray(converter,result.<column.TemplateColumnName>.DbValue.ToString());
+        <else>
+        result.<column.TemplateColumnName>.DbValue = converter.FromString(result.<column.TemplateColumnName>.DbValue.ToString());
+        <endif>
+    }
     <endif>
 }
 catch(Exception ex)
@@ -96,7 +107,7 @@ create_parameters(columns) ::=<<
 <columns:create_parameter(); separator=",">
 >>	
 
-create_parameter(column) ::="<column.CLR_Type> p_<column.TemplateColumnName>"
+create_parameter(column) ::="<column.TemplateCLR_Type> p_<column.TemplateColumnName>"
 
 create_sql_asign_parameter(column) ::=" \\\"<column.ColumnName>\\\"=@<column.TemplateColumnName> "
 

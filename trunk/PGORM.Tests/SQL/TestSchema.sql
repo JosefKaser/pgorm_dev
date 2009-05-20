@@ -38,7 +38,6 @@ create table enum_table
 	dbtype "RDBMS"
 );
 
-
 create type t_zipcode as
 (
 	range varchar(4),
@@ -74,4 +73,35 @@ create table building_complex
 	id serial not null primary key,
 	complex_building_view view_building,
 	complex_building_table building
+);
+
+create table udt_single_test
+(
+	id serial not null primary key,
+	address t_address
+);
+
+create table udt_array_test
+(
+	id serial not null primary key,
+	address t_address[]
+);
+
+create table udt_multi_array_test
+(
+	id serial not null primary key,
+	multi_zip_2 t_zipcode[][],
+	multi_zip_3 t_zipcode[][][]
+);
+
+create table complex2
+(
+	id serial not null primary key,
+	zipcode_single t_zipcode,
+	zipcode_array t_zipcode[],
+	zipcode_attay_multi t_zipcode[][],	
+	
+	address_single t_address,
+	address_array t_address[],
+	address_array_multy t_address[][]
 );

@@ -344,11 +344,17 @@ namespace TemplateNS.Core
         #region SetupParameters
         private static void SetupParameters(DbCommand command, DbParameter[] parameters)
         {
+            string value = "";
             foreach (DbParameter param in parameters)
-                if (param.GetType().ToString().Contains("DbINParameter"))
+            {
+                value = param.Value.ToString();
+                if (param.GetType().Name.Contains("DbINParameter"))
                     command.CommandText = command.CommandText.Replace(param.ParameterName, string.Format("({0})", param.Value));
+                else if (value.Contains("array["))
+                    command.CommandText = command.CommandText.Replace(param.ParameterName, string.Format("{0}", param.Value));
                 else
                     command.Parameters.Add(param);
+            }
         } 
         #endregion
 

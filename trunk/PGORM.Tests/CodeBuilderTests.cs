@@ -47,6 +47,9 @@ namespace PGORM.Tests
             project.Tables.Add("public.enum_table");
             project.Tables.Add("public.building");
             project.Tables.Add("public.building_complex");
+            project.Tables.Add("public.udt_single_test");
+            project.Tables.Add("public.udt_array_test");
+            project.Tables.Add("public.udt_multi_array_test");
 
             project.SetDefaultsByDatabaseName();
             project.AssemblyName = test_db_name;
