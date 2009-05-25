@@ -127,8 +127,11 @@
   <data name="GetAllEntityColumns" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sql\getallentitycolumns.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetAllFunctions" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sql\getallfunctions.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetAllFunctions83" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sql\getallfunctions83.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetAllFunctions84" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sql\getallfunctions84.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllIndexes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sql\getallindexes.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

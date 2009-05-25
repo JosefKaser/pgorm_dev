@@ -94,9 +94,9 @@ namespace PGORM.PostgreSQL {
         ///           CAST(c.relname AS varchar) AS table_name,
         ///           CAST(a.attname AS varchar) AS column_name,
         ///           CAST(a.attnum AS integer) AS ordinal_position,
+        ///           cast(a.attndims as integer) as column_dimation,
         ///           CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
-        ///           CAST(CASE WHEN a.attnotnull OR (t.typtype = &apos;d&apos; AND t.typnotnull) THEN &apos;NO&apos; ELSE &apos;YES&apos; END
-        ///    [rest of string was truncated]&quot;;.
+        ///           CAST(CASE WHEN a.attnotnull OR (t.t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetAllColumns {
             get {
@@ -120,6 +120,24 @@ namespace PGORM.PostgreSQL {
         
         /// <summary>
         ///   Looks up a localized string similar to select
+        ///                p.oid,
+        ///		p.proname as function_name,
+        ///		n.nspname as schema_name,
+        ///		case when (en.typname is not null and en.nspname is not null) then regexp_replace(format_type(p.prorettype,null),en.nspname || &apos;.&apos;,&apos;&apos;) else format_type(p.prorettype,null) end as return_type,
+        ///		case when (en.typname is not null and en.nspname is not null) then en.nspname else n.nspname end as return_type_schema,
+        ///		p.proargnames as arg_names,
+        ///		p.pronargs::integer as num_args,
+        ///		p.proretset as returns_set,
+        ///		--p [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetAllFunctions83 {
+            get {
+                return ResourceManager.GetString("GetAllFunctions83", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select
         ///		p.oid as proc_oid,
         ///		p.proname,
         ///		regexp_split_to_array(oidvectortypes(p.proargtypes),E&apos;,\\s+&apos;) as arg_types,
@@ -132,9 +150,9 @@ namespace PGORM.PostgreSQL {
         ///		case when r.relkind = &apos;v&apos; and y.typtype=&apos;c&apos; then true else false end as is_view,
         ///		case when r.relkind = &apos;c&apos; and y.typtype=&apos;c&apos; then  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string GetAllFunctions {
+        internal static string GetAllFunctions84 {
             get {
-                return ResourceManager.GetString("GetAllFunctions", resourceCulture);
+                return ResourceManager.GetString("GetAllFunctions84", resourceCulture);
             }
         }
         

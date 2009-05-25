@@ -19,7 +19,7 @@ namespace PGORM.CodeBuilder
     {
         #region Props
         public Project p_Project { get; set; }
-        public Schema<TemplateRelation, StoredFunction, TemplateColumn> p_Schema { get; set; }
+        public Schema<TemplateRelation, Function, TemplateColumn> p_Schema { get; set; }
         public List<ConverterProxy> Converters { get; set; }
 
         private string p_BuildFolder;
@@ -75,8 +75,8 @@ namespace PGORM.CodeBuilder
         #region ReadSchema
         private void ReadSchema()
         {
-            SchemaReader<TemplateRelation, StoredFunction, TemplateColumn> schemaReader
-                = new SchemaReader<TemplateRelation, StoredFunction, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
+            SchemaReader<TemplateRelation, Function, TemplateColumn> schemaReader
+                = new SchemaReader<TemplateRelation, Function, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
             p_Schema = schemaReader.ReadSchema();
         } 
         #endregion

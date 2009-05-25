@@ -5,13 +5,13 @@ using System.Text;
 
 namespace PGORM.PostgreSQL.Objects
 {
-    public class Schema<R,S,C> where R : Relation<C> where S : StoredFunction where C : Column, new()
+    public class Schema<R,S,C> where R : Relation<C> where S : Function where C : Column, new()
     {
         public List<R> Tables;
         public List<R> Views;
         public List<R> CompositeTypes;
         public List<R> Enums;
-        public List<S> StoredFunctions;
+        public List<S> Functions;
         
         public Schema()
         {
@@ -19,7 +19,7 @@ namespace PGORM.PostgreSQL.Objects
             Views = new List<R>();
             CompositeTypes = new List<R>();
             Enums = new List<R>();
-            StoredFunctions = new List<S>();
+            Functions = new List<S>();
         }
     }
 }
