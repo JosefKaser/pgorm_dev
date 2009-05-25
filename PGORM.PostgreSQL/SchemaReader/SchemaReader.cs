@@ -1,4 +1,7 @@
-﻿using System;
+﻿//TODO: check the funationality of column raw type
+//TODO: check the functionality of the TypeInfo (use the delimitter is the type type converter and array handling)
+//TODO: thing about removing PostfixName
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +14,22 @@ using PGORM.PostgreSQL.Objects;
 
 namespace PGORM.PostgreSQL
 {
-    public partial class SchemaReader<R,S,C> where R : Relation<C> , new() where S : StoredFunction,new()  where C : Column , new()
+    public partial class SchemaReader<R, S, C>
+        where R : Relation<C>, new()
+        where S : Function, new()
+        where C : Column, new()
     {
         #region Properties
         public event SchemaReaderMessageEventHandler Message;
-        private Schema<R,S,C> p_Schema;
-        private List<Relation<C>> sp_arguments;
+        private Schema<R, S, C> p_Schema;
         #endregion
 
         #region SchemaReader
         public SchemaReader(string connection_string)
         {
-            sp_arguments = new List<Relation<C>>();
             DataAccess.InitializeDatabase(connection_string);
             InformationSchema.Read();
-        } 
+        }
         #endregion
 
         #region OnMessage
@@ -40,117 +44,16 @@ namespace PGORM.PostgreSQL
         #endregion
 
         #region ReadSchema
-        public Schema<R,S,C> ReadSchema()
+        public Schema<R, S, C> ReadSchema()
         {
-            p_Schema = new Schema<R,S,C>();
+            p_Schema = new Schema<R, S, C>();
 
-            CreateTablesAndViews();
+            CreateRelations();
             CreateTableIndexes();
             CreateViewIndexes();
-            CreateStoredFunctions();
             return p_Schema;
         }
-        
-        #endregion
 
-        #region CreateStoredFunctions
-        private void CreateStoredFunctions()
-        {
-            foreach (Relation<C> item in sp_arguments)
-            {
-                item.RelationName = InformationSchema.GetFunstionSigniture(item.RelationName);
-            }
-
-            foreach (pg_proc proc in InformationSchema.Functions)
-            {
-                S func = new S();
-                Relation<C> arg_info = sp_arguments.Find(s => s.RelationName == proc.proc_oid.ToString());
-                if (arg_info != null)
-                    foreach (Column col in arg_info.Columns)
-                    {
-                        StoredFunctionArgument arg = new StoredFunctionArgument();
-                        arg.ArgName = col.ColumnName;
-                        arg.ArgPgTypeName = col.PG_Type;
-                        arg.ArgCLRTypeName = col.CLR_Type.Name;
-                        func.Arguments.Add(arg);
-                    }
-                func.FunstionName = proc.proname;
-                func.IsSetReturning = (bool)proc.returns_set;
-
-                if (SetFunstionReturnType(proc, func))
-                    p_Schema.StoredFunctions.Add(func);
-            }
-
-            // deconflict functions
-            DeConflictStoredFunctions();
-        } 
-        #endregion
-
-        #region DeConflictStoredFunctions
-        private void DeConflictStoredFunctions()
-        {
-            foreach (StoredFunction func in p_Schema.StoredFunctions)
-            {
-                // and any function that has the same signiture. 
-                // Meaning after creating from pg_proc the CLR represenation
-                // is conflicting.
-                StoredFunction cfunc = p_Schema.StoredFunctions.Find(f => f != func && f.CLR_Signiture() == func.CLR_Signiture());
-                if (cfunc != null)
-                    cfunc.DeconflictName();
-            }
-        } 
-        #endregion
-
-        #region SetFunstionReturnType
-        private bool SetFunstionReturnType(pg_proc proc, StoredFunction func)
-        {
-            if ((bool)proc.is_table)
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.Table;
-                func.ReturnTypeCLRName = proc.return_type;
-            }
-            else if ((bool)proc.is_view)
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.View;
-                func.ReturnTypeCLRName = proc.return_type;
-            }
-            else if ((bool)proc.is_void)
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.Void;
-                func.ReturnTypeCLRName = proc.return_type;
-            }
-            else if ((bool)proc.is_composite)
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.CLRType;
-                func.ReturnTypeCLRName = proc.return_type;
-            }
-            else if ((bool)proc.is_enum)
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.PgEnum;
-                func.ReturnTypeCLRName = proc.return_type;
-            }
-            else if (proc.return_type_type == "b")
-            {
-                func.ReturnTypeType = StoredFunctionReturnType.CLRType;
-                pg_column col = new pg_column();
-                col.data_type = proc.return_type;
-                col.column_name = string.Format("return_type_{0}", func.FunstionName);
-                List<pg_column> cols = new List<pg_column>();
-                cols.Add(col);
-                string sql = CreateCompositeTypeTemplateSQL(cols);
-                NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
-                NpgsqlDataReader reader = command.ExecuteReader();
-                reader.Read();
-                func.ReturnTypeCLRName = reader.GetFieldType(0).Name;
-                reader.Close();
-            }
-            else
-            {
-                OnMessage(SchemaReaderMessageEventType.Error, "Return type for function {0} is not implemented in this version.", proc.proname);
-                return false;
-            }
-            return true;
-        } 
         #endregion
 
         #region CreateViewIndexes
@@ -166,7 +69,7 @@ namespace PGORM.PostgreSQL
                             rel.Indexes.Add((Index<C>)index.Clone());
                 }
             }
-        } 
+        }
         #endregion
 
         #region CreateTableIndexes
@@ -215,7 +118,7 @@ namespace PGORM.PostgreSQL
                 return IndexType.CustomIndex;
 
             throw new SchemaNotImplementedException(string.Format("Index type ({0}) is not implemented in this version", t));
-        } 
+        }
         #endregion
 
         #region GetViewDependedTables
@@ -230,7 +133,7 @@ namespace PGORM.PostgreSQL
                     result.Add(r);
             }
             return result;
-        } 
+        }
         #endregion
 
         #region QualifiesAsIndexForRelation
@@ -247,12 +150,11 @@ namespace PGORM.PostgreSQL
                 }
             }
             return result;
-        } 
+        }
         #endregion
 
-        #region CreateTablesAndViews
-
-        private R CreateRelation(pg_relation pg_rel,RelationType rtype)
+        #region CreateRelation
+        private R CreateRelation(pg_relation pg_rel, RelationType rtype)
         {
             return new R()
             {
@@ -260,9 +162,12 @@ namespace PGORM.PostgreSQL
                 RelationName = pg_rel.table_name,
                 RelationType = rtype
             };
-        }
+        } 
+        #endregion
 
-        private void CreateTablesAndViews()
+        #region CreateRelations
+
+        private void CreateRelations()
         {
             foreach (pg_relation pg_rel in InformationSchema.Relations)
             {
@@ -302,21 +207,15 @@ namespace PGORM.PostgreSQL
 
                     CreateRelationColumns(c_enum, pg_rel);
                 }
-                else if (pg_rel.table_type == "SP ARGUMENT")
-                {
-                    R rel = CreateRelation(pg_rel, RelationType.Table);
-                    sp_arguments.Add(rel);
-                    CreateRelationColumns(rel, pg_rel);
-                }
             }
-        } 
+        }
         #endregion
 
         #region CreateCompositeTypeTemplateSQL
         [Obsolete()]
         private string CreateCompositeTypeTemplateSQL(List<pg_column> columns)
         {
-            string sql = "",data_type="";
+            string sql = "", data_type = "";
             foreach (pg_column col in columns)
             {
                 data_type = col.data_type;
@@ -324,7 +223,7 @@ namespace PGORM.PostgreSQL
             }
             sql = string.Format("select {0} ", sql.Substring(0, sql.Length - 1));
             return sql;
-        } 
+        }
         #endregion
 
         #region GetEnumCreationSql
@@ -335,14 +234,14 @@ namespace PGORM.PostgreSQL
                 sql += string.Format("\n\r''::varchar as \"{0}\",", col.column_name);
             sql = string.Format("select {0}", sql.Substring(0, sql.Length - 1));
             return sql;
-        } 
+        }
         #endregion
 
         #region CreateRelationColumns
         private void CreateRelationColumns(Relation<C> rel, pg_relation pg_rel)
         {
             string sql = "!";
-            
+
             List<pg_column> rel_cols = InformationSchema.GetColumnsByRelation(pg_rel);
 
             if (rel.RelationType == RelationType.CompositeType)
@@ -362,20 +261,20 @@ namespace PGORM.PostgreSQL
                 pg_column_comment comment = InformationSchema.GetColumnComment(rcol);
                 C col = new C();
                 col.ColumnName = CorrectUnknownColumn(column_name, a);
-                GetCorrectPGAndCLRType(rel,rcol, col, reader.GetFieldType(a));
+                GetCorrectPGAndCLRType(rel, rcol, col, reader.GetFieldType(a));
                 col.ColumnIndex = (int)rcol.ordinal_position;
-                col.IsSerial = IsSerial(rcol,rel);
+                col.IsSerial = IsSerial(rcol, rel);
                 col.DefaultValue = col.IsSerial ? "" : rcol.column_default;
                 col.IsNullable = rcol.is_nullable == "YES" ? true : false;
                 col.IsEntity = IsPartOfEntity(col, rel);
                 col.DB_Comment = (comment == null ? "" : comment.description);
-                CorrectColumnDimation(col, rcol);
+                col.Dimention = (int)rcol.column_dimation;
                 CorrectNullableType(col);
                 rel.Columns.Add(col);
-                
+
             }
             reader.Close();
-        } 
+        }
         #endregion
 
         #region IsPartOfEntity
@@ -387,22 +286,19 @@ namespace PGORM.PostgreSQL
                     c.table_name == rel.RelationName &&
                     c.table_schema == rel.SchemaName
                     );
-        } 
+        }
         #endregion
 
-        private void CorrectColumnDimation(C column, pg_column rcol)
-        {
-            int dim = (int)rcol.column_dimation;
-            //if (dim > 0)
-                //dim = dim - 1;
-            column.Dimention = dim;
-        }
-
+        #region CorrectNullableType
+        /// <summary>
+        /// Makes a CLR nullable type if the PG type can be traslated to a CLR base (nullable) type (int, boolean etc..)
+        /// </summary>
+        /// <param name="column"></param>
         private void CorrectNullableType(C column)
         {
             if (column.IsNullable)
             {
-                if(column.PGTypeType != PgTypeType.EnumType &&
+                if (column.PGTypeType != PgTypeType.EnumType &&
                     column.PGTypeType != PgTypeType.CompositeType &&
                     column.CLR_Type != typeof(string) &&
                         !column.IsPgArray)
@@ -411,6 +307,7 @@ namespace PGORM.PostgreSQL
                 }
             }
         }
+        #endregion
 
         #region GetCorrectPGAndCLRType
         private void GetCorrectPGAndCLRType(Relation<C> rel, pg_column rcol, Column col, Type provided_type)
@@ -442,7 +339,7 @@ namespace PGORM.PostgreSQL
             else
                 col.PG_Type = GetCorrectTypeName(rcol.udt_schema, rcol.data_type, col.PGTypeType);
         }
-        
+
         #endregion
 
         #region GetCorrectTypeName
@@ -457,7 +354,7 @@ namespace PGORM.PostgreSQL
                 return string.Format("\"public\".\"{0}\"", type_name.Replace(schema_name, ""));
             else
                 return string.Format("\"{0}\".\"{1}\"", schema_name, type_name.Replace(schema_name, ""));
-        } 
+        }
         #endregion
 
         #region CorrectUnknownColumn
@@ -471,7 +368,7 @@ namespace PGORM.PostgreSQL
         #endregion
 
         #region IsSerial
-        bool IsSerial(pg_column col,Relation<C> rel)
+        bool IsSerial(pg_column col, Relation<C> rel)
         {
             return InformationSchema.Serials.Exists(c =>
                 c.column_name == col.column_name &&
@@ -492,7 +389,7 @@ namespace PGORM.PostgreSQL
             t.TypeShortName = type.type_short_name;
             t.TypeType = PgTypeTypeConverter.FromString(type.type_type);
             return t;
-        } 
+        }
         #endregion
     }
 }

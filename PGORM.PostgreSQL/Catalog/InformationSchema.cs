@@ -23,6 +23,7 @@ namespace PGORM.PostgreSQL.Catalog
         private static NpgsqlTransaction transaction;
         private static string PGORM_SP_SIG = "!_PGORMSP_";
         public static string TEMP_SCHEMA = "";
+        public static Version ServerVersion;
         #endregion
 
         #region InformationSchema
@@ -40,14 +41,18 @@ namespace PGORM.PostgreSQL.Catalog
         } 
         #endregion
 
+
         #region Read
         public static void Read()
         {
+            ServerVersion = new Version(DataAccess.Connection.ServerVersion);
+
             transaction = DataAccess.BeginTransaction();
 
-            Functions = DataAccess.ExecuteObjectQuery<pg_proc>(SQLScripts.GetAllFunctions, transaction, pg_proc.FromReader);
-            ProcessFunctions();
-            PrepareStoredFunctionArguments();
+            if (ServerVersion >= new Version(8, 4))
+                Functions = DataAccess.ExecuteObjectQuery<pg_proc>(SQLScripts.GetAllFunctions84, transaction, pg_proc.FromReader);
+            else
+                Functions = DataAccess.ExecuteObjectQuery<pg_proc>(SQLScripts.GetAllFunctions83, transaction, pg_proc.FromReader);
 
             Relations = DataAccess.ExecuteObjectQuery<pg_relation>(SQLScripts.GetAllTablesViews, transaction, pg_relation.FromReader);
             PrepareRelations();
@@ -97,42 +102,6 @@ namespace PGORM.PostgreSQL.Catalog
             return result;
         }
 
-        #region PrepareStoredFunctionArguments
-        private static void PrepareStoredFunctionArguments()
-        {
-            foreach (pg_proc proc in Functions)
-            {
-                string sql = "";
-                string tmp_name = string.Format("\"{0};{1}\"", PGORM_SP_SIG, proc.proc_oid);
-
-                // create a temporary table for each proc which imitates the argument names and types
-                if (proc.num_args > 0)
-                {
-                    List<string> distinct_arg = new List<string>();
-                    string arg_name = "";
-                    for (int a = 0; a != proc.num_args; a++)
-                    {
-                        arg_name = proc.proargnames[a];
-                        if (distinct_arg.Exists(i => i == arg_name))
-                            arg_name = string.Format("{0}_arg{1}", arg_name, a);
-                        else
-                            distinct_arg.Add(arg_name);
-
-                        // correct arg types
-                        if (proc.arg_types[a] == "anyarray")
-                            proc.arg_types[a] = "varchar[]";
-
-                        if (proc.arg_types[a] == "anyelement")
-                            proc.arg_types[a] = "varchar";
-
-                        sql += string.Format("\"{0}\" {1}\r\n,", arg_name, proc.arg_types[a]);
-                    }
-                    sql = string.Format("create temporary table {0} ({1}) on commit drop; ", tmp_name, sql.Substring(0, sql.Length - 1));
-                    DataAccess.ExecuteNoneQuery(sql, transaction);
-                }
-            }
-        } 
-        #endregion
 
         #region PrepareRelations
         private static void PrepareRelations()
@@ -143,23 +112,6 @@ namespace PGORM.PostgreSQL.Catalog
                 {
                     if(rel.table_name.Contains(PGORM_SP_SIG))
                         rel.table_type = "SP ARGUMENT";
-                }
-            }
-        } 
-        #endregion
-
-        #region ProcessFunctions
-        private static void ProcessFunctions()
-        {
-            foreach (pg_proc proc in Functions)
-            {
-                if ((int)proc.num_args != 0 && proc.proargnames == null)
-                {
-                    List<string> new_args = new List<string>();
-                    for (int a = 0; a != proc.num_args; a++)
-                        new_args.Add(string.Format("p_{0}_{1}",
-                            proc.arg_types[a].Replace(" ", "_"), a));
-                    proc.proargnames = new_args.ToArray();
                 }
             }
         } 

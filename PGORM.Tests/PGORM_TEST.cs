@@ -290,6 +290,7 @@ namespace PGORM.Tests
         } 
         #endregion
 
+        #region Test0020_UDT_Multi_Multi_Multi_Insert
         [Test]
         public void Test0020_UDT_Multi_Multi_Multi_Insert()
         {
@@ -307,14 +308,17 @@ namespace PGORM.Tests
 
             udt_multi_array_test_ObjectFactory.Insert(ref obj);
             Assert.AreEqual(2, obj.id.Value);
-        }
+        } 
+        #endregion
 
+        #region Test0021_UDT_Multi_Multi_Multi_Get
         [Test]
         public void Test0021_UDT_Multi_Multi_Multi_Get()
         {
             udt_multi_array_testObject obj = udt_multi_array_test_ObjectFactory.GetBy_id(2);
             Assert.AreEqual("AC", obj.multi_zip_3.Value[0, 1, 0].locator.Value);
-        }
+        } 
+        #endregion
     }
 #endif
 }

@@ -17,11 +17,11 @@ namespace PGORM.PostgreSQL
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_type.cs", CodeHelper.table_to_cs(SQLScripts.GetAllTypes, "pg_type"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_dindex.cs", CodeHelper.table_to_cs(SQLScripts.GetDistinctIndex, "pg_dindex"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_view_depend.cs", CodeHelper.table_to_cs(SQLScripts.GetViewTableDepends, "pg_view_depend"));
-            File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_proc.cs", CodeHelper.table_to_cs(SQLScripts.GetAllFunctions, "pg_proc"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_entitycolumn.cs", CodeHelper.table_to_cs(SQLScripts.GetAllEntityColumns, "pg_entitycolumn"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_serial.cs", CodeHelper.table_to_cs(SQLScripts.GetAllSerials, "pg_serial"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_index.cs", CodeHelper.table_to_cs(SQLScripts.GetAllIndexes, "pg_index"));
             File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_column_comment.cs", CodeHelper.table_to_cs(SQLScripts.GetAllColumnComments, "pg_column_comment"));
+            File.WriteAllText(@"C:\Users\Gevik\WorkDir\PGORM\PGORM.PostgreSQL\Catalog\pg_proc.cs", CodeHelper.table_to_cs(SQLScripts.GetAllFunctions84, "pg_proc"));
         }
 
         public static string table_to_cs(string p_sql, string csname)

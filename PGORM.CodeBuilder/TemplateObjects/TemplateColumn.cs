@@ -14,7 +14,7 @@ namespace PGORM.CodeBuilder.TemplateObjects
         public string p_TemplateColumnName;
         public bool HasConverter { get; set; }
         public ConverterProxy ConverterProxy;
-        private Schema<TemplateRelation, StoredFunction, TemplateColumn> Schema { get; set; }
+        private Schema<TemplateRelation, Function, TemplateColumn> Schema { get; set; }
         public TemplateRelation Relation; 
         #endregion
 
