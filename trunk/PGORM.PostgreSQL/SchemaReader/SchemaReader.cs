@@ -16,12 +16,13 @@ namespace PGORM.PostgreSQL
 {
     public partial class SchemaReader<R, S, C>
         where R : Relation<C>, new()
-        where S : Function, new()
+        where S : Function<R,C>, new()
         where C : Column, new()
     {
         #region Properties
         public event SchemaReaderMessageEventHandler Message;
         private Schema<R, S, C> p_Schema;
+        private List<R> FunctionArguments;
         #endregion
 
         #region SchemaReader
@@ -47,10 +48,12 @@ namespace PGORM.PostgreSQL
         public Schema<R, S, C> ReadSchema()
         {
             p_Schema = new Schema<R, S, C>();
+            FunctionArguments = new List<R>();
 
             CreateRelations();
             CreateTableIndexes();
             CreateViewIndexes();
+            CreateFunctions();
             return p_Schema;
         }
 
@@ -171,58 +174,77 @@ namespace PGORM.PostgreSQL
         {
             foreach (pg_relation pg_rel in InformationSchema.Relations)
             {
-                if (pg_rel.table_type == "BASE TABLE")
+                switch (pg_rel.table_type)
                 {
-                    R table = CreateRelation(pg_rel, RelationType.Table);
-                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+                    case "BASE TABLE":
+                        {
+                            R table = CreateRelation(pg_rel, RelationType.Table);
+                            R udt = CreateRelation(pg_rel, RelationType.CompositeType);
 
-                    p_Schema.Tables.Add(table);
-                    p_Schema.CompositeTypes.Add(udt);
+                            p_Schema.Tables.Add(table);
+                            p_Schema.CompositeTypes.Add(udt);
 
-                    CreateRelationColumns(table, pg_rel);
-                    CreateRelationColumns(udt, pg_rel);
-                }
-                else if (pg_rel.table_type == "VIEW")
-                {
-                    R view = CreateRelation(pg_rel, RelationType.View);
-                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+                            CreateRelationColumns(table, pg_rel);
+                            CreateRelationColumns(udt, pg_rel);
+                        }
+                        break;
 
-                    p_Schema.Tables.Add(view);
-                    p_Schema.CompositeTypes.Add(udt);
+                    case "VIEW":
+                        {
+                            R view = CreateRelation(pg_rel, RelationType.View);
+                            R udt = CreateRelation(pg_rel, RelationType.CompositeType);
 
-                    CreateRelationColumns(view, pg_rel);
-                    CreateRelationColumns(udt, pg_rel);
+                            p_Schema.Views.Add(view);
+                            p_Schema.CompositeTypes.Add(udt);
 
-                }
-                else if (pg_rel.table_type == "USER-DEFINED")
-                {
-                    R udt = CreateRelation(pg_rel, RelationType.CompositeType);
-                    p_Schema.CompositeTypes.Add(udt);
-                    CreateRelationColumns(udt, pg_rel);
-                }
-                else if (pg_rel.table_type == "ENUM")
-                {
-                    R c_enum = CreateRelation(pg_rel, RelationType.Enum);
-                    p_Schema.Enums.Add(c_enum);
+                            CreateRelationColumns(view, pg_rel);
+                            CreateRelationColumns(udt, pg_rel);
+                        }
+                        break;
 
-                    CreateRelationColumns(c_enum, pg_rel);
+                    case "USER-DEFINED":
+                        {
+                            R udt = CreateRelation(pg_rel, RelationType.CompositeType);
+                            p_Schema.CompositeTypes.Add(udt);
+                            CreateRelationColumns(udt, pg_rel);
+                        }
+                        break;
+
+                    case "ENUM":
+                        {
+                            R c_enum = CreateRelation(pg_rel, RelationType.Enum);
+                            p_Schema.Enums.Add(c_enum);
+
+                            CreateRelationColumns(c_enum, pg_rel);
+                        }
+                        break;
+
+                    case "FUNCTION ARGUMENT":
+                        {
+                            R rel = CreateRelation(pg_rel, RelationType.Function); // this makes CreateRelationColumns to run the correct SQL
+                            string[] spinfo = pg_rel.table_name.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                            rel.SchemaName = spinfo[1];
+                            rel.RelationName = spinfo[2];
+                            CreateRelationColumns(rel, pg_rel);
+                            FunctionArguments.Add(rel);
+                        }
+                        break;
+
+                    case "FUNCTION RETURN TYPE":
+                        {
+                            R rel = CreateRelation(pg_rel, RelationType.CompositeType); // this makes CreateRelationColumns to run the correct SQL
+                            CreateRelationColumns(rel, pg_rel);
+                            string[] spinfo = pg_rel.table_name.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                            rel.SchemaName = spinfo[1];
+                            rel.RelationName = spinfo[2];
+                            p_Schema.CompositeTypes.Add(rel);
+                        }
+                        break;
+
+                    default:
+                        throw new SchemaNotImplementedException("Relation type {0} {1}{2} not implemented!", pg_rel.table_type, pg_rel.table_schema, pg_rel.table_name);
                 }
             }
-        }
-        #endregion
-
-        #region CreateCompositeTypeTemplateSQL
-        [Obsolete()]
-        private string CreateCompositeTypeTemplateSQL(List<pg_column> columns)
-        {
-            string sql = "", data_type = "";
-            foreach (pg_column col in columns)
-            {
-                data_type = col.data_type;
-                sql += string.Format("\r\nnull::{0} as \"{1}\",", data_type, col.column_name);
-            }
-            sql = string.Format("select {0} ", sql.Substring(0, sql.Length - 1));
-            return sql;
         }
         #endregion
 
@@ -245,11 +267,13 @@ namespace PGORM.PostgreSQL
             List<pg_column> rel_cols = InformationSchema.GetColumnsByRelation(pg_rel);
 
             if (rel.RelationType == RelationType.CompositeType)
-                sql = string.Format("select * from {0}.\"{1}_{2}\"()", InformationSchema.TEMP_SCHEMA, pg_rel.table_schema, pg_rel.table_name);
+                sql = string.Format("select * from {0}.\"{1}:{2}\"()", InformationSchema.TEMP_SCHEMA, pg_rel.table_schema, pg_rel.table_name);
             else if (rel.RelationType == RelationType.Table || rel.RelationType == RelationType.View)
                 sql = string.Format("select * from {0} where 1=0", rel.FullName);
             else if (rel.RelationType == RelationType.Enum)
                 sql = GetEnumCreationSql(rel_cols);
+            else if (rel.RelationType == RelationType.Function)
+                sql = string.Format("select * from {0}.\"{1}\"", pg_rel.table_schema, pg_rel.table_name);
 
 
             NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);

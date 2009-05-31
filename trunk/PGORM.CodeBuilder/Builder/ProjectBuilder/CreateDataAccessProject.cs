@@ -19,7 +19,7 @@ namespace PGORM.CodeBuilder
         private void CreateEnums(string daBuildFolder)
         {
             var lst = from e in p_Schema.Enums
-                             join i in UsedEnums on e.FullName equals i
+                             join i in UsedEnums on e.FullName.Replace("\"","") equals i.Replace("\"","")
                              select e;
 
             List<TemplateRelation> used_enums = lst.ToList();

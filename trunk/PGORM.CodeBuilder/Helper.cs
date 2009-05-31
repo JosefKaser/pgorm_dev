@@ -40,6 +40,12 @@ namespace PGORM.CodeBuilder
             return string.Format("{0}.{1}", project.RootNamespace, rel.TemplateNamespace);
         }
 
+        public static string GetExplicitNamespace(Project project, TemplateFunction rel)
+        {
+            return string.Format("{0}.{1}", project.RootNamespace, rel.SchemaName.ToUpper());
+        }
+
+
         public static string Asm35(string name)
         {
             return string.Format(@"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\{0}.dll", name);
@@ -97,5 +103,13 @@ namespace PGORM.CodeBuilder
                 p_ReservedWords.AddRange(HelperResources.ReservedWords.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
             return p_ReservedWords.Contains(word);
         }
+
+        public static string[] RemoveArrayItemIfExist(string[] array, string item)
+        {
+            List<string> list = array.ToList();
+            list.Remove(item);
+            return list.ToArray();
+        }
+
     }
 }

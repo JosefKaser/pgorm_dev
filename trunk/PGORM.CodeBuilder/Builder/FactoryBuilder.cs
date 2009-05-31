@@ -255,7 +255,11 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.Factory", nspace));
 
-            SetLibs(st, p_libs, relation);
+            // if this object is a UDT then we do not need the Entities namespace
+            if (relation.RelationType == RelationType.CompositeType)
+                SetLibs(st, Helper.RemoveArrayItemIfExist(p_libs, ProjectBuilder.p_ObjectNamespace), relation);
+            else
+                SetLibs(st, p_libs, relation);
 
             if (Methods.Count != 0)
             {

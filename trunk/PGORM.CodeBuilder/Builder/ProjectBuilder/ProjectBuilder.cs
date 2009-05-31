@@ -19,7 +19,7 @@ namespace PGORM.CodeBuilder
     {
         #region Props
         public Project p_Project { get; set; }
-        public Schema<TemplateRelation, Function, TemplateColumn> p_Schema { get; set; }
+        public Schema<TemplateRelation, TemplateFunction, TemplateColumn> p_Schema { get; set; }
         public List<ConverterProxy> Converters { get; set; }
 
         private string p_BuildFolder;
@@ -75,8 +75,8 @@ namespace PGORM.CodeBuilder
         #region ReadSchema
         private void ReadSchema()
         {
-            SchemaReader<TemplateRelation, Function, TemplateColumn> schemaReader
-                = new SchemaReader<TemplateRelation, Function, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
+            SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn> schemaReader
+                = new SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
             p_Schema = schemaReader.ReadSchema();
         } 
         #endregion
@@ -143,11 +143,59 @@ namespace PGORM.CodeBuilder
         } 
         #endregion
 
+        #region ResolveFunctionDepencencies
+        private void ResolveFunctionDepencencies()
+        {
+            //loop each function and resolve the return types;
+            foreach (TemplateFunction function in GetRequestedFunctions())
+            {
+                switch (function.ReturnTypeType)
+                {
+                    case FunctionReturnTypeType.Table:
+                        if (!p_Project.Tables.Exists(i => i == function.FullReturnTypeInvariant))
+                            p_Project.Tables.Add(function.FullReturnTypeInvariant); ;
+                        break;
+
+                    case FunctionReturnTypeType.View:
+                        if (!p_Project.Views.Exists(i => i == function.FullReturnTypeInvariant))
+                            p_Project.Views.Add(function.FullReturnTypeInvariant); ;
+                        break;
+
+                    case FunctionReturnTypeType.Enum:
+                        if (!UsedEnums.Exists(i => i == function.FullReturnTypeInvariant))
+                            UsedEnums.Add(function.FullReturnTypeInvariant); ;
+                        break;
+
+                    case FunctionReturnTypeType.CompositeType:
+                        //seach composite types that have the same name as the function name
+                        if (!SchemaUsedCompositeTypes.Exists(i => i.FullNameInvariant == function.FullNameInvariant) ||
+                            !SchemaUsedCompositeTypes.Exists(i => i.FullNameInvariant == function.FullReturnTypeInvariant))
+                        {
+                            TemplateRelation udt = p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == function.FullNameInvariant);
+                            // this must be an actuall composite type (not a return type)
+                            if (udt == null)
+                            {
+                                udt = p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == function.FullReturnTypeInvariant);
+                            }
+                            else
+                            {
+                                udt.IsFunctionReturnType = true;
+                            }
+                            SchemaUsedCompositeTypes.Add(udt);
+                        }
+                        break;
+                }
+            }
+        } 
+        #endregion
+
         #region ResolveDepencencies
         private void ResolveDepencencies()
         {
             //tables types
             List<TemplateRelation> rels = new List<TemplateRelation>();
+
+            ResolveFunctionDepencencies();
 
             rels.AddRange((from t in p_Schema.Tables
                            join i in p_Project.Tables on t.FullNameInvariant equals i
@@ -156,6 +204,14 @@ namespace PGORM.CodeBuilder
             rels.AddRange((from t in p_Schema.Views
                            join i in p_Project.Views on t.FullNameInvariant equals i
                            select t).ToList());
+
+            /*
+            // check to see which function is using witch return type (composite type)
+            rels.AddRange((from t in p_Schema.Functions
+                           join i in p_Project.Functions on t.FullNameInvariant equals i
+                           join c in p_Schema.CompositeTypes on i equals c.FullNameInvariant
+                           select c).ToList());
+             */
 
             //resolve enums
             foreach (TemplateRelation rel in rels)
@@ -172,6 +228,17 @@ namespace PGORM.CodeBuilder
                            join i in SchemaUsedCompositeTypes on t.FullNameInvariant equals i.FullNameInvariant
                            select t).ToList());
             ResolveTypes(rels);
+
+            /*
+            //add each used return type to SchemaUsedCompositeTypes
+            List<TemplateRelation> function_return_Types = new List<TemplateRelation>();
+            function_return_Types.AddRange((from t in p_Schema.Functions
+                           join i in p_Project.Functions on t.FullNameInvariant equals i
+                           join c in p_Schema.CompositeTypes on i equals c.FullNameInvariant
+                           select c).ToList());
+            function_return_Types.ForEach(i => i.IsFunctionReturnType = true);
+            SchemaUsedCompositeTypes.AddRange(function_return_Types);
+            */
         } 
         #endregion
 
@@ -192,7 +259,7 @@ namespace PGORM.CodeBuilder
                     {
                         SchemaUsedCompositeTypes.Add(all_types.Find(i => i.FullName == col.PG_Type));
                     }
-                    else if(col.PGTypeType != PgTypeType.BaseType && col.PGTypeType != PgTypeType.EnumType && col.PGTypeType != PgTypeType.CompositeType && col.PGTypeType != PgTypeType.View)
+                    else if (col.PGTypeType != PgTypeType.BaseType && col.PGTypeType != PgTypeType.EnumType && col.PGTypeType != PgTypeType.CompositeType && col.PGTypeType != PgTypeType.View && !SchemaUsedCompositeTypes.Exists(i => i.FullName == col.PG_Type))
                     {
                         throw new NotImplementedException(col.PGTypeType.ToString());
                     }

@@ -19,6 +19,7 @@ namespace PGORM.CodeBuilder
 
         public List<string> Tables;
         public List<string> Views;
+        public List<string> Functions;
         [XmlIgnore]
         public List<string> InternalReferences;
 
@@ -32,6 +33,7 @@ namespace PGORM.CodeBuilder
             SetDefaultsByDatabaseName();
             Tables = new List<string>();
             Views = new List<string>();
+            Functions = new List<string>();
             BuildInDebugMode = false;
             RemoveTablePrefix = new List<string>();
         }

@@ -15,8 +15,9 @@ namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
     {
-        string p_ObjectNamespace = "Entities";
-        string p_TypesNamespace = "Types";
+        //needs to be visible from factory builder
+        public static string p_ObjectNamespace = "Entities";
+        public static string p_TypesNamespace = "Types";
 
         #region CreateCompositeTypes
         private void CreateCompositeTypes(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder,bool create_depend_converters,bool is_udt)
@@ -37,11 +38,7 @@ namespace PGORM.CodeBuilder
         #region CreateViews
         private void CreateViews(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
         {
-            var views = from i in p_Schema.Views
-                        join j in p_Project.Views on i.FullNameInvariant equals j
-                        select i;
-
-            foreach (TemplateRelation rel in views)
+            foreach (TemplateRelation rel in GetRequestedViews())
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
@@ -62,14 +59,40 @@ namespace PGORM.CodeBuilder
         } 
         #endregion
 
+        #region GetRequestedTables
+        private List<TemplateRelation> GetRequestedTables()
+        {
+            var tables = from i in p_Schema.Tables
+                         join j in p_Project.Tables on i.FullNameInvariant equals j
+                         select i;
+            return tables.ToList();
+        } 
+        #endregion
+
+        #region GetRequestedViews
+        private List<TemplateRelation> GetRequestedViews()
+        {
+            var views = from i in p_Schema.Views
+                        join j in p_Project.Views on i.FullNameInvariant equals j
+                        select i;
+            return views.ToList();
+        }
+        #endregion
+
+        #region GetRequestedFunctions
+        private List<TemplateFunction> GetRequestedFunctions()
+        {
+            var funcions = from i in p_Schema.Functions
+                        join j in p_Project.Functions on i.FullNameInvariant equals j
+                        select i;
+            return funcions.ToList();
+        }
+        #endregion
+
         #region CreateTables
         private void CreateTables(DataObjectBuilder objectBuilder, FactoryBuilder factoryBuilder, RecordSetBuilder recordsetBuilder, string doBuildFolder)
         {
-            var tables = from i in p_Schema.Tables
-                        join j in p_Project.Tables on i.FullNameInvariant equals j
-                        select i;
-
-            foreach (TemplateRelation rel in tables)
+            foreach (TemplateRelation rel in GetRequestedTables())
             {
                 SendMessage(this, ProjectBuilderMessageType.Major, "Generating code for {0}", rel.RelationName);
 
@@ -126,6 +149,105 @@ namespace PGORM.CodeBuilder
         }
         #endregion
 
+        #region AttachFunctionReturnTypes
+        private void AttachFunctionReturnTypes()
+        {
+            //attach the correct return types
+            foreach (TemplateFunction function in GetRequestedFunctions())
+            {
+                // void type
+                if (function.ReturnTypeType == FunctionReturnTypeType.Void)
+                {
+                    function.TemplateReturnType = new TemplateVoidReturnType();
+                }
+
+                // table or view
+                else if (function.ReturnTypeType == FunctionReturnTypeType.View || function.ReturnTypeType == FunctionReturnTypeType.Table)
+                {
+                    TemplateRelation rt = GetRequestedViews().Find(i => i.FullNameInvariant == function.FullReturnTypeInvariant);
+                    if (rt == null)
+                        rt = GetRequestedTables().Find(i => i.FullNameInvariant == function.FullReturnTypeInvariant);
+                    function.TemplateReturnType = new TemplateReturnType(
+                        string.Format("{0}.{1}.{2}.{3}", p_Project.RootNamespace, rt.TemplateNamespace, ProjectBuilder.p_ObjectNamespace, rt.TemplateRelationName),
+                        function.IsSetReturning);
+                }
+                // composite type
+                else if (function.ReturnTypeType == FunctionReturnTypeType.Enum)
+                {
+                    function.TemplateReturnType = new TemplateReturnType(
+                        string.Format("{0}.{1}.Enums.{2}", p_Project.RootNamespace,
+                        function.ReturnTypeSchemaName.ToUpper(), function.ReturnTypeName),
+                        function.IsSetReturning);
+                }
+                else if (function.ReturnTypeType == FunctionReturnTypeType.BaseType)
+                {
+                    TemplateRelation rt = p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == function.FullNameInvariant);
+                    function.TemplateReturnType = new TemplateReturnType(
+                        rt.Columns[0].TemplateCLR_Type, function.IsSetReturning);
+                }
+                else if (function.ReturnTypeType == FunctionReturnTypeType.CompositeType)
+                {
+                    TemplateRelation udt = p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == function.FullNameInvariant);
+                    if (udt == null)
+                        udt = p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == function.FullReturnTypeInvariant);
+
+                    function.TemplateReturnType = new TemplateReturnType(
+                        string.Format("{0}.{1}.Types.{2}", p_Project.RootNamespace, udt.TemplateNamespace, udt.TemplateRelationName),
+                        function.IsSetReturning);
+                    /*
+                    function.Converter = Converters.Find(c => c.PgType == function.ReturnTypeName && c.PgTypeSchema == function.ReturnTypeSchemaName);
+                    if(function.Converter == null)
+                        function.Converter = Converters.Find(c => c.PgType == function.RelationName && c.PgTypeSchema == function.SchemaName);
+                    */
+                }
+            }
+        } 
+        #endregion
+
+        #region CreateFunctions
+        private void CreateFunctions(string doBuildFolder)
+        {
+            AttachFunctionReturnTypes();
+            foreach(TemplateFunction function in GetRequestedFunctions())
+            {
+                List<string> libs = new List<string>();
+                /*
+                if(function.ReturnTypeType == FunctionReturnTypeType.Table ||
+                    function.ReturnTypeType == FunctionReturnTypeType.View)
+                {
+                    libs.Add(string.Format("{0}.{1}.{2}",p_Project.RootNamespace,function.ReturnTypeSchemaName.ToUpper(),p_ObjectNamespace));
+                }
+
+                if (function.ReturnTypeType == FunctionReturnTypeType.Enum)
+                {
+                    libs.Add(string.Format("{0}.{1}.Enums", p_Project.RootNamespace, function.ReturnTypeSchemaName.ToUpper(), p_ObjectNamespace));
+                }
+                */
+
+                // remove the parameters access type and the prepare the columns
+                if (function.Arguments != null)
+                {
+                    function.TemplateArguments = new List<TemplateColumn>();
+                    foreach (TemplateColumn col in function.Arguments.Columns)
+                    {
+                        string[] colname = col.ColumnName.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (colname[0] == "IN" || colname[0] == "INOUT")
+                        {
+                            col.ColumnName = colname[1];
+                            function.TemplateArguments.Add(col);
+                        }
+                    }
+                    function.Arguments.Prepare(this);
+                }
+
+                FunctionBuilder functionBuilder = new FunctionBuilder(this, libs.ToArray());
+                functionBuilder.Create(function, doBuildFolder);
+            }
+            
+
+        } 
+        #endregion
+
         #region CreateDataObjectProject
         private void CreateDataObjectProject()
         {
@@ -143,10 +265,15 @@ namespace PGORM.CodeBuilder
             // after creating the composite types we have to re-prepare everything in order for
             // TemplateColumn to resolve to correct types
             PrepareAll();
-            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder,false,true);
 
+            //We have to complete then functions return types here instead of in the schema
+            //reader because functions could return all kinds of composite types which are
+            //not present in schema reader fase. 
+
+            CreateCompositeTypes(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder,false,true);
             CreateTables(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
             CreateViews(objectBuilder, factoryBuilder, recordsetBuilder, doBuildFolder);
+            CreateFunctions(doBuildFolder);
 
             AssemblyInfoData asmInfo = new AssemblyInfoData();
             AssemblyInfoBuilder asmInfoBuilder = new AssemblyInfoBuilder(p_Project.AssemblyInfo, this);

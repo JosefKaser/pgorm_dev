@@ -17,10 +17,10 @@ namespace PGORM.PostgreSQL.Catalog
 		public String[] arg_names {get; set;}
 		public Int32? num_args {get; set;}
 		public Boolean? returns_set {get; set;}
-		public String argument_info {get; set;}
+		public String argument_defaults {get; set;}
 		public String[] arg_types {get; set;}
 		public String[] all_arg_types {get; set;}
-		public String[] proargmodes {get; set;}
+		public String[] arg_modes {get; set;}
 		public String return_type_type {get; set;}
 
         public static pg_proc FromReader(IDataReader reader)
@@ -34,10 +34,10 @@ namespace PGORM.PostgreSQL.Catalog
 			result.arg_names = DataAccess.Convert<String[]>(reader["arg_names"],null);
 			result.num_args = DataAccess.Convert<Int32?>(reader["num_args"],null);
 			result.returns_set = DataAccess.Convert<Boolean?>(reader["returns_set"],null);
-			result.argument_info = DataAccess.Convert<String>(reader["argument_info"],null);
+			result.argument_defaults = DataAccess.Convert<String>(reader["argument_defaults"],null);
 			result.arg_types = DataAccess.Convert<String[]>(reader["arg_types"],null);
 			result.all_arg_types = DataAccess.Convert<String[]>(reader["all_arg_types"],null);
-			result.proargmodes = DataAccess.Convert<String[]>(reader["proargmodes"],null);
+			result.arg_modes = DataAccess.Convert<String[]>(reader["arg_modes"],null);
 			result.return_type_type = DataAccess.Convert<String>(reader["return_type_type"],null);
 
             return result;
