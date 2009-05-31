@@ -5,6 +5,7 @@ using System.Text;
 using PGORM.CodeBuilder.TemplateObjects;
 using Antlr.StringTemplate;
 using System.IO;
+using PGORM.PostgreSQL.Objects;
 
 namespace PGORM.CodeBuilder
 {
@@ -13,7 +14,7 @@ namespace PGORM.CodeBuilder
         StringTemplate st;
         string[] p_libs;
 
-        public RecordSetBuilder(ProjectBuilder p_builder,string[] p_Libs)
+        public RecordSetBuilder(ProjectBuilder p_builder, string[] p_Libs)
             : base(Templates.DataObjectRecordSet_stg, p_builder)
         {
             st = p_stgGroup.GetInstanceOf("recordset");
@@ -30,7 +31,11 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("libs", p_Project.InternalReferences);
             st.SetAttribute("libs", string.Format("{0}.RecordSet", nspace));
 
-            SetLibs(st, p_libs, relation);
+            // if this object is a UDT then we do not need the Entities namespace
+            if (relation.RelationType == RelationType.CompositeType)
+                SetLibs(st, Helper.RemoveArrayItemIfExist(p_libs, ProjectBuilder.p_ObjectNamespace), relation);
+            else
+                SetLibs(st, p_libs, relation);
 
             File.WriteAllText(fname, st.ToString());
         }

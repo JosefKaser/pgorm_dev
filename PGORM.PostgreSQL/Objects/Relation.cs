@@ -10,14 +10,15 @@ namespace PGORM.PostgreSQL.Objects
         Table,
         View,
         CompositeType,
-        Enum
+        Enum,
+        Function,
     }
 
     public class Relation<C> where C : Column, new()
     {
         public string SchemaName { get; set; }
         public string RelationName { get; set; }
-        public RelationType RelationType;
+        public RelationType RelationType { get; set; }
         public List<C> Columns { get; set; }
         public List<Index<C>> Indexes { get; set; }
 

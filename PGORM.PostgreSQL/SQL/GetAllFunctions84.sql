@@ -1,5 +1,5 @@
 ﻿select
-                p.oid,
+		p.oid,
 		p.proname as function_name,
 		n.nspname as schema_name,
 		case when (en.typname is not null and en.nspname is not null) then regexp_replace(format_type(p.prorettype,null),en.nspname || '.','') else format_type(p.prorettype,null) end as return_type,
@@ -7,10 +7,10 @@
 		p.proargnames as arg_names,
 		p.pronargs::integer as num_args,
 		p.proretset as returns_set,
-		pg_get_function_arguments(p.oid) as argument_info,
+		pg_get_expr(p.proargdefaults,'pg_proc'::regclass) as argument_defaults,
 		case when p.proargtypes <> '' then regexp_split_to_array(oidvectortypes(p.proargtypes),E',\\s+') else null end as arg_types,
 		regexp_split_to_array(oidvectortypes( (regexp_replace(p.proallargtypes::text,E'\\D',' ','g')::oidvector) ),E',\\s+') as all_arg_types,
-		p.proargmodes,
+		p.proargmodes as arg_modes,
 		case when y.typtype = 'e' then 'ENUM'
 		else
 		    case when r.relkind = 'r' and y.typtype='c' then 'TABLE'
@@ -25,7 +25,7 @@
 		                    else
 		                        case when r.relkind = 'e' then 'ENUM'
 		                        else
-		                             case when format_type(p.prorettype,null)='record' then 'RECORD' end
+		                             case when format_type(p.prorettype,null)='record' or format_type(p.prorettype,null)='anyelement' then 'RECORD' end
 		                        end
 		                    end
 		                end

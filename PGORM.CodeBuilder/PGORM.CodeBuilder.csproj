@@ -66,6 +66,7 @@
     <Compile Include="Builder\DataObjectBuilder.cs" />
     <Compile Include="Builder\DataObjectFactoryBuilder.cs" />
     <Compile Include="Builder\FactoryBuilder.cs" />
+    <Compile Include="Builder\FunctionBuilder.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataAccessProject.cs" />
     <Compile Include="Builder\ProjectBuilder\CreateDataObjectProject.cs" />
     <Compile Include="Builder\ProjectBuilder\ProjectBuilder.cs" />
@@ -98,8 +99,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateObjects\TemplateColumn.cs" />
+    <Compile Include="TemplateObjects\TemplateFunction.cs" />
     <Compile Include="TemplateObjects\TemplateMethod.cs" />
     <Compile Include="TemplateObjects\TemplateRelation.cs" />
+    <Compile Include="TemplateObjects\TemplateReturnType.cs" />
     <Compile Include="Templates.Designer.cs">
       <DependentUpon>Templates.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -121,6 +124,7 @@
     <Content Include="STG\DataObjectFactory\Factory_RecordCount.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factoty_Update.stg.txt" />
     <Content Include="STG\DataObjectRecordSet.stg.txt" />
+    <Content Include="STG\Function.stg.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataAccessProjectFiles.resx">

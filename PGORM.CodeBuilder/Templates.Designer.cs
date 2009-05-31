@@ -97,7 +97,7 @@ namespace PGORM.CodeBuilder {
         ///using Npgsql;
         ///&lt;libs:usings(); separator=&quot;\r\n&quot;&gt;
         ///
-        ///namespace &lt;namespace&gt;.Enum
+        ///namespace &lt;namespace&gt;.Enums
         ///{
         ///    #region &lt;table.TemplateRelationName&gt;
         ///    public enum &lt;table.TemplateRelationName&gt;
@@ -107,7 +107,7 @@ namespace PGORM.CodeBuilder {
         ///    #endregion
         ///
         ///    #region &lt;table.TemplateRelationName&gt;Converter
-        ///    [PostgreSQLTypeConverterAt [rest of string was truncated]&quot;;.
+        ///    [PostgreSQLTypeConverterA [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CLREnum_stg {
             get {
@@ -122,7 +122,7 @@ namespace PGORM.CodeBuilder {
         ///using &lt;lib&gt;;
         ///&gt;&gt;
         ///
-        ///dataobject(libs,namespace,table,properties) ::=&lt;&lt;
+        ///dataobject(libs,namespace,table,properties,is_udt) ::=&lt;&lt;
         ///using System;
         ///using System.Collections.Generic;
         ///using System.Linq;
@@ -141,7 +141,7 @@ namespace PGORM.CodeBuilder {
         ///		public &lt;table.TemplateRelationName&gt;()
         ///		{
         ///		}
-        ///		#endregi [rest of string was truncated]&quot;;.
+        ///		# [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DataObject_stg {
             get {
@@ -353,6 +353,15 @@ namespace PGORM.CodeBuilder {
         internal static string Factoty_Update_stg {
             get {
                 return ResourceManager.GetString("Factoty_Update_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Function_stg {
+            get {
+                return ResourceManager.GetString("Function_stg", resourceCulture);
             }
         }
     }
