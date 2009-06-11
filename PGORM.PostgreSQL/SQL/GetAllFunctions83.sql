@@ -35,7 +35,7 @@
 		end 
 		as return_type_type,
 		0::integer as num_args_with_defaults,
-		null::varchar[] name_args_with_defaults
+		null::varchar[] as name_args_with_defaults
 from
 		pg_proc p
 		inner join pg_namespace n on p.pronamespace = n.oid
