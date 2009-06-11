@@ -359,9 +359,41 @@ namespace PGORM.CodeBuilder {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string Function_stg {
+        internal static string Function_Command_stg {
             get {
-                return ResourceManager.GetString("Function_stg", resourceCulture);
+                return ResourceManager.GetString("Function_Command_stg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to group main;
+        ///
+        ///usings(lib) ::=&lt;&lt;
+        ///using &lt;lib&gt;;
+        ///&gt;&gt;
+        ///
+        ///func(libs,namespace,function,args,trans_support,content) ::=&lt;&lt;
+        ///using System;
+        ///using System.IO;
+        ///using System.Collections.Generic;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Data;
+        ///using System.Data.Common;
+        ///using System.Reflection;
+        ///using System.Diagnostics;
+        ///using Npgsql;
+        ///&lt;libs:usings(); separator=&quot;\r\n&quot;&gt;
+        ///
+        ///namespace &lt;namespace&gt;
+        ///{
+        ///    public partial class StoredFunctions
+        ///    {
+        ///        public static &lt;function.TemplateReturnType&gt; &lt;functi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Function_Function_stg {
+            get {
+                return ResourceManager.GetString("Function_Function_stg", resourceCulture);
             }
         }
     }

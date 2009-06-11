@@ -75,9 +75,12 @@ namespace PGORM.CodeBuilder
         #region ReadSchema
         private void ReadSchema()
         {
-            SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn> schemaReader
-                = new SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
-            p_Schema = schemaReader.ReadSchema();
+            if (p_Schema == null)
+            {
+                SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn> schemaReader
+                    = new SchemaReader<TemplateRelation, TemplateFunction, TemplateColumn>(p_Project.DatabaseConnectionInfo.GetConnectionString());
+                p_Schema = schemaReader.ReadSchema();
+            }
         } 
         #endregion
 
@@ -140,6 +143,9 @@ namespace PGORM.CodeBuilder
             p_Schema.CompositeTypes.ForEach(i => i.Prepare(this));
             p_Schema.Tables.ForEach(i => i.Prepare(this));
             p_Schema.Views.ForEach(i => i.Prepare(this));
+            foreach (TemplateFunction function in p_Schema.Functions)
+                if (function.Arguments != null)
+                    function.Arguments.Prepare(this);
         } 
         #endregion
 
@@ -149,6 +155,7 @@ namespace PGORM.CodeBuilder
             //loop each function and resolve the return types;
             foreach (TemplateFunction function in GetRequestedFunctions())
             {
+                #region Return Types
                 switch (function.ReturnTypeType)
                 {
                     case FunctionReturnTypeType.Table:
@@ -184,6 +191,29 @@ namespace PGORM.CodeBuilder
                             SchemaUsedCompositeTypes.Add(udt);
                         }
                         break;
+                }
+
+                #endregion
+
+                if (function.Arguments != null)
+                {
+                    foreach (TemplateColumn col in function.Arguments.Columns)
+                    {
+                        string type_name_invariant = string.Format("{0}.{1}", col.TypeInfo.TypeNamespace, col.TypeInfo.TypeShortName);
+                        if (col.PGTypeType != PgTypeType.BaseType)
+                        {
+                            if (col.PGTypeType != PgTypeType.EnumType)
+                            {
+                                if (!SchemaUsedCompositeTypes.Exists(i => i.FullNameInvariant == type_name_invariant))
+                                    SchemaUsedCompositeTypes.Add(p_Schema.CompositeTypes.Find(i => i.FullNameInvariant == type_name_invariant));
+                            }
+                            else
+                            {
+                                if (!UsedEnums.Exists(i => i == type_name_invariant))
+                                    UsedEnums.Add(type_name_invariant);
+                            }
+                        }
+                    }
                 }
             }
         } 
@@ -279,5 +309,19 @@ namespace PGORM.CodeBuilder
             }
         }
         #endregion
+
+        public void SelectAllObjects()
+        {
+            if (p_Schema == null)
+                ReadSchema();
+            p_Project.Tables.Clear();
+            p_Project.Views.Clear();
+            p_Project.Functions.Clear();
+            p_Schema.Tables.ForEach(r => p_Project.Tables.Add(r.FullNameInvariant));
+            p_Schema.Views.ForEach(r => p_Project.Views.Add(r.FullNameInvariant));
+
+            //TODO: Not yet implemented
+            //p_Schema.Functions.ForEach(r => p_Project.Functions.Add(r.FullNameInvariant));
+        }
     }
 }

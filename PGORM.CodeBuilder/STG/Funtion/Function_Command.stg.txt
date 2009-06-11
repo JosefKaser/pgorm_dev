@@ -1,0 +1,9 @@
+﻿function_command(function) ::=<<
+List<generic("OperationParameter")> oprParams = new List<generic("OperationParameter")>();
+
+<function.TemplateArguments:create_implicit_check();separator="\r\n">
+>>
+
+functin_command_param_implicit_add(argument) ::=<<
+if(p_<column.TemplateColumnName>.
+>>

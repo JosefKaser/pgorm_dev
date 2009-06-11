@@ -22,6 +22,8 @@ namespace PGORM.PostgreSQL.Catalog
 		public String[] all_arg_types {get; set;}
 		public String[] arg_modes {get; set;}
 		public String return_type_type {get; set;}
+		public Int32? num_args_with_defaults {get; set;}
+		public String[] name_args_with_defaults {get; set;}
 
         public static pg_proc FromReader(IDataReader reader)
         {
@@ -39,6 +41,8 @@ namespace PGORM.PostgreSQL.Catalog
 			result.all_arg_types = DataAccess.Convert<String[]>(reader["all_arg_types"],null);
 			result.arg_modes = DataAccess.Convert<String[]>(reader["arg_modes"],null);
 			result.return_type_type = DataAccess.Convert<String>(reader["return_type_type"],null);
+			result.num_args_with_defaults = DataAccess.Convert<Int32?>(reader["num_args_with_defaults"],null);
+			result.name_args_with_defaults = DataAccess.Convert<String[]>(reader["name_args_with_defaults"],null);
 
             return result;
         }

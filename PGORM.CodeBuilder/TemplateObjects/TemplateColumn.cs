@@ -136,6 +136,7 @@ namespace PGORM.CodeBuilder.TemplateObjects
         } 
         #endregion
 
+        #region TemplateCLR_Type
         public string TemplateCLR_Type
         {
             get
@@ -156,7 +157,8 @@ namespace PGORM.CodeBuilder.TemplateObjects
                     return string.Format("{0}", CLR_Type);
                 }
             }
-        }
+        } 
+        #endregion
 
     }
 }

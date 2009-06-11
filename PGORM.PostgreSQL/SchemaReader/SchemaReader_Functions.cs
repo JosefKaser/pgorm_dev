@@ -39,6 +39,8 @@ namespace PGORM.PostgreSQL
                 sp.FullReturnTypeInvariant = string.Format("{0}.{1}", proc.return_type_schema, proc.return_type);
                 sp.ReturnTypeName = proc.return_type;
                 sp.ReturnTypeSchemaName = proc.return_type_schema;
+                sp.ArgNamesWithDefaults = proc.name_args_with_defaults.ToList();
+                sp.ArgNumWithDefaults = (int)proc.num_args_with_defaults;
 
                 //if a function returns setof record then it should be called with column definition;
                 sp.ColumnDefinitionRequired = (proc.return_type_type == "RECORD" && proc.return_type == "record" && (bool)proc.returns_set == true);

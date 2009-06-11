@@ -124,7 +124,8 @@
     <Content Include="STG\DataObjectFactory\Factory_RecordCount.stg.txt" />
     <Content Include="STG\DataObjectFactory\Factoty_Update.stg.txt" />
     <Content Include="STG\DataObjectRecordSet.stg.txt" />
-    <Content Include="STG\Function.stg.txt" />
+    <Content Include="STG\Funtion\Function_Command.stg.txt" />
+    <Content Include="STG\Funtion\Function_Function.stg.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataAccessProjectFiles.resx">

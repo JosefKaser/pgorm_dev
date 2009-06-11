@@ -1,0 +1,99 @@
+﻿group main;
+
+usings(lib) ::=<<
+using <lib>;
+>>
+
+func(libs,namespace,function,args,trans_support,content) ::=<<
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Reflection;
+using System.Diagnostics;
+using Npgsql;
+<libs:usings(); separator="\r\n">
+
+namespace <namespace>
+{
+    public partial class StoredFunctions
+    {
+        public static <function.TemplateReturnType> <function.RelationName>(<arg_trans(trans_support)><create_parameters(function.TemplateArguments)>)
+        {
+            bool default_value_set = false;
+            int  num_default_value_set = 0;
+
+            <function_command(function)>
+            <content>
+            throw new Exception();
+        }
+
+    }
+}
+>>
+
+create_parameters(columns) ::=<<
+<columns:create_parameter(); separator=",">
+>>	
+
+generic(T) ::="\<<T>\>"
+create_parameter(column) ::="DataObjectValue<generic(column.TemplateCLR_Type)> p_<column.TemplateColumnName>"
+arg_trans(support) ::="<if(support)>NpgsqlTransaction p_Transaction,<endif>"
+
+create_implicit_check(column) ::=<<
+    #region p_<column.TemplateColumnName>
+    <if(column.DefaultValue)>    
+    if(p_<column.TemplateColumnName> != null && p_<column.TemplateColumnName>.DbValue != null)
+    {
+        OperationParameter par = new OperationParameter() { DbValue = p_<column.TemplateColumnName>.DbValue, ParameterName = "@<column.TemplateColumnName>" };
+        <check_create_converter(column)>
+        <count_default_value>
+        oprParams.Add(par);
+    }
+    <else>
+    if(p_<column.TemplateColumnName> == null && p_<column.TemplateColumnName>.DbValue == null)
+    {
+        throw new ArgumentNullException("p_<column.TemplateColumnName> cannot be null. If you mean to set the value to SQL NULL then try setting the value to DbNull.Value");
+    }
+    else
+    {
+        OperationParameter par = new OperationParameter() { DbValue = p_<column.TemplateColumnName>.DbValue, ParameterName = "@<column.TemplateColumnName>" };
+        <check_create_converter(column)>
+        oprParams.Add(par);    
+    }
+    <endif>
+    #endregion
+
+>>
+
+
+check_create_converter(column) ::=<<
+<if(column.HasConverter)>
+if(par.DbValue != DBNull.Value)
+{
+    <column.ConverterProxy.Converter> converter = new <column.ConverterProxy.Converter>();
+    <if(column.IsPgArray)>
+    ArrayNativeToBackendTypeConverter array_converter = new ArrayNativeToBackendTypeConverter(converter);        
+    par.DbValue = array_converter.FromArray(converter,par.DbValue);
+    <else>
+    par.DbValue = Helper.PrepareConvertedValue(converter.ToString(par.DbValue));
+    <endif>
+}
+<endif>
+>>
+
+
+count_default_value() ::=<<
+default_value_set = true;
+num_default_value_set++;
+>>
+
+check_default_value_sets(function) ::=<<
+if(default_value_set && num_default_value_set != <function.ArgNumWithDefaults>)
+{
+    throw new InvalidOperationException("Unable to execute this function. If you set a parameters which alread");
+}
+>>
