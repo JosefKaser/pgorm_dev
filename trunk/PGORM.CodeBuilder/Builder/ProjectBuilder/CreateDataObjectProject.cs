@@ -236,12 +236,16 @@ namespace PGORM.CodeBuilder
                             col.ColumnName = colname[1];
                             function.TemplateArguments.Add(col);
                         }
+                        col.DefaultValue = (colname[2] == "False" ? null : "True");
                     }
                     function.Arguments.Prepare(this);
                 }
-
+                //TODO: consider removing
+                //function.Prepare();
                 FunctionBuilder functionBuilder = new FunctionBuilder(this, libs.ToArray());
-                functionBuilder.Create(function, doBuildFolder);
+
+                functionBuilder.Create(function, doBuildFolder,false);
+                functionBuilder.Create(function, doBuildFolder, true);
             }
             
 

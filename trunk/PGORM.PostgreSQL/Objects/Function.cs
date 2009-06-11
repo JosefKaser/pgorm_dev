@@ -27,6 +27,8 @@ namespace PGORM.PostgreSQL.Objects
         public string ReturnTypeName { get; set; }
         public string ReturnTypeSchemaName { get; set; }
         public bool ColumnDefinitionRequired { get; set; }
+        public List<string> ArgNamesWithDefaults { get; set; }
+        public int ArgNumWithDefaults { get; set; }
 
         public override string ToString()
         {

@@ -15,13 +15,20 @@ namespace PGORM.CodeBuilder
         string[] p_libs;
 
         public FunctionBuilder(ProjectBuilder p_builder, string[] p_Libs)
-            : base(Templates.Function_stg , p_builder)
+            : base(GetTemplate(), p_builder)
         {
             st = p_stgGroup.GetInstanceOf("func");
             p_libs = p_Libs;            
         }
 
-        public void Create(TemplateFunction function, string destFolder)
+        public static string GetTemplate()
+        {
+            return string.Format("{0}\n{1}\n",
+                Templates.Function_Function_stg,
+                Templates.Function_Command_stg);
+        }
+
+        public void Create(TemplateFunction function, string destFolder,bool transaction_support)
         {
             st.Reset();
             st.SetAttribute("function", function);
@@ -30,6 +37,9 @@ namespace PGORM.CodeBuilder
             st.SetAttribute("libs", p_libs);
             if (function.Arguments != null)
                 st.SetAttribute("args", function.TemplateArguments);
+
+            st.SetAttribute("trans_support", transaction_support);
+
             string fname = string.Format(@"{0}\{1}_function.cs", destFolder,function.ToString());
             File.WriteAllText(fname, st.ToString());
         }

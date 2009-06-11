@@ -220,6 +220,47 @@ namespace PGORM.PostgreSQL.Catalog
         #endregion
 
         #region PrepareFunctionDefaultValues
+        private static List<bool> PrepareFunctionDefaultValues(pg_proc proc)
+        {
+            List<bool> values = new List<bool>();
+            List<bool> result = new List<bool>();
+            if (proc.num_args != 0)
+            {
+                if (!string.IsNullOrEmpty(proc.argument_defaults))
+                {
+                    // run pg_get_expr to the a record of the default values
+                    // then prepare the default value for every argument. set null when not default value
+                    string sql = string.Format("SELECT {0}", proc.argument_defaults);
+                    NpgsqlCommand command = new NpgsqlCommand(sql, DataAccess.Connection);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    for (int a = 0; a != reader.FieldCount; a++)
+                        // instead of actuall values we make sure the list is filled so we can handle them 
+                        // later in the function creation. we do not need to know what the actuall values
+                        // are hence those are already defined in PG
+                        values.Add(true);
+                    reader.Close();
+
+                    //setindex = num values minus num args 
+                    int setindex = (int)proc.num_args - values.Count;
+                    for (int a = 0; a != (int)proc.num_args; a++)
+                    {
+                        if (a >= setindex)
+                            result.Add(values[a - setindex]);
+                        else
+                            result.Add(false);
+                    }
+                }
+                else
+                {
+                    proc.arg_names.ToList().ForEach(i => result.Add(false));
+                }
+            }
+            return result;
+
+        }
+        /* The default values are PostgreSQL specific. This method tries to recreate the
+         * values in CLR but those are actually not needed
         private static List<string> PrepareFunctionDefaultValues(pg_proc proc)
         {
             List<object> values = new List<object>();
@@ -255,6 +296,7 @@ namespace PGORM.PostgreSQL.Catalog
             }
             return result;
         } 
+        */
         #endregion
 
         private static string FixPesudoType(string data)
@@ -266,6 +308,51 @@ namespace PGORM.PostgreSQL.Catalog
         }
 
         #region PrepareFunctionArgTypes
+        private static void PrepareFunctionArgTypes()
+        {
+            //create a table from this functions argument types. this table will be used to 
+            //create to construct the CLR functions arguments
+            foreach (pg_proc proc in Functions)
+            {
+                if (proc.num_args != 0)
+                {
+                    List<bool> defaultValues = PrepareFunctionDefaultValues(proc);
+                    List<string> name_args_with_def = new List<string>();
+                    int num_def_values=0;
+
+                    //loop the argument types and construct CREATE table
+                    string columns = "\n";
+                    for (int a = 0; a != proc.arg_types.Count(); a++)
+                    {
+                        string arg_type =  FixPesudoType(proc.arg_types[a]);
+
+                        columns += string.Format("\"{0}:{1}:{2}\" {3} {4}\n",
+                            GetArgMode(proc.arg_modes[a]),
+                            proc.arg_names[a],
+                            defaultValues[a],
+                            arg_type,
+                            (a != (int)proc.num_args - 1) ? "," : "");
+
+                        if (defaultValues[0])
+                        {
+                            name_args_with_def.Add(proc.arg_names[a]);
+                            num_def_values++;
+                        }
+                    }
+
+                    proc.name_args_with_defaults = name_args_with_def.ToArray();
+                    proc.num_args_with_defaults = num_def_values;
+
+                    string sql = string.Format("CREATE TEMP TABLE {0} ({1}) ON COMMIT DROP;",
+                        CreateFunctionSigniture(PGORM_SP_SIG,proc),
+                        columns);
+
+                    DataAccess.ExecuteNoneQuery(sql, transaction);
+                }
+            } 
+        } 
+
+        /* Refactored infavor of removing argument type dumplication in CLR       
         private static void PrepareFunctionArgTypes()
         {
             //create a table from this functions argument types. this table will be used to 
@@ -302,6 +389,7 @@ namespace PGORM.PostgreSQL.Catalog
                 }
             } 
         } 
+        */
         #endregion
 
         #region GetArgMode
@@ -324,8 +412,9 @@ namespace PGORM.PostgreSQL.Catalog
         #region CreateFunctionSigniture
         private static string CreateFunctionSigniture(string sig, pg_proc proc)
         {
-            return string.Format("\"{0}:{1}:{2}\"",
+            return string.Format("\"{0}{1}:{2}:{3}\"",
                 sig,
+                proc.oid,
                 proc.schema_name,
                 proc.function_name
                 );

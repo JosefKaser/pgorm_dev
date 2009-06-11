@@ -13,6 +13,19 @@ namespace PGORM.CodeBuilder.TemplateObjects
         public TemplateReturnType TemplateReturnType { get; set; }
         public ConverterProxy Converter { get; set; }
         public List<TemplateColumn> TemplateArguments { get; set; }
+
+        public void Prepare(ProjectBuilder p_Project)
+        {
+            // remove the nullable type from arguments
+            if (TemplateArguments != null)
+            {
+                foreach (TemplateColumn col in TemplateArguments)
+                {
+                    col.Prepare(p_Project);
+                }
+            }
+        }
+
         public bool HasConverter
         {
             get
