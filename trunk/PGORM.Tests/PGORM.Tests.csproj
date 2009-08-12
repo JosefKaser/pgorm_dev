@@ -39,8 +39,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Library\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="nunit.mocks, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.5.1.9189, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\NUnit 2.5\bin\net-2.0\framework\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks, Version=2.5.1.9189, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\NUnit 2.5\bin\net-2.0\framework\nunit.mocks.dll</HintPath>
+    </Reference>
     <Reference Include="PGORM_TEST, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Output\PGORM_TEST.dll</HintPath>
@@ -100,6 +106,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\NUnit 2.5\bin\net-2.0\nunit-console-x86.exe"  $(TargetPath) /labels</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files\NUnit 2.5\bin\net-2.0\nunit-console-x86.exe"  "$(TargetPath)" /labels</PostBuildEvent>
   </PropertyGroup>
 </Project>

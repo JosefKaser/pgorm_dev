@@ -292,7 +292,7 @@ namespace PGORM.CodeBuilder
             CompilerParameters compParams = new CompilerParameters();
 
             compParams.GenerateExecutable = false;
-            compParams.CompilerOptions = string.Format("/optimize /doc:{0}", p_DataObjectAssemblyFile.Replace(".dll", ".xml"));
+            compParams.CompilerOptions = string.Format("/optimize /doc:\"{0}\"", p_DataObjectAssemblyFile.Replace(".dll", ".xml"));
             compParams.IncludeDebugInformation = p_Project.BuildInDebugMode;
             compParams.OutputAssembly = p_DataObjectAssemblyFile;
             compParams.ReferencedAssemblies.Add("System.dll");
@@ -307,8 +307,8 @@ namespace PGORM.CodeBuilder
             compParams.ReferencedAssemblies.Add(p_DataAccessAssemblyFile);
 
             string[] files = Directory.GetFiles(doBuildFolder, "*.cs", SearchOption.AllDirectories);
-
-            CompilerResults results = cscProvider.CompileAssemblyFromFile(compParams, files);
+       
+            CompilerResults results = cscProvider.CompileAssemblyFromFile(compParams,files);
             Helper.CopyNpgsqlAssemblies(p_Project.OutputFolder);
             
             if (results.Errors.Count > 0)

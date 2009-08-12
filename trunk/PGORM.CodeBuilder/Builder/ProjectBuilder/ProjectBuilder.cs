@@ -12,7 +12,6 @@ using System.CodeDom;
 using System.Reflection;
 using PGORM.CodeBuilder.TemplateObjects;
 
-
 namespace PGORM.CodeBuilder
 {
     public partial class ProjectBuilder
